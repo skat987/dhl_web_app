@@ -75,7 +75,7 @@ $appBaseTitle = 'DHL';
     <?= $this->Flash->render() ?>
 
     <!-- Content -->
-    <div class="container clearfix">
+    <div class="container-fluid clearfix">
         <?= $this->fetch('content') ?>
     </div>
 
