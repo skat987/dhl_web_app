@@ -13,7 +13,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-$cakeDescription = 'CakePHP: the rapid development php framework';
+$appBaseTitle = 'DHL';
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,37 +21,67 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <?= $cakeDescription ?>:
+        <?= $appBaseTitle ?>:
         <?= $this->fetch('title') ?>
-    </title>
-    <?= $this->Html->meta('icon') ?>
+    </title>  
+    <?= $this->Html->css('fa-all') ?>
+    <?= $this->Html->css('bootstrap.min') ?>
+    <?= $this->Html->script('jquery-3.3.1.min') ?>
+    <?= $this->Html->script('bootstrap.min', ['block' => 'scriptBottom']) ?>
+    <?= $this->Html->script('popper.min', ['block' => 'scriptBottom']) ?>
+    <?= $this->Html->script('fa-all', ['block' => 'scriptBottom']) ?>
 
-    <?= $this->Html->css('base.css') ?>
-    <?= $this->Html->css('style.css') ?>
-
+    <!-- Fetch meta, css and script -->
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
 </head>
 <body>
-    <nav class="top-bar expanded" data-topbar role="navigation">
-        <ul class="title-area large-3 medium-4 columns">
-            <li class="name">
-                <h1><a href=""><?= $this->fetch('title') ?></a></h1>
-            </li>
-        </ul>
-        <div class="top-bar-section">
-            <ul class="right">
-                <li><a target="_blank" href="https://book.cakephp.org/3.0/">Documentation</a></li>
-                <li><a target="_blank" href="https://api.cakephp.org/3.0/">API</a></li>
-            </ul>
+    <!-- Header -->
+    <header class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center"><?= $appBaseTitle ?>: <?= $this->fetch('title') ?></h1>
+            </div>
         </div>
-    </nav>
+        <?php if (!empty($this->request->getSession()->read('Auth.User'))): ?>
+        <div class="row">
+            <div class="col">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <span class="navbar-brand mb-0 h1">Menu</span>
+                    <?= $this->Form->button('<span class="navbar-toggler-icon"></span>', [// TODO: method to show active menu item
+                        'class' => 'navbar-toggler',
+                        'type' => 'button', 
+                        'data-toggle' => 'collapse',
+                        'data-target' => '#navbarAdmin',
+                        'aria-controls' => 'navbarAdmin',
+                        'aria-expanded' => 'false',
+                        'aria-label' => 'Toggle navigation',
+                        'escape' => false
+                    ]) ?>
+                    <div class="collapse navbar-collapse" id="navbarAdmin">
+                        <?php if ($this->request->getSession()->read('Auth.User.user_type_id') == 3): ?>
+                        <?php echo $this->element('customer-menu') ?>
+                        <?php else: ?>
+                        <?php echo $this->element('admin-menu') ?>
+                        <?php endif; ?>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <?php endif; ?>
+    </header>
+
+    <!-- Flash component render -->
     <?= $this->Flash->render() ?>
+
+    <!-- Content -->
     <div class="container clearfix">
         <?= $this->fetch('content') ?>
     </div>
+
+    <!-- Footer -->
     <footer>
     </footer>
+    <?= $this->fetch('scriptBottom') ?>
 </body>
 </html>
