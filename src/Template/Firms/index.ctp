@@ -3,7 +3,22 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Firm[]|\Cake\Collection\CollectionInterface $firms
  */
+
+// Call the Modal element
+echo $this->element('modal');
 ?>
+<div class="row">
+    <div class="col">
+        <?= $this->Html->link(__('Ajouter une société <i class="fas fa-plus-circle"></i>'), '#', [
+            'escape' => false,
+            'data-toggle' => 'modal',
+            'data-target' => '#modal',
+            'data-link' => $this->Url->build(['_name' => 'adminFirmAdd']),
+            'role' => 'button',
+            'class' => 'btn btn-outline-dark'
+        ]) ?>
+    </div>
+</div>
 <div class="row">
     <div class="col">
         <div class="accordion" id="firmsList">
@@ -25,12 +40,12 @@
                         </div>
                         <div class="col-4">
                             <p class="mb-0">
-                                <?= __('Nombre d\'utilisateurs associés: ') ?>
-                                <span class="badge badge-primary badge-pill"><?= $this->Number->format($firm->workers_count) ?></span>
+                                <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->workers_count) ?></span>
+                                <?= __(' utilisateurs associés') ?>
                             </p>
                             <p class="mb-0">
-                                <?= __('Nombre de documents: ') ?>
-                                <span class="badge badge-primary badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
+                                <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
+                                <?= __(' documents') ?>
                             </p>
                         </div>
                         <div class="col-4">
@@ -40,10 +55,16 @@
                                 </div>
                             </div>
                             <div class="row justify-content-center">
-                                <?= $this->Html->link('<i class="far fa-eye"></i>', ['_name' => 'AdminFirmView', $firm->id], ['escape' => false]) ?>
-                                <?= $this->Html->link('<i class="far fa-edit"></i>', ['_name' => 'AdminFirmEdit', $firm->id], ['escape' => false]) ?>
+                                <?= $this->Html->link('<i class="far fa-eye"></i>', ['_name' => 'adminFirmView', $firm->id], ['escape' => false]) ?>
+                                <?= $this->Html->link('<i class="far fa-edit"></i>', '#', [
+                                    'escape' => false,
+                                    'data-toggle' => 'modal',
+                                    'data-target' => '#modal',
+                                    'data-link' => $this->Url->build(['_name' => 'adminFirmEdit', $firm->id]),
+                                    'data-id' => $firm->id
+                                ]) ?>
                                 <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
-                                    '_name' => 'AdminFirmDelete', $firm->id
+                                    '_name' => 'adminFirmDelete', $firm->id
                                 ], [
                                     'escape' => false,
                                     'confirm' => __('Voulez-vous vraiment supprimer la société {0}?', $firm->name)

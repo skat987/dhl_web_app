@@ -54,6 +54,7 @@ class FirmsController extends AppController
         $firm = $this->Firms->newEntity();
         if ($this->request->is('post')) {
             $firm = $this->Firms->patchEntity($firm, $this->request->getData());
+            $firm->added_by = $this->Auth->user('id');
             if ($this->Firms->save($firm)) {
                 $this->Flash->success(__('The firm has been saved.'));
 

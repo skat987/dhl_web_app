@@ -4,33 +4,31 @@
  * @var \App\Model\Entity\Firm $firm
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $firm->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $firm->id)]
-            )
-        ?></li>
-        <li><?= $this->Html->link(__('List Firms'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Customer Files'), ['controller' => 'CustomerFiles', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Customer File'), ['controller' => 'CustomerFiles', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="firms form large-9 medium-8 columns content">
-    <?= $this->Form->create($firm) ?>
-    <fieldset>
-        <legend><?= __('Edit Firm') ?></legend>
-        <?php
-            echo $this->Form->control('name');
-            echo $this->Form->control('workers_count');
-            echo $this->Form->control('customer_files_count');
-            echo $this->Form->control('added_by');
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
+<div class="modal-header">
+    <h4 class="modal-title font-weight-bold" id="firmModalLabel"><?= __('Modifier une société') ?></h4>
+    <?= $this->Form->button('<span aria-hidden="true">&times;</span>', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-label' => 'Close', 'escape' => false]) ?>
 </div>
+<?= $this->Form->create($firm) ?>
+<div class="modal-body">
+    <div class="form-group">
+        <?= $this->Form->control('name', [
+            'label' => ['text' => 'Nom de la société'],
+            'type' => 'text',
+            'class' => 'form-control',
+            'placeholder' => 'Entrer le nom de la société'
+        ]) ?>
+    </div>
+</div>
+<div class="modal-footer">
+    <?= $this->Form->button(__('Annuler'), [
+        'type' => 'button',
+        'class' => 'btn btn-secondary',
+        'data-dismiss' => 'modal'
+    ]) ?>
+    <?= $this->Form->button(__('Envoyer <i class="far fa-paper-plane"></i>'), [
+        'escape' => false,
+        'type' => 'submit',
+        'class' => 'btn btn-dark'
+    ]) ?>
+</div>
+<?= $this->Form->end() ?>

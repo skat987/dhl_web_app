@@ -27,6 +27,7 @@ $appBaseTitle = 'DHL';
     <?= $this->Html->css('fa-all') ?>
     <?= $this->Html->css('bootstrap.min') ?>
     <?= $this->Html->script('jquery-3.3.1.min') ?>
+    <?= $this->Html->script('main', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('bootstrap.min', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('popper.min', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('fa-all', ['block' => 'scriptBottom']) ?>
