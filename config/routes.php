@@ -58,9 +58,19 @@ Router::scope('/', function (RouteBuilder $routes) {
      * ...and connect the rest of 'Pages' controller's URLs.
      */
     $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
+
     $routes->connect('/admin/home', ['controller' => 'Firms', 'action' => 'index'], ['_name' => 'adminHome']);
     $routes->connect('/admin/users', ['controller' => 'Users', 'action' => 'index'], ['_name' => 'adminUsersManager']);
     $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout'], ['_name' => 'logout']);
+    $routes->connect('/admin/firms/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'AdminFirmView'])
+    ->setPatterns(['id' => '\d+'])
+    ->setPass(['id']);
+    $routes->connect('/admin/firms/edit/:id', ['controller' => 'Firms', 'action' => 'edit'], ['_name' => 'AdminFirmEdit'])
+    ->setPatterns(['id' => '\d+'])
+    ->setPass(['id']);
+    $routes->connect('/admin/firms/delete/:id', ['controller' => 'Firms', 'action' => 'delete'], ['_name' => 'AdminFirmDelete'])
+    ->setPatterns(['id' => '\d+'])
+    ->setPass(['id']);
 
     /**
      * Connect catchall routes for all controllers.

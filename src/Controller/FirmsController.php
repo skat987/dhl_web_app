@@ -20,6 +20,9 @@ class FirmsController extends AppController
      */
     public function index()
     {
+        $this->paginate = [
+            'contain' => ['CustomerFiles']
+        ];
         $firms = $this->paginate($this->Firms);
 
         $this->set(compact('firms'));
