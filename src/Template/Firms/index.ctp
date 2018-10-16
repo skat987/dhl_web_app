@@ -55,7 +55,7 @@ echo $this->element('modal');
                                 </div>
                             </div>
                             <div class="row justify-content-center">
-                                <?= $this->Html->link('<i class="far fa-eye"></i>', ['_name' => 'adminFirmView', $firm->id], ['escape' => false]) ?>
+                                <?= $this->Html->link('<i class="far fa-eye"></i>', ['_name' => 'firmView', $firm->id], ['escape' => false]) ?>
                                 <?= $this->Html->link('<i class="far fa-edit"></i>', '#', [
                                     'escape' => false,
                                     'data-toggle' => 'modal',

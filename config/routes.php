@@ -62,7 +62,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/admin/home', ['controller' => 'Firms', 'action' => 'index'], ['_name' => 'adminHome']);
     $routes->connect('/admin/users', ['controller' => 'Users', 'action' => 'index'], ['_name' => 'adminUsersManager']);
     $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout'], ['_name' => 'logout']);
-    $routes->connect('/admin/firms/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'adminFirmView'])
+    $routes->connect('/admin/firms/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'firmView'])
     ->setPatterns(['id' => '\d+'])
     ->setPass(['id']);
     $routes->connect('/admin/firms/edit/:id', ['controller' => 'Firms', 'action' => 'edit'], ['_name' => 'adminFirmEdit'])
@@ -72,6 +72,16 @@ Router::scope('/', function (RouteBuilder $routes) {
     ->setPatterns(['id' => '\d+'])
     ->setPass(['id']);
     $routes->connect('/admin/firms/add', ['controller' => 'Firms', 'action' => 'add'], ['_name' => 'adminFirmAdd']);
+    $routes->connect('/admin/users/:id', ['controller' => 'Users', 'action' => 'view'], ['_name' => 'userView'])
+    ->setPatterns(['id' => '\d+'])
+    ->setPass(['id']);
+    $routes->connect('/admin/users/edit/:id', ['controller' => 'Users', 'action' => 'edit'], ['_name' => 'userEdit'])
+    ->setPatterns(['id' => '\d+'])
+    ->setPass(['id']);
+    $routes->connect('/admin/users/delete/:id', ['controller' => 'Users', 'action' => 'delete'], ['_name' => 'userDelete'])
+    ->setPatterns(['id' => '\d+'])
+    ->setPass(['id']);
+    $routes->connect('/admin/users/add', ['controller' => 'Users', 'action' => 'add'], ['_name' => 'userAdd']);
 
     /**
      * Connect catchall routes for all controllers.

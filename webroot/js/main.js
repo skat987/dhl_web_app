@@ -7,7 +7,7 @@ $(document).ready(function() {
         var id = button.data('id');
         var modal = $(this);
 
-        if (id != null) {          
+        if (id != null) {  
             $.ajax({
                 type: 'GET',
                 url: url,
