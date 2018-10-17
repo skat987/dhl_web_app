@@ -4,31 +4,87 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List User Types'), ['controller' => 'UserTypes', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User Type'), ['controller' => 'UserTypes', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Firms'), ['controller' => 'Firms', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Firm'), ['controller' => 'Firms', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="users form large-9 medium-8 columns content">
-    <?= $this->Form->create($user) ?>
-    <fieldset>
-        <legend><?= __('Add User') ?></legend>
-        <?php
-            echo $this->Form->control('first_name');
-            echo $this->Form->control('last_name');
-            echo $this->Form->control('full_name');
-            echo $this->Form->control('phone');
-            echo $this->Form->control('email');
-            echo $this->Form->control('password');
-            echo $this->Form->control('user_type_id', ['options' => $userTypes]);
-            echo $this->Form->control('firm_id', ['options' => $firms]);
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
+<div class="modal-header">
+    <h4 class="modal-title font-weight-bold" id="modalLabel"><?= __('Ajouter un utilisateur') ?></h4>
+    <?= $this->Form->button('<span aria-hidden="true">&times;</span>', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-label' => 'Close', 'escape' => false]) ?>
 </div>
+<?= $this->Form->create($user) ?>
+<div class="modal-body">
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <?= $this->Form->control('first_name', [
+                'label' => ['text' => 'Prénom'],
+                'type' => 'text',
+                'class' => 'form-control',
+                'placeholder' => 'Prénom',
+                'required' => true
+            ]) ?>
+        </div>
+        <div class="col-md-4 mb-3">
+            <?= $this->Form->control('last_name', [
+                'label' => ['text' => 'Nom'],
+                'type' => 'text',
+                'class' => 'form-control',
+                'placeholder' => 'Nom',
+                'required' => true
+            ]) ?>
+        </div>
+        <div class="col-md-4 mb-3">
+            <?= $this->Form->control('phone', [
+                'label' => ['text' => 'Téléphone'],
+                'type' => 'tel',
+                'class' => 'form-control',
+                'placeholder' => 'N° téléphone'
+            ]) ?>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <?= $this->Form->control('email', [
+                'label' => ['text' => 'Email'],
+                'type' => 'email',
+                'class' => 'form-control',
+                'placeholder' => 'Adresse mail'
+            ]) ?>
+        </div>
+        <div class="col-md-6 mb-3">
+            <?= $this->Form->control('password', [
+                'label' => ['text' => 'Mot de passe'],
+                'type' => 'password',
+                'class' => 'form-control',
+                'placeholder' => 'Mot de passe'
+            ]) ?>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <?= $this->Form->control('user_type_id', [
+                'label' => ['text' => 'Type d\'utilisateur'],
+                'class' => 'form-control',
+                'options' => $userTypes,
+                'empty' => 'Sélectionnez un type'
+            ]) ?>
+        </div>
+        <div class="col-md-6 mb-3">
+            <?= $this->Form->control('firm_id', [
+                'label' => ['text' => 'Société'],
+                'class' => 'form-control',
+                'options' => $firms,
+                'empty' => 'Selectionnez une société'
+            ]) ?>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <?= $this->Form->button(__('Annuler'), [
+        'type' => 'button',
+        'class' => 'btn btn-secondary',
+        'data-dismiss' => 'modal'
+    ]) ?>
+    <?= $this->Form->button(__('Envoyer <i class="far fa-paper-plane"></i>'), [
+        'escape' => false,
+        'type' => 'submit',
+        'class' => 'btn btn-dark'
+    ]) ?>
+</div>
+<?= $this->Form->end() ?>

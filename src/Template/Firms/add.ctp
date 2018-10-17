@@ -5,7 +5,7 @@
  */
 ?>
 <div class="modal-header">
-    <h4 class="modal-title font-weight-bold" id="firmModalLabel"><?= __('Ajouter une société') ?></h4>
+    <h4 class="modal-title font-weight-bold" id="modalLabel"><?= __('Ajouter une société') ?></h4>
     <?= $this->Form->button('<span aria-hidden="true">&times;</span>', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-label' => 'Close', 'escape' => false]) ?>
 </div>
 <?= $this->Form->create($firm) ?>
