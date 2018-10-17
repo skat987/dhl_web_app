@@ -4,65 +4,82 @@
  * @var \App\Model\Entity\User $user
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete User'), ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List User Types'), ['controller' => 'UserTypes', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User Type'), ['controller' => 'UserTypes', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Firms'), ['controller' => 'Firms', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Firm'), ['controller' => 'Firms', 'action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="users view large-9 medium-8 columns content">
-    <h3><?= h($user->id) ?></h3>
-    <table class="vertical-table">
-        <tr>
-            <th scope="row"><?= __('First Name') ?></th>
-            <td><?= h($user->first_name) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Last Name') ?></th>
-            <td><?= h($user->last_name) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Full Name') ?></th>
-            <td><?= h($user->full_name) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Email') ?></th>
-            <td><?= h($user->email) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Password') ?></th>
-            <td><?= h($user->password) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('User Type') ?></th>
-            <td><?= $user->has('user_type') ? $this->Html->link($user->user_type->name, ['controller' => 'UserTypes', 'action' => 'view', $user->user_type->id]) : '' ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Firm') ?></th>
-            <td><?= $user->has('firm') ? $this->Html->link($user->firm->name, ['controller' => 'Firms', 'action' => 'view', $user->firm->id]) : '' ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($user->id) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Phone') ?></th>
-            <td><?= $this->Number->format($user->phone) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Created') ?></th>
-            <td><?= h($user->created) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Modified') ?></th>
-            <td><?= h($user->modified) ?></td>
-        </tr>
-    </table>
+<div class="modal-header">
+    <h4 class="modal-title font-weight-bold" id="modalLabel"><?= __('Profil utilisateur') ?></h4>
+    <?= $this->Form->button('<span aria-hidden="true">&times;</span>', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-label' => 'Close', 'escape' => false]) ?>
 </div>
+<?= $this->Form->create($user) ?>
+<div class="modal-body">
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <?= $this->Form->control('first_name', [
+                'label' => ['text' => 'Prénom', 'class' => 'font-weight-bold'],
+                'type' => 'text',
+                'class' => 'form-control-plaintext',
+                'readonly' => true
+            ]) ?>
+        </div>
+        <div class="col-md-4 mb-3">
+            <?= $this->Form->control('last_name', [
+                'label' => ['text' => 'Nom', 'class' => 'font-weight-bold'],
+                'type' => 'text',
+                'class' => 'form-control-plaintext',
+                'readonly' => true
+            ]) ?>
+        </div>
+        <div class="col-md-4 mb-3">
+            <?= $this->Form->control('phone', [
+                'label' => ['text' => 'Téléphone', 'class' => 'font-weight-bold'],
+                'type' => 'tel',
+                'class' => 'form-control-plaintext',
+                'readonly' => true
+            ]) ?>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <?= $this->Form->control('email', [
+                'label' => ['text' => 'Email', 'class' => 'font-weight-bold'],
+                'type' => 'email',
+                'class' => 'form-control-plaintext',
+                'readonly' => true
+            ]) ?>
+        </div>
+        <div class="col-md-6 mb-3">
+            <?= $this->Form->control('password', [
+                'label' => ['text' => 'Mot de passe', 'class' => 'font-weight-bold'],
+                'type' => 'password',
+                'class' => 'form-control-plaintext',
+                'readonly' => true
+            ]) ?>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <?= $this->Form->control('user_type_id', [
+                'label' => ['text' => 'Type d\'utilisateur', 'class' => 'font-weight-bold'],
+                'type' => 'text',
+                'class' => 'form-control-plaintext',
+                'value' => $user->user_type->name,
+                'readonly' => true
+            ]) ?>
+        </div>
+        <div class="col-md-6 mb-3">
+            <?= $this->Form->control('firm_id', [
+                'label' => ['text' => 'Société', 'class' => 'font-weight-bold'],
+                'type' => 'text',
+                'class' => 'form-control-plaintext',
+                'value' => $user->firm->name,
+                'readonly' => true
+            ]) ?>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <?= $this->Form->button(__('Retour'), [
+        'type' => 'button',
+        'class' => 'btn btn-secondary',
+        'data-dismiss' => 'modal'
+    ]) ?>
+</div>
+<?= $this->Form->end() ?>
