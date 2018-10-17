@@ -164,6 +164,7 @@ class UsersController extends AppController
      * UpdateWorkersCountFirm method
      * 
      * @return void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function updateWorkersCountFirm($id)
     {
@@ -171,7 +172,7 @@ class UsersController extends AppController
         $firm->workers_count++;
         $query = $this->Users->Firms->query();
         $query->update()
-            ->set(['workers_count' => $firm->workers_count])
+            ->set(['workers_count' => $firms->workers_count])
             ->where(['id' => $id])
             ->execute();
     }
