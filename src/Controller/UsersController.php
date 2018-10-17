@@ -65,6 +65,7 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             $user->full_name = $user->first_name . ' ' . $user->last_name;
+            $this->updateWorkersCountFirm($user->firm_id);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
@@ -157,5 +158,21 @@ class UsersController extends AppController
         $this->Flash->success('Vous avez été déconnecté.');
         
         return $this->redirect($this->Auth->logout()); 
+    }
+
+    /**
+     * UpdateWorkersCountFirm method
+     * 
+     * @return void
+     */
+    public function updateWorkersCountFirm($id)
+    {
+        $firm = $this->Users->Firms->get($id);
+        $firm->workers_count++;
+        $query = $this->Users->Firms->query();
+        $query->update()
+            ->set(['workers_count' => $firm->workers_count])
+            ->where(['id' => $id])
+            ->execute();
     }
 }
