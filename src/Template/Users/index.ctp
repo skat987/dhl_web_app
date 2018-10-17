@@ -69,11 +69,11 @@ echo $this->element('modal');
 </div>
 <nav aria-label="user list pagination">
     <ul class="pagination justify-content-center">
-        <?= $this->Paginator->first('<< ' . __('first')) ?>
-        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+        <?= $this->Paginator->first('<< ' . __('Premier')) ?>
+        <?= $this->Paginator->prev('< ' . __('Précédent')) ?>
         <?= $this->Paginator->numbers() ?>
-        <?= $this->Paginator->next(__('next') . ' >') ?>
-        <?= $this->Paginator->last(__('last') . ' >>') ?>
+        <?= $this->Paginator->next(__('Suivant') . ' >') ?>
+        <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
     </ul>
     <p><?= $this->Paginator->counter(['format' => __('Page {{page}} sur {{pages}}, {{current}} enregistrement(s) affichés sur {{count}}')]) ?></p>
 </nav>
