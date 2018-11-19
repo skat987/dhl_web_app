@@ -6,6 +6,11 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+// for additionnals method
+use Cake\Event\Event;
+use Cake\Datasource\EntityInterface;
+use ArrayObject;
+
 /**
  * Users Model
  *
@@ -80,9 +85,10 @@ class UsersTable extends Table
             ->scalar('full_name')
             ->maxLength('full_name', 45)
             ->allowEmpty('full_name');
-
+        
         $validator
-            ->integer('phone')
+            ->scalar('phone')
+            ->maxLength('phone', 45)
             ->allowEmpty('phone');
 
         $validator
@@ -114,5 +120,34 @@ class UsersTable extends Table
         $rules->add($rules->existsIn(['firm_id'], 'Firms'));
 
         return $rules;
+    }
+
+    /**
+     * BeforeSave method
+     */
+    public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        if ($entity->isDirty('first_name') || $entity->isDirty('last_name')) {
+            $entity->full_name = $entity->first_name . ' ' . $entity->last_name;
+        }
+
+        if (!$entity->isNew() && $entity->isDirty('firm_id')) {
+            $oldFirm = $this->Firms->get($entity->getOriginal('firm_id'));
+            $oldFirm->workers_count = $this->find()->where(['firm_id' => $oldFirm->id])->count() - 1;
+            $this->Firms->save($oldFirm);
+        }
+
+    }
+
+    /**
+     * AfterSave method
+     */
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        if($entity->isDirty('firm_id')) {
+            $firm = $this->Firms->get($entity->firm_id);
+            $firm->workers_count = $this->find()->where(['firm_id' => $firm->id])->count();
+            $this->Firms->save($firm);
+        }
     }
 }

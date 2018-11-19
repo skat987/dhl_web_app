@@ -19,14 +19,14 @@
     </ul>
 </nav>
 <div class="customerFiles form large-9 medium-8 columns content">
-    <?= $this->Form->create($customerFile) ?>
+    <?= $this->Form->create($customerFile, ['type' => 'file']) ?>
     <fieldset>
         <legend><?= __('Edit Customer File') ?></legend>
-        <?php
+        <?php            
             echo $this->Form->control('file_name');
-            echo $this->Form->control('firm_id', ['options' => $firms]);
-            echo $this->Form->control('tag');
-            echo $this->Form->control('added_by');
+            echo $this->Form->control('file', ['type' => 'file', 'defaultValue' => $customerFile->file]);
+            echo $this->Form->control('firm_id', ['options' => $firms, 'id' => 'firmsList', 'empty' => 'Sélectionner une société']);
+            echo $this->Form->control('dir_name', ['type' => 'select', 'id' => 'dirsList', 'empty' => 'Sélectionner un dossier']);
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

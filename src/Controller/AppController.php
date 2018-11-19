@@ -53,6 +53,7 @@ class AppController extends Controller
         //$this->loadComponent('Security');
 
         $this->loadComponent('Auth', [
+            'authorize'=> 'Controller',
             'authenticate' => [
                 'Form' => [
                     'fields' => [
@@ -67,5 +68,12 @@ class AppController extends Controller
             ],
             'unauthorizedRedirect' => $this->referer()
         ]);
+        $this->Auth->allow(['view', 'index']);
+    }
+
+    public function isAuthorized($user)
+    {
+        dd($user);
+        return false;
     }
 }

@@ -6,6 +6,12 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+// for additionnals method
+use Cake\Event\Event;
+use Cake\Datasource\EntityInterface;
+use ArrayObject;
+use Cake\Filesystem\Folder;
+
 /**
  * Firms Model
  *
@@ -83,4 +89,14 @@ class FirmsTable extends Table
 
         return $validator;
     }
+
+     /**
+     * BeforeSave method
+     */
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        if ($entity->isNew()) {
+            $newDir = new Folder(WWW_ROOT . 'uploads' . DS . $entity->id, true);
+        }
+    }    
 }

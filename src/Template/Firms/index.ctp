@@ -3,7 +3,8 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Firm[]|\Cake\Collection\CollectionInterface $firms
  */
-
+//dd($firms);
+$this->assign('title', 'Liste des sociétés');
 // Call the Modal element
 echo $this->element('modal');
 ?>
@@ -14,6 +15,14 @@ echo $this->element('modal');
             'data-toggle' => 'modal',
             'data-target' => '#modal',
             'data-link' => $this->Url->build(['_name' => 'adminFirmAdd']),
+            'role' => 'button',
+            'class' => 'btn btn-outline-dark'
+        ]) ?>
+        <?= $this->Html->link(__('Ajouter un document <i class="fas fa-plus-circle"></i>'), '#', [
+            'escape' => false,
+            'data-toggle' => 'modal',
+            'data-target' => '#modal',
+            'data-link' => $this->Url->build(['_name' => 'addCustomerFile']),
             'role' => 'button',
             'class' => 'btn btn-outline-dark'
         ]) ?>
@@ -28,13 +37,13 @@ echo $this->element('modal');
                     <div class="row">
                         <div class="col-4">
                             <h5 class="mb-0">
-                                <?= $this->Form->button(__(h($firm->name)), [
+                                <?= $this->Form->button(h($firm->name), [
                                     'class' => 'btn btn-link',
                                     'type' => 'button',
                                     'data-toggle' => 'collapse',
                                     'data-target' => '#collapse_' . $firm->id,
                                     'aria-expanded' => 'false',
-                                    'aria-controls' => 'collapse_' .$firm->id
+                                    'aria-controls' => 'collapse_' . $firm->id
                                 ]) ?>
                             </h5>
                         </div>
@@ -73,14 +82,67 @@ echo $this->element('modal');
                         </div>
                     </div>
                 </div>
-                <?php if ($firm->customer_files_count > 0): ?>
+                <?php if (($firm->customer_files_count > 0)): $currentDir = $firm->customer_files[0]->dir_name; ?>
+                <?php foreach ($firm->customer_files as $customer_file): 
+                    if (isset($customer_file->dir_name)):
+                        echo $currentDir;
+                        if ($currentDir == $customer_file->dir_name):
+                            echo  $customer_file->file->name(); 
+                        else:
+                            $currentDir = $customer_file->dir_name;
+                            echo  $customer_file->file->name();
+                        endif;
+                    else:
+                    endif;
+                    endforeach; ?>
                 <div id=<?= __('collapse_') . $firm->id ?> class="collapse" aria-labelledby=<?= __("heading_") . $firm->id ?> data-parent="#firmsList">
                     <div class="card-body">
-                        <ul class="list-group">
-                            <?php foreach ($firm->customer_files as $customerFile): ?>
-                            <li class="list-group-item"><?= h($customerFile->file_name) ?></li>
+                        <div class="accordion" id=<?= __('list_firm_') . $firm->id ?>>
+                            <?php if (isset($dir[$firm->id]['subDirs'])): ?>
+                            <?php foreach($dir[$firm->id]['subDirs'] as $key => $subDir): ?>
+                            <div class="card">
+                                <div class="card-header" id=<?= __("heading_firm_") . $firm->id . __('_dir_') . $key ?>>
+                                <h5 class="mb-0">
+                                    <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($subDir['name']), [
+                                        'escape' => false,
+                                        'class' => 'btn btn-link',
+                                        'type' => 'button',
+                                        'data-toggle' => 'collapse',
+                                        'data-target' => '#collapse_firm_' . $firm->id . __('_dir_') . $key,
+                                        'aria-expanded' => 'false',
+                                        'aria-controls' => 'collapse_firm_' . $firm->id . __('_dir_') . $key
+                                    ]) ?>
+                                </h5>
+                                </div>
+                                <div id=<?= __('collapse_firm_') . $firm->id . __('_dir_') . $key ?> class="collapse" aria-labelledby=<?= __("heading_firm_") . $firm->id . __('_dir_') . $key ?> data-parent=<?= __('#list_firm_') . $firm->id ?>>
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            <?php if (isset($subDir['files'])): ?>
+                                            <?php foreach($subDir['files'] as $file): ?>
+                                            <li class="list-group-item">
+                                                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($file->name()), 
+                                                    $file->pwd(), 
+                                                    ['escape' => false]) 
+                                                ?>
+                                            </li>
+                                            <?php endforeach; ?>
+                                            <?php else: ?>
+                                            <li class="list-group-item"><?= __('Dossier vide') ?></li>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                             <?php endforeach; ?>
-                        </ul>
+                            <?php endif; ?>
+                            <?php if (isset($dir[$firm->id]['files'])): ?>
+                            <ul class="list-group">
+                                <?php foreach($dir[$firm->id]['files'] as $singleFile): ?>
+                                <li class="list-group-item"><i class="far fa-file"></i><?= __(' ') . h($singleFile->name()) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
                 <?php endif; ?>

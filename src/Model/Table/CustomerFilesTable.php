@@ -6,6 +6,12 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+
+// for additionnals method
+use Cake\Event\Event;
+use Cake\Datasource\EntityInterface;
+use ArrayObject;
+
 /**
  * CustomerFiles Model
  *
@@ -36,10 +42,12 @@ class CustomerFilesTable extends Table
         parent::initialize($config);
 
         $this->setTable('customer_files');
-        $this->setDisplayField('id');
+        $this->setDisplayField('file_name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->addBehavior('Upload');
 
         $this->belongsTo('Firms', [
             'foreignKey' => 'firm_id',
@@ -66,8 +74,9 @@ class CustomerFilesTable extends Table
             ->notEmpty('file_name');
 
         $validator
-            ->integer('tag')
-            ->allowEmpty('tag');
+            ->scalar('dir_name')
+            ->maxLength('dir_name', 45)
+            ->allowEmpty('dir_name');
 
         $validator
             ->integer('added_by')
@@ -89,5 +98,39 @@ class CustomerFilesTable extends Table
         $rules->add($rules->existsIn(['firm_id'], 'Firms'));
 
         return $rules;
+    }
+
+    /**
+     * BeforeSave method
+     */
+    public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        if (!$entity->isNew() && $entity->isDirty('firm_id')) {
+            $oldFirm = $this->Firms->get($entity->getOriginal('firm_id'));
+            $oldFirm->customer_files_count = $this->find()->where(['firm_id' => $oldFirm->id])->count() - 1;
+            $this->Firms->save($oldFirm);
+        }
+    }
+
+    /**
+     * AfterSave method
+     */
+    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        if ($entity->isDirty('firm_id')) {
+            $firm = $this->Firms->get($entity->firm_id);
+            $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
+            $this->Firms->save($firm);
+        }
+    }
+
+    /**
+     * AfterDelete method
+     */
+    public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $firm = $this->Firms->get($entity->firm_id);
+        $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
+        $this->Firms->save($firm);
     }
 }

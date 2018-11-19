@@ -4,6 +4,7 @@
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
  */
 
+$this->assign('title', 'Liste des utilisateurs');
 // Call the Modal element
 echo $this->element('modal');
 ?>
@@ -36,7 +37,7 @@ echo $this->element('modal');
             <?php foreach ($users as $user): ?>
             <tr>
                 <td><?= h($user->full_name) ?></td>
-                <td><?= $this->Number->format($user->phone) ?></td>
+                <td><?= h($user->phone) ?></td>
                 <td><?= h($user->email) ?></td>
                 <td><?= $user->has('user_type') ? h($user->user_type->name) : '' ?></td>
                 <td><?= $user->has('firm') ? $this->Html->link($user->firm->name, ['_name' => 'firmView', $user->firm->id]) : '' ?></td>

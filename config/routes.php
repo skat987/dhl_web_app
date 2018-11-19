@@ -47,31 +47,29 @@ use Cake\Routing\Route\DashedRoute;
 Router::defaultRouteClass(DashedRoute::class);
 
 Router::scope('/', function (RouteBuilder $routes) {
+   
     /**
-     * Here, we are connecting '/' (base path) to a controller called 'Pages',
-     * its action called 'display', and we pass a param to select the view file
-     * to use (in this case, src/Template/Pages/home.ctp)...
+     * Default routes
      */
-    $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-
-    /**
-     * ...and connect the rest of 'Pages' controller's URLs.
-     */
-    $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-
-    $routes->connect('/admin/home', ['controller' => 'Firms', 'action' => 'index'], ['_name' => 'adminHome']);
-    $routes->connect('/admin/users', ['controller' => 'Users', 'action' => 'index'], ['_name' => 'adminUsersManager']);
+    $routes->connect('/', ['controller' => 'Users', 'action' => 'login'], ['_name' => 'login']);
     $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout'], ['_name' => 'logout']);
-    $routes->connect('/admin/firms/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'firmView'])
+
+    /**
+     * Admin routes
+     */
+    $routes->connect('/admin/home', ['controller' => 'Firms', 'action' => 'index'], ['_name' => 'adminHome']);
+    $routes->connect('/admin/firm/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'firmView'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/admin/firms/edit/:id', ['controller' => 'Firms', 'action' => 'edit'], ['_name' => 'adminFirmEdit'])
+    $routes->connect('/admin/firm/:id/edit', ['controller' => 'Firms', 'action' => 'edit'], ['_name' => 'adminFirmEdit'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/admin/firms/delete/:id', ['controller' => 'Firms', 'action' => 'delete'], ['_name' => 'adminFirmDelete'])
+    $routes->connect('/admin/firm/:id/delete', ['controller' => 'Firms', 'action' => 'delete'], ['_name' => 'adminFirmDelete'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
     $routes->connect('/admin/firms/add', ['controller' => 'Firms', 'action' => 'add'], ['_name' => 'adminFirmAdd']);
+    
+    $routes->connect('/admin/users', ['controller' => 'Users', 'action' => 'index'], ['_name' => 'adminUsers']);
     $routes->connect('/admin/users/:id', ['controller' => 'Users', 'action' => 'view'], ['_name' => 'userView'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
@@ -82,6 +80,12 @@ Router::scope('/', function (RouteBuilder $routes) {
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
     $routes->connect('/admin/users/add', ['controller' => 'Users', 'action' => 'add'], ['_name' => 'userAdd']);
+
+    $routes->connect('/customer-files/add', ['controller' => 'CustomerFiles', 'action' => 'add'], ['_name' => 'addCustomerFile']);
+
+    /**
+     * Customer routes TODO
+     */
 
     /**
      * Connect catchall routes for all controllers.

@@ -3,111 +3,76 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Firm $firm
  */
+
+$this->assign('title', 'Espace client');
 ?>
-<div class="firms view large-9 medium-8 columns content">
-    <h3><?= h($firm->name) ?></h3>
-    <table class="vertical-table">
-        <tr>
-            <th scope="row"><?= __('Name') ?></th>
-            <td><?= h($firm->name) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($firm->id) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Workers Count') ?></th>
-            <td><?= $this->Number->format($firm->workers_count) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Customer Files Count') ?></th>
-            <td><?= $this->Number->format($firm->customer_files_count) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Added By') ?></th>
-            <td><?= $this->Number->format($firm->added_by) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Created') ?></th>
-            <td><?= h($firm->created) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Modified') ?></th>
-            <td><?= h($firm->modified) ?></td>
-        </tr>
-    </table>
-    <div class="related">
-        <h4><?= __('Related Customer Files') ?></h4>
-        <?php if (!empty($firm->customer_files)): ?>
-        <table cellpadding="0" cellspacing="0">
-            <tr>
-                <th scope="col"><?= __('Id') ?></th>
-                <th scope="col"><?= __('File Name') ?></th>
-                <th scope="col"><?= __('Firm Id') ?></th>
-                <th scope="col"><?= __('Tag') ?></th>
-                <th scope="col"><?= __('Added By') ?></th>
-                <th scope="col"><?= __('Created') ?></th>
-                <th scope="col"><?= __('Modified') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
-            <?php foreach ($firm->customer_files as $customerFiles): ?>
-            <tr>
-                <td><?= h($customerFiles->id) ?></td>
-                <td><?= h($customerFiles->file_name) ?></td>
-                <td><?= h($customerFiles->firm_id) ?></td>
-                <td><?= h($customerFiles->tag) ?></td>
-                <td><?= h($customerFiles->added_by) ?></td>
-                <td><?= h($customerFiles->created) ?></td>
-                <td><?= h($customerFiles->modified) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'CustomerFiles', 'action' => 'view', $customerFiles->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'CustomerFiles', 'action' => 'edit', $customerFiles->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'CustomerFiles', 'action' => 'delete', $customerFiles->id], ['confirm' => __('Are you sure you want to delete # {0}?', $customerFiles->id)]) ?>
-                </td>
-            </tr>
+<div class="row">
+    <div class="jumbotron jumbotron-fluid col">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h1 class="display-4 text-center"><?= h($firm->name) ?></h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <p class="lead text-center">
+                        <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->workers_count) ?></span>
+                        <?= __(' utilisateurs associés') ?>
+                    </p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <p class="lead text-center">
+                        <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
+                        <?= __(' documents') ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <?php if (isset($dir) && (count($dir) > 0)): ?>
+    <div class="accordion col" id="accordion_firms_view">
+        <?php if (isset($dir['subDirs'])): ?>
+        <?php foreach ($dir['subDirs'] as $key => $subDir): ?>
+        <div class="card">
+            <div class="card-header" id=<?= __('accordion_firms_view_') . $key ?>>
+                <h5 class="mb-0">
+                    <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($subDir['name']), [
+                        'escape' => false,
+                        'class' => 'btn btn-link',
+                        'type' => 'button',
+                        'data-toggle' => 'collapse',
+                        'data-target' => '#collapse_firms_view_' . $key,
+                        'aria-expanded' => 'false',
+                        'aria-controls' => 'collapse_firms_view_' . $key
+                    ]) ?>
+                </h5>
+            </div>
+            <div id=<?= __('collapse_firms_view_') . $key ?> class="collapse" aria-labelledby=<?= __('accordion_firms_view_') . $key ?> data-parent="#accordion_firms_view">
+                <div class="card-body">
+                    <ul class="list-group">
+                        <?php if (isset($subDir['files'])): ?>
+                        <?php foreach ($subDir['files'] as $file): ?>
+                        <li class="list-group-item"><i class="far fa-file"></i><?= __(' ') . h($file->name()) ?></li>
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                        <li class="list-group-item"><?= __('Dossier vide') ?></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+        <?php endif; ?>
+        <?php if (isset($dir['files'])): ?>
+        <ul class="list-group">
+            <?php foreach($dir['files'] as $singleFile): ?>
+            <li class="list-group-item"><i class="far fa-file"></i><?= __(' ') . h($singleFile->name()) ?></li>
             <?php endforeach; ?>
-        </table>
+        </ul>
         <?php endif; ?>
     </div>
-    <div class="related">
-        <h4><?= __('Related Users') ?></h4>
-        <?php if (!empty($firm->users)): ?>
-        <table cellpadding="0" cellspacing="0">
-            <tr>
-                <th scope="col"><?= __('Id') ?></th>
-                <th scope="col"><?= __('First Name') ?></th>
-                <th scope="col"><?= __('Last Name') ?></th>
-                <th scope="col"><?= __('Full Name') ?></th>
-                <th scope="col"><?= __('Phone') ?></th>
-                <th scope="col"><?= __('Email') ?></th>
-                <th scope="col"><?= __('Password') ?></th>
-                <th scope="col"><?= __('User Type Id') ?></th>
-                <th scope="col"><?= __('Firm Id') ?></th>
-                <th scope="col"><?= __('Created') ?></th>
-                <th scope="col"><?= __('Modified') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
-            <?php foreach ($firm->users as $users): ?>
-            <tr>
-                <td><?= h($users->id) ?></td>
-                <td><?= h($users->first_name) ?></td>
-                <td><?= h($users->last_name) ?></td>
-                <td><?= h($users->full_name) ?></td>
-                <td><?= h($users->phone) ?></td>
-                <td><?= h($users->email) ?></td>
-                <td><?= h($users->password) ?></td>
-                <td><?= h($users->user_type_id) ?></td>
-                <td><?= h($users->firm_id) ?></td>
-                <td><?= h($users->created) ?></td>
-                <td><?= h($users->modified) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'Users', 'action' => 'view', $users->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'Users', 'action' => 'edit', $users->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Users', 'action' => 'delete', $users->id], ['confirm' => __('Are you sure you want to delete # {0}?', $users->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-        <?php endif; ?>
-    </div>
+    <?php endif; ?>
 </div>

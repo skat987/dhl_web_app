@@ -20,7 +20,7 @@
                 <th scope="col"><?= $this->Paginator->sort('id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('file_name') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('firm_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('tag') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('dir_name') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('added_by') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
@@ -33,7 +33,7 @@
                 <td><?= $this->Number->format($customerFile->id) ?></td>
                 <td><?= h($customerFile->file_name) ?></td>
                 <td><?= $customerFile->has('firm') ? $this->Html->link($customerFile->firm->name, ['controller' => 'Firms', 'action' => 'view', $customerFile->firm->id]) : '' ?></td>
-                <td><?= $this->Number->format($customerFile->tag) ?></td>
+                <td><?= h($customerFile->dir_name) ?></td>
                 <td><?= $this->Number->format($customerFile->added_by) ?></td>
                 <td><?= h($customerFile->created) ?></td>
                 <td><?= h($customerFile->modified) ?></td>

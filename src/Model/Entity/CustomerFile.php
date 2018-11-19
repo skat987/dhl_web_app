@@ -3,6 +3,10 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 
+// for additionnals method
+use Cake\Filesystem\Folder;
+use Cake\Filesystem\File;
+
 /**
  * CustomerFile Entity
  *
@@ -31,10 +35,28 @@ class CustomerFile extends Entity
     protected $_accessible = [
         'file_name' => true,
         'firm_id' => true,
-        'tag' => true,
+        'dir_name' => true,
         'added_by' => true,
         'created' => true,
         'modified' => true,
-        'firm' => true
+        'firm' => true,
+        'file' => true
     ];
+
+    protected function _getFile()
+    {
+        if (!$this->isNew()) {            
+            $path = ($this->_properties['dir_name']) ? WWW_ROOT . 'uploads' . DS . $this->_properties['firm_id'] . DS . $this->_properties['dir_name'] . DS . $this->_properties['file_name'] : WWW_ROOT . 'uploads' . DS . $this->_properties['firm_id'] . DS . $this->_properties['file_name'];
+            return new File($path);
+        }
+    }
+
+    protected function _setFile($file)
+    {
+        if (isset($file)) {            
+            $path = (isset($this->_properties['dir_name'])) ? WWW_ROOT . 'uploads' . DS . $this->_properties['firm_id'] . DS . $this->_properties['dir_name'] . DS . $file['name'] : WWW_ROOT . 'uploads' . DS . $this->_properties['firm_id'] . DS . $file['name'];
+            move_uploaded_file($file['tmp_name'], $path);
+            return new File($path);
+        }
+    }
 }
