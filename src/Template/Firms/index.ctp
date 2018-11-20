@@ -121,7 +121,7 @@ echo $this->element('modal');
                                             <?php foreach($subDir['files'] as $file): ?>
                                             <li class="list-group-item">
                                                 <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($file->name()), 
-                                                    $file->pwd(), 
+                                                    '/uploads/' . $firm->id . DS . $subDir['name'] . DS . $file->name, 
                                                     ['escape' => false]) 
                                                 ?>
                                             </li>

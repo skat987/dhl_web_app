@@ -48,14 +48,14 @@ function showModal(modal) {
     });
 }
 
-// function showFileSelected(modal) {
-//     modal.on('shown.bs.modal', function() {
-//         var fileInput = modal.find('#fileSelected');
-//         fileInput.bind('change', function() {
-//             console.log('file input', $(this).);
-//         });
-//     });
-// }
+function showFileSelected(modal) {
+    // modal.on('shown.bs.modal', function() {
+    //     var fileInput = modal.find('#fileSelected');
+    //     fileInput.bind('change', function() {
+    //         console.log('file input', $(this));
+    //     });
+    // });
+}
 
 function setDirsSelect(modal) {
     modal.on('shown.bs.modal', function() {

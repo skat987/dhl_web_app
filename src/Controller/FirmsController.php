@@ -48,6 +48,7 @@ class FirmsController extends AppController
         ];
         $firms = $this->paginate($this->Firms);
         $dir = $this->getFilesList();
+        // dd(hash_algos());
         $this->set(compact('firms', 'dir'));
     }
 
