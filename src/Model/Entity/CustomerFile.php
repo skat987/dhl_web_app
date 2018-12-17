@@ -43,6 +43,9 @@ class CustomerFile extends Entity
         'file' => true
     ];
 
+    /**
+     * Accessor for the file property
+     */
     protected function _getFile()
     {
         if (!$this->isNew()) {            
@@ -51,6 +54,9 @@ class CustomerFile extends Entity
         }
     }
 
+    /**
+     * Mutator for the file property
+     */
     protected function _setFile($file)
     {
         if (isset($file)) {            

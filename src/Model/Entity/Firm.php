@@ -3,6 +3,9 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 
+// for additionnals method
+use Cake\Filesystem\Folder;
+
 /**
  * Firm Entity
  *
@@ -37,6 +40,17 @@ class Firm extends Entity
         'created' => true,
         'modified' => true,
         'customer_files' => true,
-        'users' => true
+        'users' => true,
+        'dir' => true
     ];
+
+    /**
+     * Accessor for the dir property
+     */
+    protected function _getDir()
+    {
+        if (!$this->isNew()) {
+            return new Folder(UPLOADS . $this->_properties['id']);
+        }
+    }
 }

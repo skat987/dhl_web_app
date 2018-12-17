@@ -91,7 +91,7 @@ class FirmsTable extends Table
     }
 
      /**
-     * BeforeSave method
+     * AfterSave method
      */
     public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {

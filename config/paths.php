@@ -83,3 +83,9 @@ define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor' . DS . 'cakephp' . DS . 'c
  */
 define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
 define('CAKE', CORE_PATH . 'src' . DS);
+
+//---------------------------------- Ajout christopher 2018/11/19 -------------------------//
+/**
+ * Path to the uploads directory.
+ */
+define('UPLOADS', WWW_ROOT . 'uploads' . DS);

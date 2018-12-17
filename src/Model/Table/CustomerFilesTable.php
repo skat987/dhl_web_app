@@ -47,8 +47,6 @@ class CustomerFilesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->addBehavior('Upload');
-
         $this->belongsTo('Firms', [
             'foreignKey' => 'firm_id',
             'joinType' => 'INNER'
@@ -98,6 +96,19 @@ class CustomerFilesTable extends Table
         $rules->add($rules->existsIn(['firm_id'], 'Firms'));
 
         return $rules;
+    }
+
+    /**
+     * BeforeMarshal method
+     */
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        if (isset($data['file'])) {
+            $data['file_name'] = $data['file']['name'];
+        }
+        if (isset($data['dir_name'])) {
+            $data['dir_name'] = ($data['dir_name'] == 'null') ? null : $data['dir_name'];
+        }
     }
 
     /**
