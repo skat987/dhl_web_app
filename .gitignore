@@ -38,3 +38,6 @@ nbproject/*
 .vscode
 # Sass preprocessor
 .sass-cache/
+
+# Ajout Christopher, le 17/12/2018 #
+/webroot/uploads/*
