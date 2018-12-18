@@ -131,7 +131,7 @@ class CustomerFilesController extends AppController
      */
     public function getFirmDirectories($firmId)
     {
-        $dir = new Folder(WWW_ROOT . 'uploads' . DS . $firmId);
+        $dir = new Folder(UPLOADS . $firmId);
         $directories = $dir->read()[0];
         $this->set(compact('directories'));
     }
@@ -143,7 +143,7 @@ class CustomerFilesController extends AppController
     {
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            $dir = new Folder(WWW_ROOT . 'uploads' . DS . $data['firmId']);
+            $dir = new Folder(UPLOADS . $data['firmId']);
             $newDir = new Folder($dir->pwd() . DS . $data['newDir'], true);
             $resp = [
                 'message' => 'Le dossier ' . $data['newDir'] . ' a bien été créé.',

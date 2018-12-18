@@ -59,7 +59,7 @@ class UploadBehavior extends Behavior
      */
     private function createFile($entity)
     {
-        $dir = new Folder(WWW_ROOT . 'uploads' . DS . $entity->firm_id);   
+        $dir = new Folder(UPLOADS . $entity->firm_id);   
         $path = (is_null($entity->dir_name)) ? $dir->addPathElement($dir->pwd(), $entity->file_name) : $dir->addPathElement($dir->pwd(), [$entity->dir_name,  $entity->file_name]);
         move_uploaded_file($entity->file['tmp_name'], $path);
     }
@@ -69,7 +69,7 @@ class UploadBehavior extends Behavior
      */
     private function updateFile($entity)
     {
-        $dir = new Folder(WWW_ROOT . 'uploads' . DS . $entity->firm_id);        
+        $dir = new Folder(UPLOADS . $entity->firm_id);        
         $path = (is_null($entity->getOriginal('dir_name'))) ? $dir->addPathElement($dir->pwd(), $entity->getOriginal('file_name')) : $dir->addPathElement($dir->pwd(), [$entity->getOriginal('dir_name'), $entity->getOriginal('file_name')]);
         $file = new File($path);
 
@@ -82,7 +82,7 @@ class UploadBehavior extends Behavior
         }
         
         if ($entity->isDirty('firm_id')) {
-            $newDir = new Folder(WWW_ROOT . 'uploads' . DS . $entity->firm_id);
+            $newDir = new Folder(UPLOADS . $entity->firm_id);
 
             if (!is_null($entity->dir_name)) {
                 $newDir = new Folder($newDir->pwd() . DS . $entity->dir_name);
@@ -98,7 +98,7 @@ class UploadBehavior extends Behavior
      */
     public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        $dir = new Folder(WWW_ROOT . 'uploads' . DS . $entity->firm_id);        
+        $dir = new Folder(UPLOADS . $entity->firm_id);        
         $path = (is_null($entity->dir_name)) ? $dir->addPathElement($dir->pwd(), $entity->file_name) : $dir->addPathElement($dir->pwd(), [$entity->dir_name, $entity->file_name]);
         $file = new File($path);
         $file->delete();

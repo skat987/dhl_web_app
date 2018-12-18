@@ -49,7 +49,7 @@ $appBaseTitle = 'DHL';
             <div class="col">
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                     <span class="navbar-brand mb-0 h1">Menu</span>
-                    <?= $this->Form->button('<span class="navbar-toggler-icon"></span>', [// TODO: method to show active menu item
+                    <?= $this->Form->button('<span class="navbar-toggler-icon"></span>', [// TODO: afficher quel item est actif dans le menu
                         'class' => 'navbar-toggler',
                         'type' => 'button', 
                         'data-toggle' => 'collapse',

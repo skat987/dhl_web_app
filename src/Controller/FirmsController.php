@@ -65,7 +65,7 @@ class FirmsController extends AppController
         ]);
         $list = $this->getFilesList();
         $dir = (isset($list[$id])) ? $list[$id] : []; 
-        dd($firm);       
+        //dd($firm);       
         $this->set(compact('firm', 'dir'));
     }
 
@@ -140,7 +140,7 @@ class FirmsController extends AppController
         $content = $dir->read()[0];
         $results = [];        
         foreach($content as $key => $value) {
-            $path = WWW_ROOT . 'uploads' . DS . $value;
+            $path = UPLOADS . $value;
             $dir->cd($path);
             $contentDirs = $dir->read()[0];
             $contentFiles = $dir->read()[1];            

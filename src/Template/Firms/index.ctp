@@ -33,7 +33,7 @@ echo $this->element('modal');
         <div class="accordion" id="firmsList">
             <?php foreach ($firms as $firm):?>
             <div class="card">
-                <div class="card-header" id=<?= __("heading_") . $firm->id ?>>
+                <div class="card-header" id=<?= __('heading_') . $firm->id ?>>
                     <div class="row">
                         <div class="col-4">
                             <h5 class="mb-0">
@@ -83,13 +83,13 @@ echo $this->element('modal');
                     </div>
                 </div>
                 <?php if (($firm->customer_files_count > 0)): ?>
-                <div id=<?= __('collapse_') . $firm->id ?> class="collapse" aria-labelledby=<?= __("heading_") . $firm->id ?> data-parent="#firmsList">
+                <div id=<?= __('collapse_') . $firm->id ?> class="collapse" aria-labelledby=<?= __('heading_') . $firm->id ?> data-parent="#firmsList">
                     <div class="card-body">
                         <!-- <div class="accordion" id=<?= __('list_firm_') . $firm->id ?>>
                             <?php if (isset($dir[$firm->id]['subDirs'])): ?>
                             <?php foreach($dir[$firm->id]['subDirs'] as $key => $subDir): ?>
                             <div class="card">
-                                <div class="card-header" id=<?= __("heading_firm_") . $firm->id . __('_dir_') . $key ?>>
+                                <div class="card-header" id=<?= __('heading_firm_') . $firm->id . __('_dir_') . $key ?>>
                                 <h5 class="mb-0">
                                     <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($subDir['name']), [
                                         'escape' => false,
@@ -102,16 +102,17 @@ echo $this->element('modal');
                                     ]) ?>
                                 </h5>
                                 </div>
-                                <div id=<?= __('collapse_firm_') . $firm->id . __('_dir_') . $key ?> class="collapse" aria-labelledby=<?= __("heading_firm_") . $firm->id . __('_dir_') . $key ?> data-parent=<?= __('#list_firm_') . $firm->id ?>>
+                                <div id=<?= __('collapse_firm_') . $firm->id . __('_dir_') . $key ?> class="collapse" aria-labelledby=<?= __('heading_firm_') . $firm->id . __('_dir_') . $key ?> data-parent=<?= __('#list_firm_') . $firm->id ?>>
                                     <div class="card-body">
                                         <ul class="list-group">
                                             <?php if (isset($subDir['files'])): ?>
                                             <?php foreach($subDir['files'] as $file): ?>
                                             <li class="list-group-item">
-                                                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($file->name()), 
+                                                <?= $this->Html->link(
+                                                    __('<i class="far fa-file"></i> ') . h($file->name()), 
                                                     'uploads' . DS . $firm->id . DS . $subDir['name'] . DS . $file->name, 
-                                                    ['escape' => false]) 
-                                                ?>
+                                                    ['escape' => false]
+                                                ) ?>
                                             </li>
                                             <?php endforeach; ?>
                                             <?php else: ?>
@@ -133,9 +134,9 @@ echo $this->element('modal');
                         </div> -->
                         <div class="accordion" id=<?= __('list_firm_') . $firm->id ?>>
                             <?php if (count($firm->dir->read()[0]) > 0): ?>
-                            <?php foreach($firm->dir->read()[0] as $key => $subDir): $firm->dir->cd($subDir); dd($firm->dir->read()) ?>
+                            <?php foreach($firm->dir->read()[0] as $key => $subDir): $firm->dir->cd($subDir); /*dd($firm->dir->read())*/ ?>
                             <div class="card">
-                                <div class="card-header" id=<?= __("heading_firm_") . $firm->id . __('_dir_') . $key ?>>
+                                <div class="card-header" id=<?= __('heading_firm_') . $firm->id . __('_dir_') . $key ?>>
                                 <h5 class="mb-0">
                                     <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($subDir), [
                                         'escape' => false,
@@ -148,7 +149,7 @@ echo $this->element('modal');
                                     ]) ?>
                                 </h5>
                                 </div>
-                                <div id=<?= __('collapse_firm_') . $firm->id . __('_dir_') . $key ?> class="collapse" aria-labelledby=<?= __("heading_firm_") . $firm->id . __('_dir_') . $key ?> data-parent=<?= __('#list_firm_') . $firm->id ?>>
+                                <div id=<?= __('collapse_firm_') . $firm->id . __('_dir_') . $key ?> class="collapse" aria-labelledby=<?= __('heading_firm_') . $firm->id . __('_dir_') . $key ?> data-parent=<?= __('#list_firm_') . $firm->id ?>>
                                     <div class="card-body">
                                         <ul class="list-group">
                                             <?php if (isset($subDir['files'])): ?>
