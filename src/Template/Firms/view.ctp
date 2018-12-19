@@ -32,44 +32,68 @@ $this->assign('title', 'Espace client');
     </div>
 </div>
 <div class="row">
-    <?php if (isset($dir) && (count($dir) > 0)): ?>
-    <div class="accordion col" id="accordion_firms_view">
-        <?php if (isset($dir['subDirs'])): ?>
-        <?php foreach ($dir['subDirs'] as $key => $subDir): ?>
+    <?php if ($firm->customer_files_count > 0): ?>
+    <div class="accordion col" id="firmStorage">
+        <?php if (count($firm->dir->read()[0]) > 0): ?>
+        <?php foreach ($firm->dir->read()[0] as $key => $subDir): ?>
         <div class="card">
-            <div class="card-header" id=<?= __('accordion_firms_view_') . $key ?>>
+            <div class="card-header" id=<?= __('heading_') . $key ?>>
                 <h5 class="mb-0">
-                    <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($subDir['name']), [
+                    <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($subDir), [
                         'escape' => false,
                         'class' => 'btn btn-link',
                         'type' => 'button',
                         'data-toggle' => 'collapse',
-                        'data-target' => '#collapse_firms_view_' . $key,
+                        'data-target' => '#collapse_' . $key,
                         'aria-expanded' => 'false',
-                        'aria-controls' => 'collapse_firms_view_' . $key
+                        'aria-controls' => 'collapse_' . $key
                     ]) ?>
                 </h5>
             </div>
-            <div id=<?= __('collapse_firms_view_') . $key ?> class="collapse" aria-labelledby=<?= __('accordion_firms_view_') . $key ?> data-parent="#accordion_firms_view">
+            <div id=<?= __('collapse_') . $key ?> class="collapse" aria-labelledby=<?= __('heading_') . $key ?> data-parent="#firmStorage">
                 <div class="card-body">
                     <ul class="list-group">
-                        <?php if (isset($subDir['files'])): ?>
-                        <?php foreach ($subDir['files'] as $file): ?>
-                        <li class="list-group-item"><i class="far fa-file"></i><?= __(' ') . h($file->name()) ?></li>
-                        <?php endforeach; ?>
-                        <?php else: ?>
-                        <li class="list-group-item"><?= __('Dossier vide') ?></li>
+                        <?php foreach ($firm->customer_files as $customerFile): ?>
+                        <?php if ($customerFile->file->Folder->inPath($firm->dir->cd($subDir))): ?>
+                        <li class="list-group-item">
+                            <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file->name()),
+                                'uploads' . DS . $firm->id . DS . $customerFile->dir_name . DS . $customerFile->file->name,
+                                ['escape' => false]
+                            ) ?>
+                            <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
+                                '_name' => 'deleteCustomerFile', $customerFile->id
+                            ], [
+                                'escape' => false,
+                                'class' => 'float-right',
+                                'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file_name)
+                            ]) ?>
+                        </li>
                         <?php endif; ?>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
         </div>
         <?php endforeach; ?>
         <?php endif; ?>
-        <?php if (isset($dir['files'])): ?>
+        <?php if (count($firm->dir->read()[1]) > 0): ?>
         <ul class="list-group">
-            <?php foreach($dir['files'] as $singleFile): ?>
-            <li class="list-group-item"><i class="far fa-file"></i><?= __(' ') . h($singleFile->name()) ?></li>
+            <?php foreach($firm->customer_files as $customerFile): ?>
+            <?php if ($customerFile->file->Folder->path == $firm->dir->path): ?>
+            <li class="list-group-item">
+                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file->name()),
+                    'uploads' . DS . $firm->id . DS . $customerFile->file->name,
+                    ['escape' => false]
+                ) ?>
+                <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
+                    '_name' => 'deleteCustomerFile', $customerFile->id
+                ], [
+                    'escape' => false,
+                    'class' => 'float-right',
+                    'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file_name)
+                ]) ?>
+            </li>
+            <?php endif; ?>
             <?php endforeach; ?>
         </ul>
         <?php endif; ?>

@@ -49,7 +49,7 @@ class CustomerFile extends Entity
     protected function _getFile()
     {
         if (!$this->isNew()) {            
-            $path = ($this->_properties['dir_name']) ? UPLOADS . $this->_properties['firm_id'] . DS . $this->_properties['dir_name'] . DS . $this->_properties['file_name'] : UPLOADS . $this->_properties['firm_id'] . DS . $this->_properties['file_name'];
+            $path = (isset($this->_properties['dir_name'])) ? UPLOADS . $this->_properties['firm_id'] . DS . $this->_properties['dir_name'] . DS . $this->_properties['file_name'] : UPLOADS . $this->_properties['firm_id'] . DS . $this->_properties['file_name'];
             return new File($path);
         }
     }

@@ -44,7 +44,7 @@
                 'class' => 'form-control',
                 'id' => 'dirsSelect',
                 'type' => 'select',
-                'empty' => 'Selectionnez un dossier'
+                'empty' => 'Sélectionnez un dossier'
             ]) ?>
         </div>
     </div>

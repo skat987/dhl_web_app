@@ -74,7 +74,7 @@ class CustomerFilesController extends AppController
             $customerFile = $this->CustomerFiles->patchEntity($customerFile, $this->request->getData());
             $customerFile->added_by = $this->Auth->user('id');           
             if ($this->CustomerFiles->save($customerFile)) {          
-                $this->Flash->success(__('Le fichier a bein été sauvegardé.'));
+                $this->Flash->success(__('Le fichier a bien été sauvegardé.'));
                 return $this->redirect(['controller' => 'Firms', 'action' => 'index']);
             }
             $this->Flash->error(__('Le fichier n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));       

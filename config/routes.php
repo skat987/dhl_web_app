@@ -82,10 +82,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/admin/users/add', ['controller' => 'Users', 'action' => 'add'], ['_name' => 'userAdd']);
 
     $routes->connect('/customer-files/add', ['controller' => 'CustomerFiles', 'action' => 'add'], ['_name' => 'addCustomerFile']);
-
-    /**
-     * Customer routes TODO
-     */
+    $routes->connect('/customer-files/:id/delete', ['controller' => 'CustomerFiles', 'action' => 'delete'], ['_name' => 'deleteCustomerFile'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
 
     /**
      * Connect catchall routes for all controllers.

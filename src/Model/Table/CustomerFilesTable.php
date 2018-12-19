@@ -11,6 +11,8 @@ use Cake\Validation\Validator;
 use Cake\Event\Event;
 use Cake\Datasource\EntityInterface;
 use ArrayObject;
+use Cake\Filesystem\Folder;
+use Cake\Filesystem\File;
 
 /**
  * CustomerFiles Model
@@ -140,8 +142,10 @@ class CustomerFilesTable extends Table
      */
     public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        $firm = $this->Firms->get($entity->firm_id);
-        $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
-        $this->Firms->save($firm);
+        if ($entity->file->delete()) {
+            $firm = $this->Firms->get($entity->firm_id);
+            $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
+            $this->Firms->save($firm);
+        }
     }
 }
