@@ -13,6 +13,7 @@ use Cake\Datasource\EntityInterface;
 use ArrayObject;
 use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
+use Cake\Utility\Security;
 
 /**
  * CustomerFiles Model
@@ -129,10 +130,13 @@ class CustomerFilesTable extends Table
             $basePath = UPLOADS . $entity->firm_id . DS;
             $baseName = pathinfo($entity->file['name'], PATHINFO_BASENAME);
             $path = (isset($entity->dir_name)) ? $basePath . $entity->dir_name . DS . $baseName : $basePath . $baseName;
-            if (!move_uploaded_file($entity->file['tmp_name'], $path)) {
+            if (move_uploaded_file($entity->file['tmp_name'], $path)) {
+                //$this->encryptCustomerFile(new File($path));
+            } else {
                 return false;
-            } 
+            }
         }
+
     }
 
     /**
@@ -148,14 +152,34 @@ class CustomerFilesTable extends Table
     }
 
     /**
+     * BeforeDelete method
+     */
+    public function beforeDelete(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        if (!$entity->file->delete()) {
+            return false;
+        }
+    }
+
+    /**
      * AfterDelete method
      */
     public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        if ($entity->file->delete()) {
-            $firm = $this->Firms->get($entity->firm_id);
-            $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
-            $this->Firms->save($firm);
-        }
+        $firm = $this->Firms->get($entity->firm_id);
+        $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
+        $this->Firms->save($firm);
+    }
+
+    /**
+     * EncryptCustomerFile method
+     */
+    private function encryptCustomerFile(File $file)
+    {
+        $key = 'aZeRtY753yTrEzA';
+        $hash = hash_file('sha3-512', $file->path);
+        $file->open();
+        //$file->replaceText($file->read(), $hash);
+        dd($file->replaceText($file->read(), $hash));
     }
 }
