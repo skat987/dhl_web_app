@@ -15,13 +15,19 @@ $this->assign('title', 'Espace client');
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-2">
                     <p class="lead text-center">
                         <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->workers_count) ?></span>
                         <?= __(' utilisateurs associés') ?>
                     </p>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-2">
+                    <p class="lead text-center">
+                        <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->dir->read()[0])) ?></span>
+                        <?= __(' dossiers') ?>
+                    </p>
+                </div>
+                <div class="col-md-4 mb-2">
                     <p class="lead text-center">
                         <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
                         <?= __(' documents') ?>
@@ -56,7 +62,7 @@ $this->assign('title', 'Espace client');
                         <?php foreach ($firm->customer_files as $customerFile): ?>
                         <?php if ($customerFile->file->Folder->inPath($firm->dir->cd($subDir))): ?>
                         <li class="list-group-item">
-                            <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file->name()),
+                            <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name),
                                 'uploads' . DS . $firm->id . DS . $customerFile->dir_name . DS . $customerFile->file->name,
                                 ['escape' => false]
                             ) ?>
@@ -65,7 +71,7 @@ $this->assign('title', 'Espace client');
                             ], [
                                 'escape' => false,
                                 'class' => 'float-right',
-                                'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file_name)
+                                'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                             ]) ?>
                         </li>
                         <?php endif; ?>
@@ -81,7 +87,7 @@ $this->assign('title', 'Espace client');
             <?php foreach($firm->customer_files as $customerFile): ?>
             <?php if ($customerFile->file->Folder->path == $firm->dir->path): ?>
             <li class="list-group-item">
-                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file->name()),
+                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name),
                     'uploads' . DS . $firm->id . DS . $customerFile->file->name,
                     ['escape' => false]
                 ) ?>
@@ -90,7 +96,7 @@ $this->assign('title', 'Espace client');
                 ], [
                     'escape' => false,
                     'class' => 'float-right',
-                    'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file_name)
+                    'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                 ]) ?>
             </li>
             <?php endif; ?>
