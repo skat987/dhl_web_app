@@ -24,9 +24,9 @@ class FirmsController extends AppController
     public function isAuthorized($user)
     {
         if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete', 'getFilesList'];
+            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete'];
         } else {
-            $actionsAllowed = ['view', 'getFilesList'];
+            $actionsAllowed = ['view'];
         }
         $action = $this->request->getParam('action');
         return in_array($action, $actionsAllowed);
@@ -40,16 +40,10 @@ class FirmsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => [
-                'CustomerFiles' => [
-                    'sort' => ['CustomerFiles.dir_name']
-                ]
-            ]
+            'contain' => ['CustomerFiles']
         ];
         $firms = $this->paginate($this->Firms);
-        $dir = $this->getFilesList();
-        // dd(hash_algos());
-        $this->set(compact('firms', 'dir'));
+        $this->set(compact('firms'));
     }
 
     /**
@@ -63,11 +57,8 @@ class FirmsController extends AppController
     {
         $firm = $this->Firms->get($id, [
             'contain' => ['CustomerFiles', 'Users']
-        ]);
-        $list = $this->getFilesList();
-        $dir = (isset($list[$id])) ? $list[$id] : []; 
-        dd($firm);       
-        $this->set(compact('firm', 'dir'));
+        ]);     
+        $this->set(compact('firm'));
     }
 
     /**
@@ -130,41 +121,5 @@ class FirmsController extends AppController
             $this->Flash->error(__('La société n\'a pas pu être supprimée. Veuillez ré-essayer.'));
         }
         return $this->redirect(['action' => 'index']);
-    }
-
-    /**
-     * GetFilesList method
-     */
-    private function getFilesList()
-    {
-        $dir = new Folder(WWW_ROOT . 'uploads');
-        $content = $dir->read()[0];
-        $results = [];        
-        foreach($content as $key => $value) {
-            $path = WWW_ROOT . 'uploads' . DS . $value;
-            $dir->cd($path);
-            $contentDirs = $dir->read()[0];
-            $contentFiles = $dir->read()[1];            
-            if (count($contentDirs) > 0) {          
-                foreach($contentDirs as $subDirKey => $subDir) {
-                    $subFolder = new Folder($dir->pwd() . DS . $subDir);
-                    $results[$value]['subDirs'][$subDirKey]['name'] = $subDir;
-                    if (count($subFolder->read()[1]) > 0) {
-                        $contentFolder = $subFolder->read()[1];
-                        foreach($contentFolder as $contentFolderKey => $contentValue) {
-                            $file = new File($subFolder->pwd() . DS . $contentValue);
-                            $results[$value]['subDirs'][$subDirKey]['files'][$contentFolderKey] = $file;
-                        }
-                    }
-                }
-            }
-            if (count($contentFiles) > 0) {                
-                foreach($contentFiles as $fileKey => $fileValue) {
-                    $file = new File($dir->pwd() . DS . $fileValue);
-                    $results[$value]['files'][$fileKey] = $file;
-                }
-            }
-        }
-        return $results;
     }
 }

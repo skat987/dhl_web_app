@@ -23,7 +23,7 @@ class CustomerFilesController extends AppController
     public function isAuthorized($user)
     {
         if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete', 'getFirmDirectories', 'createDir'];
+            $actionsAllowed = ['add', 'delete', 'getFirmDirectories', 'createDir', 'deleteDir'];
         }
         $action = (isset($actionsAllowed)) ? $this->request->getParam('action') : null;
         if (isset($action)) {
@@ -72,12 +72,13 @@ class CustomerFilesController extends AppController
         $customerFile = $this->CustomerFiles->newEntity();
         if ($this->request->is('post')) {
             $customerFile = $this->CustomerFiles->patchEntity($customerFile, $this->request->getData());
-            $customerFile->added_by = $this->Auth->user('id');           
+            $customerFile->added_by = $this->Auth->user('id');         
             if ($this->CustomerFiles->save($customerFile)) {          
-                $this->Flash->success(__('Le fichier a bein été sauvegardé.'));
-                return $this->redirect(['controller' => 'Firms', 'action' => 'index']);
-            }
-            $this->Flash->error(__('Le fichier n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));       
+                $this->Flash->success(__('Le fichier a bien été sauvegardé.'));
+            } else {
+                $this->Flash->error(__('Le fichier n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));  
+            }     
+            return $this->redirect($this->referer());
         }
         $firms = $this->CustomerFiles->Firms->find('list', ['limit' => 200]);
         $this->set(compact('customerFile', 'firms'));
@@ -123,7 +124,7 @@ class CustomerFilesController extends AppController
         } else {
             $this->Flash->error(__('Le fichier n\'a pas pu être supprimé. Veuillez ré-essayer.'));
         }
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -131,7 +132,7 @@ class CustomerFilesController extends AppController
      */
     public function getFirmDirectories($firmId)
     {
-        $dir = new Folder(WWW_ROOT . 'uploads' . DS . $firmId);
+        $dir = new Folder(UPLOADS . $firmId);
         $directories = $dir->read()[0];
         $this->set(compact('directories'));
     }
@@ -143,7 +144,7 @@ class CustomerFilesController extends AppController
     {
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            $dir = new Folder(WWW_ROOT . 'uploads' . DS . $data['firmId']);
+            $dir = new Folder(UPLOADS . $data['firmId']);
             $newDir = new Folder($dir->pwd() . DS . $data['newDir'], true);
             $resp = [
                 'message' => 'Le dossier ' . $data['newDir'] . ' a bien été créé.',
@@ -151,5 +152,22 @@ class CustomerFilesController extends AppController
             ];
             $this->set(compact('resp'));
         }
+    }
+
+    /**
+     * DeleteDir method
+     */
+    public function deleteDir($firmId, $dirName)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $dir = new Folder(UPLOADS . $firmId . DS . $dirName);
+        if (count($dir->read()[1]) > 0) {
+            $this->Flash->error(__('Le dossier {0} contient des documents. Il ne peut pas être supprimé', $dirName));
+        } else {
+            if ($dir->delete()) {
+                $this->Flash->success(__('Le dossier {0} a bien été supprimé', $dirName));
+            }
+        }
+        return $this->redirect($this->referer());
     }
 }

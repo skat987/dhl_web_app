@@ -22,8 +22,7 @@ function showModal(modal) {
         var url = button.data('link');
         var id = button.data('id');
         if (id != null) {
-            $.ajax({
-                type: 'GET',
+            $.get({
                 url: url,
                 data: 'id=' + id,
                 success: function(data) {
@@ -34,8 +33,7 @@ function showModal(modal) {
                 }
             });
         } else {
-            $.ajax({
-                type: 'GET',
+            $.get({
                 url: url,
                 success: function(data) {
                     modal.find('#modalContent').html(data);
@@ -52,7 +50,7 @@ function showFileSelected(modal) {
     // modal.on('shown.bs.modal', function() {
     //     var fileInput = modal.find('#fileSelected');
     //     fileInput.bind('change', function() {
-    //         console.log('file input', $(this));
+    //         console.log('file input', $(this).);
     //     });
     // });
 }

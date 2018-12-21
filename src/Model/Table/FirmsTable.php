@@ -91,12 +91,12 @@ class FirmsTable extends Table
     }
 
      /**
-     * BeforeSave method
+     * AfterSave method
      */
     public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         if ($entity->isNew()) {
-            $newDir = new Folder(WWW_ROOT . 'uploads' . DS . $entity->id, true);
+            $newDir = new Folder(UPLOADS . $entity->id, true);
         }
     }    
 }

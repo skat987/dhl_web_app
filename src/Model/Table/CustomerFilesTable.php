@@ -11,6 +11,8 @@ use Cake\Validation\Validator;
 use Cake\Event\Event;
 use Cake\Datasource\EntityInterface;
 use ArrayObject;
+use Cake\Filesystem\Folder;
+use Cake\Filesystem\File;
 
 /**
  * CustomerFiles Model
@@ -47,8 +49,6 @@ class CustomerFilesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->addBehavior('Upload');
-
         $this->belongsTo('Firms', [
             'foreignKey' => 'firm_id',
             'joinType' => 'INNER'
@@ -69,13 +69,19 @@ class CustomerFilesTable extends Table
 
         $validator
             ->scalar('file_name')
-            ->maxLength('file_name', 45)
+            ->maxLength('file_name', 100)
             ->requirePresence('file_name', 'create')
             ->notEmpty('file_name');
 
         $validator
+            ->scalar('file_extension')
+            ->maxLength('file_extension', 10)
+            ->requirePresence('file_extension', 'create')
+            ->notEmpty('file_extension');
+
+        $validator
             ->scalar('dir_name')
-            ->maxLength('dir_name', 45)
+            ->maxLength('dir_name', 100)
             ->allowEmpty('dir_name');
 
         $validator
@@ -101,14 +107,31 @@ class CustomerFilesTable extends Table
     }
 
     /**
+     * BeforeMarshal method
+     */
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    {
+        if (isset($data['file'])) {
+            $data['file_name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
+            $data['file_extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
+        }
+        if (isset($data['dir_name'])) {
+            $data['dir_name'] = ($data['dir_name'] == 'null') ? null : $data['dir_name'];
+        }
+    }
+
+    /**
      * BeforeSave method
      */
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        if (!$entity->isNew() && $entity->isDirty('firm_id')) {
-            $oldFirm = $this->Firms->get($entity->getOriginal('firm_id'));
-            $oldFirm->customer_files_count = $this->find()->where(['firm_id' => $oldFirm->id])->count() - 1;
-            $this->Firms->save($oldFirm);
+        if ($entity->isNew()) {
+            $basePath = UPLOADS . $entity->firm_id . DS;
+            $baseName = pathinfo($entity->file['name'], PATHINFO_BASENAME);
+            $path = (isset($entity->dir_name)) ? $basePath . $entity->dir_name . DS . $baseName : $basePath . $baseName;
+            if (!move_uploaded_file($entity->file['tmp_name'], $path)) {
+                return false;
+            } 
         }
     }
 
@@ -129,8 +152,10 @@ class CustomerFilesTable extends Table
      */
     public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        $firm = $this->Firms->get($entity->firm_id);
-        $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
-        $this->Firms->save($firm);
+        if ($entity->file->delete()) {
+            $firm = $this->Firms->get($entity->firm_id);
+            $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
+            $this->Firms->save($firm);
+        }
     }
 }

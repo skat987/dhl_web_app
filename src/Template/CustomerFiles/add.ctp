@@ -6,7 +6,13 @@
 ?>
 <div class="modal-header">
     <h4 class="modal-title font-weight-bold" id="modalLabel"><?= __('Nouveau document') ?></h4>
-    <?= $this->Form->button('<span aria-hidden="true">&times;</span>', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-label' => 'Close', 'escape' => false]) ?>
+    <?= $this->Form->button('<span aria-hidden="true">&times;</span>', [
+        'type' => 'button', 
+        'class' => 'close', 
+        'data-dismiss' => 'modal', 
+        'aria-label' => 'Close', 
+        'escape' => false
+    ]) ?>
 </div>
 <?= $this->Form->create($customerFile, ['type' => 'file']) ?>
 <div class="modal-body">
@@ -38,7 +44,7 @@
                 'class' => 'form-control',
                 'id' => 'dirsSelect',
                 'type' => 'select',
-                'empty' => 'Selectionnez un dossier'
+                'empty' => 'Sélectionnez un dossier'
             ]) ?>
         </div>
     </div>

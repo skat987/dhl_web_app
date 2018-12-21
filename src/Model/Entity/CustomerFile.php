@@ -34,6 +34,7 @@ class CustomerFile extends Entity
      */
     protected $_accessible = [
         'file_name' => true,
+        'file_extension' => true,
         'firm_id' => true,
         'dir_name' => true,
         'added_by' => true,
@@ -43,20 +44,20 @@ class CustomerFile extends Entity
         'file' => true
     ];
 
-    protected function _getFile()
+    /**
+     * Accessor for the file property
+     */
+    protected function _getFile($file = null)
     {
-        if (!$this->isNew()) {            
-            $path = ($this->_properties['dir_name']) ? WWW_ROOT . 'uploads' . DS . $this->_properties['firm_id'] . DS . $this->_properties['dir_name'] . DS . $this->_properties['file_name'] : WWW_ROOT . 'uploads' . DS . $this->_properties['firm_id'] . DS . $this->_properties['file_name'];
+        if (!$this->isNew()) { 
+            $basePath = UPLOADS . $this->_properties['firm_id'] . DS;
+            $baseName = $this->_properties['file_name'] . '.' . $this->_properties['file_extension'];           
+            $path = (isset($this->_properties['dir_name'])) ? $basePath . $this->_properties['dir_name'] . DS . $baseName : $basePath . $baseName;
             return new File($path);
-        }
-    }
-
-    protected function _setFile($file)
-    {
-        if (isset($file)) {            
-            $path = (isset($this->_properties['dir_name'])) ? WWW_ROOT . 'uploads' . DS . $this->_properties['firm_id'] . DS . $this->_properties['dir_name'] . DS . $file['name'] : WWW_ROOT . 'uploads' . DS . $this->_properties['firm_id'] . DS . $file['name'];
-            move_uploaded_file($file['tmp_name'], $path);
-            return new File($path);
+        } else {
+            if (isset($file)) {
+                return $file;
+            }
         }
     }
 }
