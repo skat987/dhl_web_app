@@ -148,14 +148,22 @@ class CustomerFilesTable extends Table
     }
 
     /**
+     * BeforeDelete method
+     */
+    public function beforeDelete(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        if (!$entity->file->delete()) {
+            return false;
+        }
+    }
+
+    /**
      * AfterDelete method
      */
     public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        if ($entity->file->delete()) {
-            $firm = $this->Firms->get($entity->firm_id);
-            $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
-            $this->Firms->save($firm);
-        }
+        $firm = $this->Firms->get($entity->firm_id);
+        $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
+        $this->Firms->save($firm);
     }
 }
