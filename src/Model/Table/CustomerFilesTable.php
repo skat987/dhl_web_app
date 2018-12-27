@@ -15,6 +15,11 @@ use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 use Cake\Utility\Security;
 
+// Define the number of blocks that should be read from the source file for each chunk.
+define('FILE_ENCRYPTION_BLOCKS', 10000);
+// Define the size of each chunk that the encrypt method is able to encrypt.
+define('CHUNK_ENCRYPTION_SIZE', 16);
+
 /**
  * CustomerFiles Model
  *
@@ -127,11 +132,18 @@ class CustomerFilesTable extends Table
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         if ($entity->isNew()) {
-            $basePath = UPLOADS . $entity->firm_id . DS;
+            $destinationBasePath = UPLOADS . $entity->firm_id . DS;
             $baseName = pathinfo($entity->file['name'], PATHINFO_BASENAME);
-            $path = (isset($entity->dir_name)) ? $basePath . $entity->dir_name . DS . $baseName : $basePath . $baseName;
-            if (move_uploaded_file($entity->file['tmp_name'], $path)) {
-                //$this->encryptCustomerFile(new File($path));
+            $destinationPath = (isset($entity->dir_name)) ? $destinationBasePath . $entity->dir_name . DS . $baseName : $destinationBasePath . $baseName;
+            $tempPath = UPLOADS . 'Temp' . DS . $baseName;
+            if (!file_exists($tempPath)) {
+                if (move_uploaded_file($entity->file['tmp_name'], $tempPath)) {
+                    $dest = new File($destinationPath, true);
+                    $key = 'aZeRtY789yTrEzA';
+                    $this->encryptCustomerFile($tempPath, $key, $destinationPath);
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
@@ -174,12 +186,29 @@ class CustomerFilesTable extends Table
     /**
      * EncryptCustomerFile method
      */
-    private function encryptCustomerFile(File $file)
+    private function encryptCustomerFile($source, $key, $dest)
     {
-        $key = 'aZeRtY753yTrEzA';
-        $hash = hash_file('sha3-512', $file->path);
-        $file->open();
-        //$file->replaceText($file->read(), $hash);
-        dd($file->replaceText($file->read(), $hash));
+        $key = substr(hash('sha3-512', $key, true), 0, CHUNK_ENCRYPTION_SIZE);
+        $iv = Security::randomBytes(CHUNK_ENCRYPTION_SIZE);
+        $error = false;
+        if ($fpOut = fopen($dest, 'w')) {
+            fwrite($fpOut, $iv);
+            if ($fpIn = fopen($source, 'rb')) {
+                while (!feof($fpIn)) {
+                    $plainText = fread($fpIn, CHUNK_ENCRYPTION_SIZE * FILE_ENCRYPTION_BLOCKS);
+                    $cipherText = openssl_encrypt($plainText, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+                    $iv = substr($cipherText, 0, CHUNK_ENCRYPTION_SIZE);
+                    fwrite($fpOut, $cipherText);
+                }
+                fclose($fpIn);
+            } else {
+                $error = true;
+            }
+            fclose($fpOut);
+            unlink($source);
+        } else {
+            $error = true;
+        }
+        return $error ? false : $dest;
     }
 }

@@ -23,7 +23,7 @@ class CustomerFilesController extends AppController
     public function isAuthorized($user)
     {
         if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['add', 'delete', 'getFirmDirectories', 'createDir', 'deleteDir'];
+            $actionsAllowed = ['add', 'delete', 'getFirmDirectories', 'createDir', 'deleteDir', 'downloadCustomerFile'];
         }
         $action = (isset($actionsAllowed)) ? $this->request->getParam('action') : null;
         if (isset($action)) {
@@ -169,5 +169,61 @@ class CustomerFilesController extends AppController
             }
         }
         return $this->redirect($this->referer());
+    }
+
+    private function decryptCustomerFile($source, $key, $dest)
+    {
+        $key = substr(hash('sha3-512', $key, true), 0, 16);
+        $error = false;
+        if ($fpOut = fopen($dest, 'w')) {
+            if ($fpIn = fopen($source, 'rb')) {
+                $iv = fread($fpIn, 16);
+                while (!feof($fpIn)) {
+                    $cipherText = fread($fpIn, 16 * (10000 + 1));
+                    $plainText = openssl_decrypt($cipherText, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+                    $iv = substr($cipherText, 0, 16);
+                    fwrite($fpOut, $plainText);
+                }
+                fclose($fpIn);
+            } else {
+                $error = true;
+            }
+            fclose($fpOut);
+        } else {
+            $error = true;
+        }
+        return $error ? false : $dest;
+    }
+
+    public function downloadCustomerFile($id = null)
+    {
+        $customerFile = $this->CustomerFiles->get($id, [
+            'contain' => []
+        ]);
+        $key = 'aZeRtY789yTrEzA';
+        $tempPath = UPLOADS . 'Temp' . DS . $customerFile->file->name;
+        if (!file_exists($tempPath)) {
+            $download = new File($tempPath, true);
+            $tempFile = $this->decryptCustomerFile($customerFile->file->path, $key, $tempPath);
+            $this->setDownloadHeaders($download);
+            $download->delete();
+        } else {
+            $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
+        }
+        return $this->redirect($this->referer());
+    }
+
+    private function setDownloadHeaders(File $file)
+    {
+        $mimeType = (mime_content_type($file->path) == 'text/plain') ? 'text/plain' : 'application/octet-stream';
+        header('Content-Disposition: attachment; filename="' . $file->name . '";');
+        header('Content-Type: ' . $mimeType);
+        header('Content-Transfert-Encoding: binary');
+        header('Content-Length: ' . $file->size());
+        header('Pragma: no-cache');
+        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        header('Expires: 0');
+        flush();
+        readfile($file->path);
     }
 }

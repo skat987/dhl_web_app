@@ -88,6 +88,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/customer-files/:firm_id-:dir_name/delete', ['controller' => 'CustomerFiles', 'action' => 'deleteDir'], ['_name' => 'deleteDirectory'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id', 'dir_name']);
+    $routes->connect('/customer-files/:id/download', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
 
     /**
      * Connect catchall routes for all controllers.

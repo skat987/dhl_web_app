@@ -128,10 +128,12 @@ echo $this->element('modal');
                                             <?php foreach($firm->customer_files as $customerFile): ?>
                                             <?php if($customerFile->file->Folder->inPath($firm->dir->cd($dir_name))): ?>
                                             <li class="list-group-item">
-                                                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name), 
-                                                    'uploads' . DS . $firm->id . DS . $customerFile->dir_name . DS . $customerFile->file->name, 
-                                                    ['escape' => false]
-                                                ) ?>
+                                                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name), [
+                                                    '_name' => 'downloadCustomerFile', 
+                                                    $customerFile->id
+                                                ], [
+                                                    'escape' => false
+                                                ]) ?>
                                                 <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
                                                     '_name' => 'deleteCustomerFile', $customerFile->id
                                                 ], [
@@ -153,10 +155,12 @@ echo $this->element('modal');
                                 <?php foreach($firm->customer_files as $customerFile): ?>
                                 <?php if($customerFile->file->Folder->path == $firm->dir->path): ?>
                                 <li class="list-group-item">
-                                    <?= $this->Html->link(_('<i class="far fa-file"></i> ') . h($customerFile->file_name),
-                                        'uploads' . DS . $firm->id . DS . $customerFile->file->name,
-                                        ['escape' => false]
-                                    ) ?>
+                                    <?= $this->Html->link(_('<i class="far fa-file"></i> ') . h($customerFile->file_name), [
+                                        '_name' => 'downloadCustomerFile',
+                                        $customerFile->id
+                                    ], [
+                                        'escape' => false
+                                    ]) ?>
                                     <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
                                         '_name' => 'deleteCustomerFile', $customerFile->id
                                     ], [
