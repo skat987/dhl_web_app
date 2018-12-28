@@ -15,11 +15,6 @@ use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 use Cake\Utility\Security;
 
-// Define the number of blocks that should be read from the source file for each chunk.
-define('FILE_ENCRYPTION_BLOCKS', 10000);
-// Define the size of each chunk that the encrypt method is able to encrypt.
-define('CHUNK_ENCRYPTION_SIZE', 16);
-
 /**
  * CustomerFiles Model
  *
@@ -86,6 +81,12 @@ class CustomerFilesTable extends Table
             ->notEmpty('file_extension');
 
         $validator
+            ->scalar('file_key')
+            ->maxLength('file_key', 16)
+            ->requirePresence('file_key', 'create')
+            ->notEmpty('file_key');
+
+        $validator
             ->scalar('dir_name')
             ->maxLength('dir_name', 100)
             ->allowEmpty('dir_name');
@@ -117,6 +118,7 @@ class CustomerFilesTable extends Table
      */
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
+        //dd(mime_content_type($data['file']['tmp_name'])); TODO: Gérer les mimes des fichiers
         if (isset($data['file'])) {
             $data['file_name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
             $data['file_extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
@@ -135,12 +137,15 @@ class CustomerFilesTable extends Table
             $destinationBasePath = UPLOADS . $entity->firm_id . DS;
             $baseName = pathinfo($entity->file['name'], PATHINFO_BASENAME);
             $destinationPath = (isset($entity->dir_name)) ? $destinationBasePath . $entity->dir_name . DS . $baseName : $destinationBasePath . $baseName;
-            $tempPath = UPLOADS . 'Temp' . DS . $baseName;
+            $tempPath = TEMP_UPLOADS . $baseName;
             if (!file_exists($tempPath)) {
                 if (move_uploaded_file($entity->file['tmp_name'], $tempPath)) {
-                    $dest = new File($destinationPath, true);
-                    $key = 'aZeRtY789yTrEzA';
-                    $this->encryptCustomerFile($tempPath, $key, $destinationPath);
+                    $newFile = new File($destinationPath, true);
+                    $isEncrypted = $this->encryptCustomerFile($tempPath, $entity->file_key, $destinationPath);
+                    if (!$isEncrypted) {
+                        $newFile->delete();
+                        return false;
+                    }
                 } else {
                     return false;
                 }
@@ -188,7 +193,6 @@ class CustomerFilesTable extends Table
      */
     private function encryptCustomerFile($source, $key, $dest)
     {
-        $key = substr(hash('sha3-512', $key, true), 0, CHUNK_ENCRYPTION_SIZE);
         $iv = Security::randomBytes(CHUNK_ENCRYPTION_SIZE);
         $error = false;
         if ($fpOut = fopen($dest, 'w')) {
@@ -196,7 +200,7 @@ class CustomerFilesTable extends Table
             if ($fpIn = fopen($source, 'rb')) {
                 while (!feof($fpIn)) {
                     $plainText = fread($fpIn, CHUNK_ENCRYPTION_SIZE * FILE_ENCRYPTION_BLOCKS);
-                    $cipherText = openssl_encrypt($plainText, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+                    $cipherText = openssl_encrypt($plainText, DEFAULT_ENCRYPTION_METHOD, $key, OPENSSL_RAW_DATA, $iv);
                     $iv = substr($cipherText, 0, CHUNK_ENCRYPTION_SIZE);
                     fwrite($fpOut, $cipherText);
                 }
@@ -204,8 +208,11 @@ class CustomerFilesTable extends Table
             } else {
                 $error = true;
             }
-            fclose($fpOut);
-            unlink($source);
+            if (fclose($fpOut)) {
+                unlink($source);
+            } else {
+                $error = true;
+            }
         } else {
             $error = true;
         }

@@ -6,6 +6,7 @@ use App\Controller\AppController;
 // Folder & File Components
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
+use Cake\Utility\Security;
 
 /**
  * CustomerFiles Controller
@@ -72,7 +73,8 @@ class CustomerFilesController extends AppController
         $customerFile = $this->CustomerFiles->newEntity();
         if ($this->request->is('post')) {
             $customerFile = $this->CustomerFiles->patchEntity($customerFile, $this->request->getData());
-            $customerFile->added_by = $this->Auth->user('id');         
+            $customerFile->added_by = $this->Auth->user('id');    
+            $customerFile->file_key = Security::randomBytes(CHUNK_ENCRYPTION_SIZE);   
             if ($this->CustomerFiles->save($customerFile)) {          
                 $this->Flash->success(__('Le fichier a bien été sauvegardé.'));
             } else {
@@ -171,17 +173,43 @@ class CustomerFilesController extends AppController
         return $this->redirect($this->referer());
     }
 
+    /**
+     * DownloadCustomerFile method
+     */
+    public function downloadCustomerFile($id = null)
+    {
+        $customerFile = $this->CustomerFiles->get($id, [
+            'contain' => []
+        ]);
+        $tempPath = TEMP_UPLOADS . $customerFile->file->name;
+        if (!file_exists($tempPath)) {
+            $tempFile = new File($tempPath, true);
+            $isDecrypt = $this->decryptCustomerFile($customerFile->file->path, $customerFile->file_key, $tempPath);
+            if ($isDecrypt) {
+                $this->setHeaders($tempFile);
+                $tempFile->delete();
+            } else {
+                $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
+            }
+        } else {
+            $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
+        }
+        return $this->redirect($this->referer());
+    }
+
+    /**
+     * DecryptCustomerFile method
+     */
     private function decryptCustomerFile($source, $key, $dest)
     {
-        $key = substr(hash('sha3-512', $key, true), 0, 16);
         $error = false;
         if ($fpOut = fopen($dest, 'w')) {
             if ($fpIn = fopen($source, 'rb')) {
-                $iv = fread($fpIn, 16);
+                $iv = fread($fpIn, CHUNK_ENCRYPTION_SIZE);
                 while (!feof($fpIn)) {
-                    $cipherText = fread($fpIn, 16 * (10000 + 1));
-                    $plainText = openssl_decrypt($cipherText, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
-                    $iv = substr($cipherText, 0, 16);
+                    $cipherText = fread($fpIn, CHUNK_ENCRYPTION_SIZE * (FILE_ENCRYPTION_BLOCKS + 1));
+                    $plainText = openssl_decrypt($cipherText, DEFAULT_ENCRYPTION_METHOD, $key, OPENSSL_RAW_DATA, $iv);
+                    $iv = substr($cipherText, 0, CHUNK_ENCRYPTION_SIZE);
                     fwrite($fpOut, $plainText);
                 }
                 fclose($fpIn);
@@ -195,29 +223,13 @@ class CustomerFilesController extends AppController
         return $error ? false : $dest;
     }
 
-    public function downloadCustomerFile($id = null)
+    /**
+     * SetHeaders method
+     */
+    private function setHeaders(File $file)
     {
-        $customerFile = $this->CustomerFiles->get($id, [
-            'contain' => []
-        ]);
-        $key = 'aZeRtY789yTrEzA';
-        $tempPath = UPLOADS . 'Temp' . DS . $customerFile->file->name;
-        if (!file_exists($tempPath)) {
-            $download = new File($tempPath, true);
-            $tempFile = $this->decryptCustomerFile($customerFile->file->path, $key, $tempPath);
-            $this->setDownloadHeaders($download);
-            $download->delete();
-        } else {
-            $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
-        }
-        return $this->redirect($this->referer());
-    }
-
-    private function setDownloadHeaders(File $file)
-    {
-        $mimeType = (mime_content_type($file->path) == 'text/plain') ? 'text/plain' : 'application/octet-stream';
         header('Content-Disposition: attachment; filename="' . $file->name . '";');
-        header('Content-Type: ' . $mimeType);
+        header('Content-Type: ' . mime_content_type($file->path));
         header('Content-Transfert-Encoding: binary');
         header('Content-Length: ' . $file->size());
         header('Pragma: no-cache');
