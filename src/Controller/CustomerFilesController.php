@@ -20,6 +20,11 @@ class CustomerFilesController extends AppController
 
     /**
      * IsAuthorized method
+     * 
+     * Define the allowed methods for the authenticated user.
+     * 
+     * @param string|array $user user's authenticated informations
+     * @return bool if the authenticated user is authorized or not.
      */
     public function isAuthorized($user)
     {
@@ -66,7 +71,7 @@ class CustomerFilesController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return \Cake\Http\Response|null Redirects on successful add, to the current page.
      */
     public function add()
     {
@@ -114,7 +119,7 @@ class CustomerFilesController extends AppController
      * Delete method
      *
      * @param string|null $id Customer File id.
-     * @return \Cake\Http\Response|null Redirects to index.
+     * @return \Cake\Http\Response|null Redirects to the current page.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
@@ -131,6 +136,11 @@ class CustomerFilesController extends AppController
 
     /**
      * GetFirmDirectories method
+     * 
+     * Return the directories from the firm's files storage.
+     * 
+     * @param string $firmId Firm id
+     * @return \Cake\Http\Response|void
      */
     public function getFirmDirectories($firmId)
     {
@@ -141,6 +151,10 @@ class CustomerFilesController extends AppController
 
     /**
      * CreateDir method
+     * 
+     * Create a new directory in the firm's files storage.
+     * 
+     * @return \Cake\Http\Response|void
      */
     public function createDir()
     {
@@ -158,6 +172,12 @@ class CustomerFilesController extends AppController
 
     /**
      * DeleteDir method
+     * 
+     * Delete a directory from the firm's files storage.
+     * 
+     * @param string $firmId Firm id
+     * @param string $dirName Directory name
+     * @return \Cake\Http\Response|null Redirects to the current page.  
      */
     public function deleteDir($firmId, $dirName)
     {
@@ -175,6 +195,11 @@ class CustomerFilesController extends AppController
 
     /**
      * DownloadCustomerFile method
+     * 
+     * Open a download box to download a decrypted copy of the file.
+     * 
+     * @param string|null $id Customer File id
+     * @return \Cake\Http\Response|null Redirects to the current page.
      */
     public function downloadCustomerFile($id = null)
     {
@@ -199,6 +224,12 @@ class CustomerFilesController extends AppController
 
     /**
      * DecryptCustomerFile method
+     * 
+     * Create a decrypted copy of a file before download
+     * 
+     * @param string $source Path to the selected file.
+     * @param string $key Encryption key
+     * @return string|bool The path of the copy on successful decryption or false.
      */
     private function decryptCustomerFile($source, $key, $dest)
     {
@@ -225,6 +256,11 @@ class CustomerFilesController extends AppController
 
     /**
      * SetHeaders method
+     * 
+     * Force the download of a file
+     * 
+     * @param \Cake\Filesystem\File $file File to download.
+     * @return \Cake\Http\Response|void
      */
     private function setHeaders(File $file)
     {

@@ -2,7 +2,6 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use Cake\Utility\Security;
 use App\Auth\LegacyPasswordHasher;
 
 /**
@@ -61,6 +60,8 @@ class User extends Entity
 
     /**
      * Method to hash user password
+     * 
+     * The passed value must have a length of 8 or greater than.
      */
     protected function _setPassword($value)
     {
