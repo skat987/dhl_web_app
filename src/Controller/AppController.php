@@ -62,6 +62,7 @@ class AppController extends Controller
                     ]
                 ]
             ],
+            'authError' => 'Vous n\'êtes pas autorisé(e) à réaliser cette action.',
             'loginAction' => [
                 'controller' => 'Users',
                 'action' => 'login'
