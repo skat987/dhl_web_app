@@ -118,10 +118,13 @@ class CustomerFilesTable extends Table
      */
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
-        //dd(mime_content_type($data['file']['tmp_name'])); TODO: Gérer les mimes des fichiers
         if (isset($data['file'])) {
-            $data['file_name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
-            $data['file_extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
+            if ($this->isFileAllowed($data['file'])) {                
+                $data['file_name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
+                $data['file_extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
+            } else {
+                return false;
+            }
         }
         if (isset($data['dir_name'])) {
             $data['dir_name'] = ($data['dir_name'] == 'null') ? null : $data['dir_name'];
@@ -186,6 +189,33 @@ class CustomerFilesTable extends Table
         $firm = $this->Firms->get($entity->firm_id);
         $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
         $this->Firms->save($firm);
+    }
+
+    /**
+     * IsFileAllowed method
+     */
+    private function isFileAllowed($file)
+    {
+        $typeAllowed = [
+            'text/plain',
+            'text/csv', 
+            'application/msword', 
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+            'image/gif',
+            'image/x-icon',
+            'image/jpeg',
+            'application/vnd.oasis.opendocument.presentation',
+            'application/vnd.oasis.opendocument.spreadsheet',
+            'application/vnd.oasis.opendocument.text',
+            'image/png',
+            'application/pdf',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];        
+        $mimeType = mime_content_type($file['tmp_name']);
+        return in_array($mimeType, $typeAllowed);
     }
 
     /**
