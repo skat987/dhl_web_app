@@ -59,6 +59,9 @@ class AppController extends Controller
                     'fields' => [
                         'username' => 'email',
                         'password' => 'password'
+                    ],
+                    'passwordHasher' => [
+                        'className' => 'Legacy'
                     ]
                 ]
             ],

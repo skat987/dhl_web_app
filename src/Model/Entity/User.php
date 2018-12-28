@@ -3,6 +3,7 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 use Cake\Utility\Security;
+use App\Auth\LegacyPasswordHasher;
 
 /**
  * User Entity
@@ -64,7 +65,7 @@ class User extends Entity
     protected function _setPassword($value)
     {
         if (strlen($value) >= 8) {
-            return Security::hash($value, 'sha3-512');
+            return LegacyPasswordHasher::hash($value);
         }
     }
 }
