@@ -19,6 +19,8 @@ use Cake\Filesystem\Folder;
  *
  * @property \App\Model\Entity\CustomerFile[] $customer_files
  * @property \App\Model\Entity\User[] $users
+ * 
+ * @property \Cake\Filesystem\Folder $storage
  */
 class Firm extends Entity
 {
@@ -41,13 +43,13 @@ class Firm extends Entity
         'modified' => true,
         'customer_files' => true,
         'users' => true,
-        'dir' => true
+        'storage' => true
     ];
 
     /**
-     * Accessor for the dir property
+     * Accessor for the storage property
      */
-    protected function _getDir()
+    protected function _getStorage()
     {
         if (!$this->isNew()) {
             return new Folder(UPLOADS . $this->_properties['id']);

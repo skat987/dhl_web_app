@@ -6,7 +6,6 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
-
 // for additionnals method
 use Cake\Event\Event;
 use Cake\Datasource\EntityInterface;
@@ -119,7 +118,7 @@ class CustomerFilesTable extends Table
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
         if (isset($data['file'])) {
-            if ($this->isFileAllowed($data['file'])) {                
+            if ($this->isTypeAllowed($data['file']['tmp_name'])) {                
                 $data['file_name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
                 $data['file_extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
             } else {
@@ -140,7 +139,7 @@ class CustomerFilesTable extends Table
             $destinationBasePath = UPLOADS . $entity->firm_id . DS;
             $baseName = pathinfo($entity->file['name'], PATHINFO_BASENAME);
             $destinationPath = (isset($entity->dir_name)) ? $destinationBasePath . $entity->dir_name . DS . $baseName : $destinationBasePath . $baseName;
-            $tempPath = TEMP_UPLOADS . $baseName;
+            $tempPath = TMP_UPLOADS . $baseName;
             if (!file_exists($tempPath)) {
                 if (move_uploaded_file($entity->file['tmp_name'], $tempPath)) {
                     $newFile = new File($destinationPath, true);
@@ -192,9 +191,9 @@ class CustomerFilesTable extends Table
     }
 
     /**
-     * IsFileAllowed method
+     * IsTypeAllowed method
      */
-    private function isFileAllowed($file)
+    private function isTypeAllowed($file)
     {
         $typeAllowed = [
             'text/plain',
@@ -202,7 +201,6 @@ class CustomerFilesTable extends Table
             'application/msword', 
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
             'image/gif',
-            'image/x-icon',
             'image/jpeg',
             'application/vnd.oasis.opendocument.presentation',
             'application/vnd.oasis.opendocument.spreadsheet',
@@ -214,8 +212,7 @@ class CustomerFilesTable extends Table
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         ];        
-        $mimeType = mime_content_type($file['tmp_name']);
-        return in_array($mimeType, $typeAllowed);
+        return in_array(mime_content_type($file), $typeAllowed);
     }
 
     /**

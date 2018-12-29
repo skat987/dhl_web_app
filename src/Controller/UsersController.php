@@ -140,7 +140,6 @@ class UsersController extends AppController
     public function login()
     {
         if ($this->request->is('post')) {
-            //dd($this->request->getData());
             $user = $this->Auth->identify();
             if ($user) {
                 $this->Auth->setUser($user);

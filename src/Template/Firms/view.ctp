@@ -23,7 +23,7 @@ $this->assign('title', 'Espace client');
                 </div>
                 <div class="col-md-4 mb-2">
                     <p class="lead text-center">
-                        <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->dir->read()[0])) ?></span>
+                        <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->storage->read()[0])) ?></span>
                         <?= __(' dossiers') ?>
                     </p>
                 </div>
@@ -38,14 +38,14 @@ $this->assign('title', 'Espace client');
     </div>
 </div>
 <div class="row">
-    <?php if ($firm->customer_files_count > 0): ?>
+    <?php if ((count($firm->storage->read()[0]) > 0) || ($firm->customer_files_count > 0)): ?>
     <div class="accordion col" id="firmStorage">
-        <?php if (count($firm->dir->read()[0]) > 0): ?>
-        <?php foreach ($firm->dir->read()[0] as $key => $subDir): ?>
+        <?php if (count($firm->storage->read()[0]) > 0): ?>
+        <?php foreach ($firm->storage->read()[0] as $key => $dir_name): ?>
         <div class="card">
             <div class="card-header" id=<?= __('heading_') . $key ?>>
                 <h5 class="mb-0">
-                    <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($subDir), [
+                    <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($dir_name), [
                         'escape' => false,
                         'class' => 'btn btn-link',
                         'type' => 'button',
@@ -60,7 +60,7 @@ $this->assign('title', 'Espace client');
                 <div class="card-body">
                     <ul class="list-group">
                         <?php foreach ($firm->customer_files as $customerFile): ?>
-                        <?php if ($customerFile->file->Folder->inPath($firm->dir->cd($subDir))): ?>
+                        <?php if ($customerFile->file->Folder->inPath($firm->storage->cd($dir_name))): ?>
                         <li class="list-group-item">
                             <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name),
                                 'uploads' . DS . $firm->id . DS . $customerFile->dir_name . DS . $customerFile->file->name,
@@ -82,10 +82,10 @@ $this->assign('title', 'Espace client');
         </div>
         <?php endforeach; ?>
         <?php endif; ?>
-        <?php if (count($firm->dir->read()[1]) > 0): ?>
+        <?php if (count($firm->storage->read()[1]) > 0): ?>
         <ul class="list-group">
             <?php foreach($firm->customer_files as $customerFile): ?>
-            <?php if ($customerFile->file->Folder->path == $firm->dir->path): ?>
+            <?php if ($customerFile->file->Folder->path == $firm->storage->path): ?>
             <li class="list-group-item">
                 <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name),
                     'uploads' . DS . $firm->id . DS . $customerFile->file->name,

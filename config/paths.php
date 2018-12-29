@@ -93,7 +93,7 @@ define('UPLOADS', WWW_ROOT . 'uploads' . DS);
 /**
  * Path to the uploads/Temp directory
  */
-define('TEMP_UPLOADS', UPLOADS . 'Temp' . DS);
+define('TMP_UPLOADS', WWW_ROOT . 'tmp' . DS);
 
 /**
  * Define the number of blocks that should be read from the source file for each chunk.

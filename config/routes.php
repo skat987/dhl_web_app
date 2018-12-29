@@ -85,7 +85,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/customer-files/:id/delete', ['controller' => 'CustomerFiles', 'action' => 'delete'], ['_name' => 'deleteCustomerFile'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/customer-files/:firm_id-:dir_name/delete', ['controller' => 'CustomerFiles', 'action' => 'deleteDir'], ['_name' => 'deleteDirectory'])
+    $routes->connect('/customer-files/:firm_id-:dir_name/delete', ['controller' => 'CustomerFiles', 'action' => 'deleteDirectory'], ['_name' => 'deleteDirectory'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id', 'dir_name']);
     $routes->connect('/customer-files/:id/download', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])

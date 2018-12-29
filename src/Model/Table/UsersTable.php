@@ -130,13 +130,11 @@ class UsersTable extends Table
         if ($entity->isDirty('first_name') || $entity->isDirty('last_name')) {
             $entity->full_name = $entity->first_name . ' ' . $entity->last_name;
         }
-
         if (!$entity->isNew() && $entity->isDirty('firm_id')) {
             $oldFirm = $this->Firms->get($entity->getOriginal('firm_id'));
             $oldFirm->workers_count = $this->find()->where(['firm_id' => $oldFirm->id])->count() - 1;
             $this->Firms->save($oldFirm);
         }
-
     }
 
     /**

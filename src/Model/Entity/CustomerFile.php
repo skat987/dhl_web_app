@@ -16,7 +16,6 @@ use Cake\Utility\Security;
  * @property string $file_extension
  * @property string $file_key
  * @property int $firm_id
- * @property int $tag
  * @property int $added_by
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified

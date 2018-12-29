@@ -54,7 +54,7 @@ echo $this->element('modal');
                             </p>
                             <p class="mb-0">
                             <p class="mb-0">
-                                <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->dir->read()[0])) ?></span>
+                                <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->storage->read()[0])) ?></span>
                                 <?= __(' dossiers') ?>
                             </p>
                             <p class="mb-0">
@@ -92,12 +92,12 @@ echo $this->element('modal');
                         </div>
                     </div>
                 </div>
-                <?php if ((count($firm->dir->read()[0]) > 0) || ($firm->customer_files_count > 0)): ?>
+                <?php if ((count($firm->storage->read()[0]) > 0) || ($firm->customer_files_count > 0)): ?>
                 <div id=<?= __('collapse_') . $firm->id ?> class="collapse" aria-labelledby=<?= __('heading_') . $firm->id ?> data-parent="#firmsList">
                     <div class="card-body">
                         <div class="accordion" id=<?= __('storage_firm_') . $firm->id ?>>
-                            <?php if (count($firm->dir->read()[0]) > 0): ?>
-                            <?php foreach($firm->dir->read()[0] as $key => $dir_name): ?>
+                            <?php if (count($firm->storage->read()[0]) > 0): ?>
+                            <?php foreach($firm->storage->read()[0] as $key => $dir_name): ?>
                             <div class="card">
                                 <div class="card-header" id=<?= __('heading_storage_') . $firm->id . __('_dir_') . $key ?>>
                                     <div class="row">
@@ -126,7 +126,7 @@ echo $this->element('modal');
                                     <div class="card-body">
                                         <ul class="list-group">
                                             <?php foreach($firm->customer_files as $customerFile): ?>
-                                            <?php if($customerFile->file->Folder->inPath($firm->dir->cd($dir_name))): ?>
+                                            <?php if($customerFile->file->Folder->inPath($firm->storage->cd($dir_name))): ?>
                                             <li class="list-group-item">
                                                 <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name), [
                                                     '_name' => 'downloadCustomerFile', 
@@ -150,10 +150,10 @@ echo $this->element('modal');
                             </div>
                             <?php endforeach; ?>
                             <?php endif; ?>
-                            <?php if (count($firm->dir->read()[1]) > 0): ?>
+                            <?php if (count($firm->storage->read()[1]) > 0): ?>
                             <ul class="list-group">
                                 <?php foreach($firm->customer_files as $customerFile): ?>
-                                <?php if($customerFile->file->Folder->path == $firm->dir->path): ?>
+                                <?php if($customerFile->file->Folder->path == $firm->storage->path): ?>
                                 <li class="list-group-item">
                                     <?= $this->Html->link(_('<i class="far fa-file"></i> ') . h($customerFile->file_name), [
                                         '_name' => 'downloadCustomerFile',

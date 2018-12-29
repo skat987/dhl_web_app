@@ -96,7 +96,10 @@ class FirmsTable extends Table
     public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         if ($entity->isNew()) {
-            $newDir = new Folder(UPLOADS . $entity->id, true);
+            $storage = new Folder();
+            if (!$storage->create(UPLOADS . $entity->id)) {
+                return false;
+            }
         }
     }    
 }

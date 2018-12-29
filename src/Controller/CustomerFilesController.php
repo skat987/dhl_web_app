@@ -29,7 +29,7 @@ class CustomerFilesController extends AppController
     public function isAuthorized($user)
     {
         if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['add', 'delete', 'getFirmDirectories', 'createDir', 'deleteDir', 'downloadCustomerFile'];
+            $actionsAllowed = ['add', 'delete', 'getFirmDirectories', 'createDirectory', 'deleteDirectory', 'downloadCustomerFile'];
         }
         $action = (isset($actionsAllowed)) ? $this->request->getParam('action') : null;
         if (isset($action)) {
@@ -144,8 +144,8 @@ class CustomerFilesController extends AppController
      */
     public function getFirmDirectories($firmId)
     {
-        $dir = new Folder(UPLOADS . $firmId);
-        $directories = $dir->read()[0];
+        $storage = new Folder(UPLOADS . $firmId);
+        $directories = $storage->read()[0];
         $this->set(compact('directories'));
     }
 
@@ -156,7 +156,7 @@ class CustomerFilesController extends AppController
      * 
      * @return \Cake\Http\Response|void
      */
-    public function createDir()
+    public function createDirectory()
     {
         if ($this->request->is('post')) {
             $data = $this->request->getData();
@@ -171,7 +171,7 @@ class CustomerFilesController extends AppController
     }
 
     /**
-     * DeleteDir method
+     * DeleteDirectory method
      * 
      * Delete a directory from the firm's files storage.
      * 
@@ -179,7 +179,7 @@ class CustomerFilesController extends AppController
      * @param string $dirName Directory name
      * @return \Cake\Http\Response|null Redirects to the current page.  
      */
-    public function deleteDir($firmId, $dirName)
+    public function deleteDirectory($firmId, $dirName)
     {
         $this->request->allowMethod(['post', 'delete']);
         $dir = new Folder(UPLOADS . $firmId . DS . $dirName);
@@ -206,7 +206,7 @@ class CustomerFilesController extends AppController
         $customerFile = $this->CustomerFiles->get($id, [
             'contain' => []
         ]);
-        $tempPath = TEMP_UPLOADS . $customerFile->file->name;
+        $tempPath = TMP_UPLOADS . $customerFile->file->name;
         if (!file_exists($tempPath)) {
             $tempFile = new File($tempPath, true);
             $isDecrypt = $this->decryptCustomerFile($customerFile->file->path, $customerFile->file_key, $tempPath);
@@ -214,6 +214,7 @@ class CustomerFilesController extends AppController
                 $this->setHeaders($tempFile);
                 $tempFile->delete();
             } else {
+                $tempFile->delete();
                 $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
             }
         } else {

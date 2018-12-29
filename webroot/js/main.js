@@ -99,7 +99,7 @@ function createDir(modal) {
             var dirsSelect = modal.find('#dirsSelect');
             if (firmId) {
                 $.post({
-                    url: '/customer-files/create-dir',
+                    url: '/customer-files/create-directory',
                     data: {
                         firmId: firmId,
                         newDir: newDir
