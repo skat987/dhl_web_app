@@ -61,7 +61,11 @@ class User extends Entity
     /**
      * Method to hash user password
      * 
+     * Set the user's password property.
      * The passed value must have a length of 8 or greater than.
+     * 
+     * @param string $value Password to assigned to the entity.
+     * @return string Hashed by the custom password hasher using 'sha3-512' algo.
      */
     protected function _setPassword($value)
     {

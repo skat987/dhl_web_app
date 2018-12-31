@@ -48,6 +48,10 @@ class Firm extends Entity
 
     /**
      * Accessor for the storage property
+     * 
+     * Get the firm's files storage.
+     * 
+     * @return \Cake\Filesystem\Folder Folder object used to store the firm's files.
      */
     protected function _getStorage()
     {

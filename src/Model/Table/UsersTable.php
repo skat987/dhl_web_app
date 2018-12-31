@@ -124,6 +124,8 @@ class UsersTable extends Table
 
     /**
      * BeforeSave method
+     * 
+     * Performs actions before the entity is backed up into the database.
      */
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
@@ -139,6 +141,8 @@ class UsersTable extends Table
 
     /**
      * AfterSave method
+     * 
+     * Performs actions after the entity has been saved in the database.
      */
     public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {

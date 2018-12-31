@@ -1,5 +1,7 @@
 <?php
 /**
+ * Login form.
+ * 
  * @var \App\View\AppView $this
  */
 ?>

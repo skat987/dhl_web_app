@@ -1,5 +1,7 @@
 <?php
 /**
+ * Form for adding a customer file.
+ * 
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\CustomerFile $customerFile
  */

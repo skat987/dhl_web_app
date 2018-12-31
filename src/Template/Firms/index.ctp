@@ -1,5 +1,7 @@
 <?php
 /**
+ * List of firms.
+ * 
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Firm[]|\Cake\Collection\CollectionInterface $firms
  */

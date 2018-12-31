@@ -79,6 +79,9 @@ class AppController extends Controller
      * IsAuthorized method
      * 
      * Define the allowed methods for the authenticated user.
+     * 
+     * @param string|array $user user's authenticated informations
+     * @return bool if the authenticated user is authorized or not.
      */
     public function isAuthorized($user)
     {

@@ -92,6 +92,9 @@ class FirmsTable extends Table
 
      /**
      * AfterSave method
+     * 
+     * Performs actions after the entity has been saved in the database.
+     * Create a firm's storage space.
      */
     public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {

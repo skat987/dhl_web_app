@@ -60,6 +60,11 @@ class CustomerFile extends Entity
 
     /**
      * Accessor of the file property
+     * 
+     * Returns the file linked to the entity
+     * 
+     * @param array|null $file file stored or to store on the application
+     * @return \Cake\Filesystem\File|array If it's a new entity, returns the file's informations in an array, else return the file stored.
      */
     protected function _getFile($file = null)
     {
@@ -76,7 +81,10 @@ class CustomerFile extends Entity
     }
 
     /**
-     * Mutator of the file-key property 
+     * Mutator of the file_key property 
+     * 
+     * @param string $value key to assign to the entity
+     * @return string Hashed with the 'sha3-512' algo.
      */
     protected function _setFileKey($value)
     {

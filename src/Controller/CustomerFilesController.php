@@ -70,6 +70,8 @@ class CustomerFilesController extends AppController
 
     /**
      * Add method
+     * 
+     * Create a new Customer File entity.
      *
      * @return \Cake\Http\Response|null Redirects on successful add, to the current page.
      */
@@ -117,6 +119,8 @@ class CustomerFilesController extends AppController
 
     /**
      * Delete method
+     * 
+     * Delete the selected customer file.
      *
      * @param string|null $id Customer File id.
      * @return \Cake\Http\Response|null Redirects to the current page.

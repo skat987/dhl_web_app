@@ -114,6 +114,8 @@ class CustomerFilesTable extends Table
 
     /**
      * BeforeMarshal method
+     * 
+     * Performs actions before the data is converted to an entity.
      */
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
@@ -132,6 +134,9 @@ class CustomerFilesTable extends Table
 
     /**
      * BeforeSave method
+     * 
+     * Performs actions before the entity is backed up to the database.
+     * It realizes the storage of the file and its encryption.
      */
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
@@ -160,6 +165,8 @@ class CustomerFilesTable extends Table
 
     /**
      * AfterSave method
+     * 
+     * Performs actions after the entity has been saved in the database.
      */
     public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
@@ -172,6 +179,8 @@ class CustomerFilesTable extends Table
 
     /**
      * BeforeDelete method
+     * 
+     * Performs actions before the entity is deleted.
      */
     public function beforeDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
@@ -182,6 +191,8 @@ class CustomerFilesTable extends Table
 
     /**
      * AfterDelete method
+     * 
+     * Performs actions after the entity has been deleted. 
      */
     public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
@@ -192,6 +203,11 @@ class CustomerFilesTable extends Table
 
     /**
      * IsTypeAllowed method
+     * 
+     * Check that the file type is allowed.
+     * 
+     * @param string $file Path to the file to check.
+     * @return bool If the type is in the allowed list.
      */
     private function isTypeAllowed($file)
     {
@@ -217,6 +233,15 @@ class CustomerFilesTable extends Table
 
     /**
      * EncryptCustomerFile method
+     * 
+     * Encrypt the contents of a file by block using AES-256-CBC.
+     * The original file is deleted at the end of the operation.
+     * The encryption key is hashed in sha 3.
+     * 
+     * @param string $source Path to the file to encrypt
+     * @param string $key Encryption key.
+     * @param string $dest Path to the output file
+     * @return string|bool $dest if the action is successful or 'false'
      */
     private function encryptCustomerFile($source, $key, $dest)
     {

@@ -1,5 +1,7 @@
 <?php
 /**
+ * Form to add a firm.
+ * 
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Firm $firm
  */

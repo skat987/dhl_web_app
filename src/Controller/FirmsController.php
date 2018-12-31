@@ -20,6 +20,11 @@ class FirmsController extends AppController
 
     /**
      * IsAuthorized method
+     * 
+     * Define the allowed methods for the authenticated user.
+     * 
+     * @param string|array $user user's authenticated informations
+     * @return bool if the authenticated user is authorized or not.
      */
     public function isAuthorized($user)
     {
@@ -34,6 +39,8 @@ class FirmsController extends AppController
 
     /**
      * Index method
+     * 
+     * Set the firms list on the admin home page.
      *
      * @return \Cake\Http\Response|void
      */
@@ -48,6 +55,8 @@ class FirmsController extends AppController
 
     /**
      * View method
+     * 
+     * Show the profile of the firm.
      *
      * @param string|null $id Firm id.
      * @return \Cake\Http\Response|void
@@ -63,6 +72,8 @@ class FirmsController extends AppController
 
     /**
      * Add method
+     * 
+     * Create a new firm entity.
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
@@ -83,6 +94,8 @@ class FirmsController extends AppController
 
     /**
      * Edit method
+     * 
+     * Update the informations of the selected firm.
      *
      * @param string|null $id Firm id.
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
@@ -106,6 +119,8 @@ class FirmsController extends AppController
 
     /**
      * Delete method
+     * 
+     * Delete the selected firm entity.
      *
      * @param string|null $id Firm id.
      * @return \Cake\Http\Response|null Redirects to index.

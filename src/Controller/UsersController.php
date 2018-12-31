@@ -25,6 +25,11 @@ class UsersController extends AppController
 
     /**
      * IsAuthorized method
+     * 
+     * Define the allowed methods for the authenticated user.
+     * 
+     * @param string|array $user user's authenticated informations
+     * @return bool if the authenticated user is authorized or not.
      */
     public function isAuthorized($user)
     {
@@ -39,6 +44,8 @@ class UsersController extends AppController
 
     /**
      * Index method
+     * 
+     * Show the users list page.
      *
      * @return \Cake\Http\Response|void
      */
@@ -53,6 +60,8 @@ class UsersController extends AppController
 
     /**
      * View method
+     * 
+     * Show the profile of the selected user.
      *
      * @param string|null $id User id.
      * @return \Cake\Http\Response|void
@@ -68,6 +77,8 @@ class UsersController extends AppController
 
     /**
      * Add method
+     * 
+     * Create a new user entity.
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
@@ -89,6 +100,8 @@ class UsersController extends AppController
 
     /**
      * Edit method
+     * 
+     * Update the informations of the selected user.
      *
      * @param string|null $id User id.
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
@@ -114,6 +127,8 @@ class UsersController extends AppController
 
     /**
      * Delete method
+     * 
+     * Delete the selected user.
      *
      * @param string|null $id User id.
      * @return \Cake\Http\Response|null Redirects to index.
@@ -133,6 +148,8 @@ class UsersController extends AppController
 
     /**
      * Login method
+     * 
+     * Connect a user.
      * 
      * @return \Cake\Http\Response|null Redirects to Auth HomePage.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
@@ -158,6 +175,8 @@ class UsersController extends AppController
     
     /**
      * Logout method
+     * 
+     * Disconnect a user.
      * 
      * @return \Cake\Http\Response|null Redirects to Login Page.
      */
