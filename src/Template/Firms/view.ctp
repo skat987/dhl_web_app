@@ -46,17 +46,27 @@ $this->assign('title', 'Espace client');
         <?php foreach ($firm->storage->read()[0] as $key => $dir_name): ?>
         <div class="card">
             <div class="card-header" id=<?= __('heading_') . $key ?>>
-                <h5 class="mb-0">
-                    <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($dir_name), [
-                        'escape' => false,
-                        'class' => 'btn btn-link',
-                        'type' => 'button',
-                        'data-toggle' => 'collapse',
-                        'data-target' => '#collapse_' . $key,
-                        'aria-expanded' => 'false',
-                        'aria-controls' => 'collapse_' . $key
-                    ]) ?>
-                </h5>
+                <div class="row">
+                    <div class="col-auto mr-auto">
+                        <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($dir_name), [
+                            'escape' => false,
+                            'class' => 'btn btn-link',
+                            'type' => 'button',
+                            'data-toggle' => 'collapse',
+                            'data-target' => '#collapse_' . $key,
+                            'aria-expanded' => 'false',
+                            'aria-controls' => 'collapse_' . $key
+                        ]) ?>
+                    </div>
+                    <div class="col-auto">
+                        <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
+                            '_name' => 'deleteDirectory', 'firm_id' => $firm->id, 'dir_name' => $dir_name
+                        ], [
+                            'escape' => false,
+                            'confirm' => __('Voulez-vous vraiment supprimer le dossier {0}?', $dir_name)
+                        ]) ?>
+                    </div>
+                </div>
             </div>
             <div id=<?= __('collapse_') . $key ?> class="collapse" aria-labelledby=<?= __('heading_') . $key ?> data-parent="#firmStorage">
                 <div class="card-body">
