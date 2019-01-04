@@ -7,6 +7,8 @@
  */
 
 $this->assign('title', 'Espace client');
+// Call the Modal element
+echo $this->element('modal');
 ?>
 <div class="row">
     <div class="jumbotron jumbotron-fluid col">
@@ -37,6 +39,28 @@ $this->assign('title', 'Espace client');
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col d-flex justify-content-center">
+        <?= $this->Html->link(__('<i class="far fa-file"></i> Ajouter un document <i class="fas fa-plus-circle"></i>'), '#', [
+            'escape' => false,
+            'role' => 'button',
+            'class' => 'btn btn-outline-dark',
+            'data-toggle' => 'modal',
+            'data-target' => '#modal',
+            'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id]),
+            'data-firm' => $firm->id
+        ]) ?>
+        <?= $this->Html->link(__('<i class="far fa-folder"></i> Nouveau dossier <i class="fas fa-plus-circle"></i>'), '#', [
+            'escape' => false,
+            'role' => 'button',
+            'class' => 'btn btn-outline-dark',
+            'data-toggle' => 'modal',
+            'data-target' => '#modal',
+            'data-link' => $this->Url->build(['_name' => 'addDirectory', $firm->id]),
+            'data-firm' => $firm->id
+        ]) ?>
     </div>
 </div>
 <div class="row">
