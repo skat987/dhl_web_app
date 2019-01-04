@@ -47,9 +47,7 @@ class FirmsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => [
-                'CustomerFiles' 
-            ],
+            'contain' => ['CustomerFiles'],
             'maxLimit' => 10
         ];
         $firms = $this->paginate($this->Firms);
@@ -69,7 +67,7 @@ class FirmsController extends AppController
     {
         $firm = $this->Firms->get($id, [
             'contain' => ['CustomerFiles', 'Users']
-        ]);     
+        ]);
         $this->set(compact('firm'));
     }
 

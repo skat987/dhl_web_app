@@ -41,6 +41,7 @@ echo $this->element('modal');
         </div>
     </div>
 </div>
+<?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
 <div class="row">
     <div class="col d-flex justify-content-center">
         <?= $this->Html->link(__('<i class="far fa-file"></i> Ajouter un document <i class="fas fa-plus-circle"></i>'), '#', [
@@ -63,6 +64,7 @@ echo $this->element('modal');
         ]) ?>
     </div>
 </div>
+<?php endif; ?>
 <div class="row">
     <?php if ((count($firm->storage->read()[0]) > 0) || ($firm->customer_files_count > 0)): ?>
     <div class="accordion col" id="firmStorage">
@@ -82,6 +84,7 @@ echo $this->element('modal');
                             'aria-controls' => 'collapse_' . $key
                         ]) ?>
                     </div>
+                    <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
                     <div class="col-auto">
                         <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
                             '_name' => 'deleteDirectory', 'firm_id' => $firm->id, 'dir_name' => $dir_name
@@ -90,6 +93,7 @@ echo $this->element('modal');
                             'confirm' => __('Voulez-vous vraiment supprimer le dossier {0}?', $dir_name)
                         ]) ?>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
             <div id=<?= __('collapse_') . $key ?> class="collapse" aria-labelledby=<?= __('heading_') . $key ?> data-parent="#firmStorage">
@@ -98,10 +102,13 @@ echo $this->element('modal');
                         <?php foreach ($firm->customer_files as $customerFile): ?>
                         <?php if ($customerFile->file->Folder->inPath($firm->storage->cd($dir_name))): ?>
                         <li class="list-group-item">
-                            <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name),
-                                'uploads' . DS . $firm->id . DS . $customerFile->dir_name . DS . $customerFile->file->name,
-                                ['escape' => false]
-                            ) ?>
+                            <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name), [
+                                '_name' => 'downloadCustomerFile',
+                                $customerFile->id
+                            ], [
+                                'escape' => false
+                            ]) ?>
+                            <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
                             <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
                                 '_name' => 'deleteCustomerFile', $customerFile->id
                             ], [
@@ -109,6 +116,7 @@ echo $this->element('modal');
                                 'class' => 'float-right',
                                 'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                             ]) ?>
+                            <?php endif; ?>
                         </li>
                         <?php endif; ?>
                         <?php endforeach; ?>
@@ -123,10 +131,13 @@ echo $this->element('modal');
             <?php foreach($firm->customer_files as $customerFile): ?>
             <?php if ($customerFile->file->Folder->path == $firm->storage->path): ?>
             <li class="list-group-item">
-                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name),
-                    'uploads' . DS . $firm->id . DS . $customerFile->file->name,
-                    ['escape' => false]
-                ) ?>
+                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name), [
+                    '_name' => 'downloadCustomerFile',
+                    $customerFile->id
+                ], [
+                    'escape' => false
+                ]) ?>
+                <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
                 <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
                     '_name' => 'deleteCustomerFile', $customerFile->id
                 ], [
@@ -134,6 +145,7 @@ echo $this->element('modal');
                     'class' => 'float-right',
                     'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                 ]) ?>
+                <?php endif; ?>
             </li>
             <?php endif; ?>
             <?php endforeach; ?>

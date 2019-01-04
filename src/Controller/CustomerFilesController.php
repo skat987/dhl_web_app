@@ -30,6 +30,8 @@ class CustomerFilesController extends AppController
     {
         if (in_array($user['user_type_id'], [1, 2])) {
             $actionsAllowed = ['add', 'delete', 'addDirectory', 'deleteDirectory', 'downloadCustomerFile'];
+        } else {
+            $actionsAllowed = ['downloadCustomerFile'];
         }
         $action = (isset($actionsAllowed)) ? $this->request->getParam('action') : null;
         if (isset($action)) {
