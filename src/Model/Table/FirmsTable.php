@@ -90,7 +90,7 @@ class FirmsTable extends Table
         return $validator;
     }
 
-     /**
+    /**
      * AfterSave method
      * 
      * Performs actions after the entity has been saved in the database.
@@ -104,5 +104,27 @@ class FirmsTable extends Table
                 return false;
             }
         }
-    }    
+    }   
+
+    /**
+     * BeforeDelete method
+     * 
+     * Performs actions before the entity is deleted.
+     */
+    public function beforeDelete(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        if ($entity->customer_files_count > 0) {
+            return false;
+        }
+    }
+    
+    /**
+     * AfterDelete method
+     * 
+     * Performs actions after the entity has been deleted
+     */
+    public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $entity->storage->delete();
+    }
 }
