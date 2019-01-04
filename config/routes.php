@@ -55,7 +55,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout'], ['_name' => 'logout']);
 
     /**
-     * Admin routes
+     * Firm entity routes
      */
     $routes->connect('/admin/home', ['controller' => 'Firms', 'action' => 'index'], ['_name' => 'adminHome']);
     $routes->connect('/admin/firm/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'firmView'])
@@ -69,6 +69,9 @@ Router::scope('/', function (RouteBuilder $routes) {
         ->setPass(['id']);
     $routes->connect('/admin/firms/add', ['controller' => 'Firms', 'action' => 'add'], ['_name' => 'adminFirmAdd']);
     
+    /**
+     * User entity routes
+     */
     $routes->connect('/admin/users', ['controller' => 'Users', 'action' => 'index'], ['_name' => 'adminUsers']);
     $routes->connect('/admin/users/:id', ['controller' => 'Users', 'action' => 'view'], ['_name' => 'userView'])
         ->setPatterns(['id' => '\d+'])
@@ -81,10 +84,18 @@ Router::scope('/', function (RouteBuilder $routes) {
         ->setPass(['id']);
     $routes->connect('/admin/users/add', ['controller' => 'Users', 'action' => 'add'], ['_name' => 'userAdd']);
 
-    $routes->connect('/customer-files/add', ['controller' => 'CustomerFiles', 'action' => 'add'], ['_name' => 'addCustomerFile']);
+    /**
+     * CustomerFile entity routes
+     */
+    $routes->connect('/customer-files/firm-:firm_id/add', ['controller' => 'CustomerFiles', 'action' => 'add'], ['_name' => 'addCustomerFile'])
+        ->setPatterns(['firm_id' => '\d+'])
+        ->setPass(['firm_id']);
     $routes->connect('/customer-files/:id/delete', ['controller' => 'CustomerFiles', 'action' => 'delete'], ['_name' => 'deleteCustomerFile'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
+    $routes->connect('/customer-files/firm-:firm_id/add-directory', ['controller' => 'CustomerFiles', 'action' => 'addDirectory'], ['_name' => 'addDirectory'])
+        ->setPatterns(['firm_id' => '\d+'])
+        ->setPass(['firm_id']);
     $routes->connect('/customer-files/:firm_id-:dir_name/delete', ['controller' => 'CustomerFiles', 'action' => 'deleteDirectory'], ['_name' => 'deleteDirectory'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id', 'dir_name']);

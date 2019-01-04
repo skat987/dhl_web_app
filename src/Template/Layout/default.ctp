@@ -16,7 +16,7 @@
 $appBaseTitle = 'DHL';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

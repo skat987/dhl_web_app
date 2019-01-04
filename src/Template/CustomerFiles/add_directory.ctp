@@ -1,29 +1,32 @@
 <?php
 /**
- * Form to add a firm.
+ * Form to add a new folder
  * 
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Firm $firm
  */
 ?>
 <div class="modal-header">
-    <h4 class="modal-title font-weight-bold"><?= __('Ajouter une société') ?></h4>
+    <h4 class="modal-title font-weight-bold"><?= __('Nouveau dossier') ?></h4>
     <?= $this->Form->button('<span aria-hidden="true">&times;</span>', [
-        'type' => 'button', 
-        'class' => 'close', 
-        'data-dismiss' => 'modal', 
-        'aria-label' => 'Close', 
+        'type' => 'button',
+        'class' => 'close',
+        'data-dismiss' => 'modal',
+        'aria-label' => 'Close',
         'escape' => false
     ]) ?>
 </div>
-<?= $this->Form->create($firm) ?>
+<?= $this->Form->create(null) ?>
 <div class="modal-body">
     <div class="form-group">
-        <?= $this->Form->control('name', [
-            'label' => ['text' => 'Nom de la société'],
+        <p>Société: <?= h($firm->name) ?></p>
+    </div>
+    <div class="form-group">
+        <?= $this->Form->control('dirName', [
+            'label' => ['text' => 'Nom du dossier'],
             'type' => 'text',
             'class' => 'form-control',
-            'placeholder' => 'Entrer le nom de la société'
+            'placeholder' => 'Entrer le nom du dossier'
         ]) ?>
     </div>
 </div>

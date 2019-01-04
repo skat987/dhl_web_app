@@ -128,7 +128,7 @@ class CustomerFilesTable extends Table
             }
         }
         if (isset($data['dir_name'])) {
-            $data['dir_name'] = ($data['dir_name'] == 'null') ? null : $data['dir_name'];
+            $data['dir_name'] = ($data['dir_name'] == '') ? null : $data['dir_name'];
         }
     }
 

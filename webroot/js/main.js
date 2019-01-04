@@ -10,9 +10,9 @@ function setUpFirmsIndex() {
     var modal = $('#modal');
     if (modal) {
         showModal(modal);
-        showFileSelected(modal);
-        setDirsSelect(modal);
-        createDir(modal);
+        // showFileSelected(modal);
+        // setDirsSelect(modal);
+        // createDir(modal);
     }
 }
 
@@ -20,7 +20,7 @@ function showModal(modal) {
     modal.on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);
         var url = button.data('link');
-        var id = button.data('id');
+        var id = button.data('firm');
         if (id != null) {
             $.get({
                 url: url,

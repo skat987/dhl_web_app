@@ -29,7 +29,7 @@ class CustomerFilesController extends AppController
     public function isAuthorized($user)
     {
         if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['add', 'delete', 'getFirmDirectories', 'createDirectory', 'deleteDirectory', 'downloadCustomerFile'];
+            $actionsAllowed = ['add', 'delete', 'addDirectory', 'deleteDirectory', 'downloadCustomerFile'];
         }
         $action = (isset($actionsAllowed)) ? $this->request->getParam('action') : null;
         if (isset($action)) {
@@ -75,13 +75,14 @@ class CustomerFilesController extends AppController
      *
      * @return \Cake\Http\Response|null Redirects on successful add, to the current page.
      */
-    public function add()
+    public function add($firmId = null)
     {
         $customerFile = $this->CustomerFiles->newEntity();
+        $customerFile->firm_id = $firmId;
         if ($this->request->is('post')) {
             $customerFile = $this->CustomerFiles->patchEntity($customerFile, $this->request->getData());
             $customerFile->added_by = $this->Auth->user('id');    
-            $customerFile->file_key = Security::randomBytes(CHUNK_ENCRYPTION_SIZE);   
+            $customerFile->file_key = Security::randomBytes(CHUNK_ENCRYPTION_SIZE); 
             if ($this->CustomerFiles->save($customerFile)) {          
                 $this->Flash->success(__('Le fichier a bien été sauvegardé.'));
             } else {
@@ -89,8 +90,10 @@ class CustomerFilesController extends AppController
             }     
             return $this->redirect($this->referer());
         }
-        $firms = $this->CustomerFiles->Firms->find('list', ['limit' => 200]);
-        $this->set(compact('customerFile', 'firms'));
+        $firm = $this->CustomerFiles->Firms->get($firmId, [
+            'contain' => []
+        ]);
+        $this->set(compact('customerFile', 'firm'));
     }
 
     /**
@@ -114,7 +117,7 @@ class CustomerFilesController extends AppController
             $this->Flash->error(__('Le fichier n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));
         }
         $firms = $this->CustomerFiles->Firms->find('list', ['limit' => 200]);
-        $this->set(compact('customerFile', 'firms', 'file'));
+        $this->set(compact('customerFile', 'firms'));
     }
 
     /**
@@ -139,39 +142,28 @@ class CustomerFilesController extends AppController
     }
 
     /**
-     * GetFirmDirectories method
-     * 
-     * Return the directories from the firm's files storage.
-     * 
-     * @param string $firmId Firm id
-     * @return \Cake\Http\Response|void
-     */
-    public function getFirmDirectories($firmId)
-    {
-        $storage = new Folder(UPLOADS . $firmId);
-        $directories = $storage->read()[0];
-        $this->set(compact('directories'));
-    }
-
-    /**
      * CreateDir method
      * 
      * Create a new directory in the firm's files storage.
      * 
      * @return \Cake\Http\Response|void
      */
-    public function createDirectory()
+    public function addDirectory($firmId)
     {
+        $firm = $this->CustomerFiles->Firms->get($firmId, [
+            'contain' => []
+        ]);
         if ($this->request->is('post')) {
-            $data = $this->request->getData();
-            $dir = new Folder(UPLOADS . $data['firmId']);
-            $newDir = new Folder($dir->pwd() . DS . $data['newDir'], true);
-            $resp = [
-                'message' => 'Le dossier ' . $data['newDir'] . ' a bien été créé.',
-                'value' => $data['newDir']
-            ];
-            $this->set(compact('resp'));
+            $dirName = $this->request->getData('dirName');
+            $dir = new Folder();
+            if ($dir->create($firm->storage->path . DS . $dirName)) {
+                $this->Flash->success(__('Le dossier {0} a bien été créé.', $dirName));
+            } else {
+                $this->Flash->error(__('Une erreur est survenue. Le dossier {0} n\'a pas pu être créé.', $dirName));
+            }
+            return $this->redirect($this->referer());
         }
+        $this->set('firm', $firm);
     }
 
     /**
@@ -192,6 +184,8 @@ class CustomerFilesController extends AppController
         } else {
             if ($dir->delete()) {
                 $this->Flash->success(__('Le dossier {0} a bien été supprimé', $dirName));
+            } else {
+                $this->Flash->error(__('Une erreur est survenue. Le dossier {0} n\'a pas pu être supprimé.', $dirName));
             }
         }
         return $this->redirect($this->referer());
@@ -216,11 +210,10 @@ class CustomerFilesController extends AppController
             $isDecrypt = $this->decryptCustomerFile($customerFile->file->path, $customerFile->file_key, $tempPath);
             if ($isDecrypt) {
                 $this->setHeaders($tempFile);
-                $tempFile->delete();
             } else {
-                $tempFile->delete();
                 $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
             }
+            $tempFile->delete();
         } else {
             $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
         }

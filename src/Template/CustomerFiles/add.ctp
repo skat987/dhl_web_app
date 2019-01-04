@@ -17,7 +17,18 @@
     ]) ?>
 </div>
 <?= $this->Form->create($customerFile, ['type' => 'file']) ?>
-<div class="modal-body">
+<div class="modal-body"> 
+    <div class="form-row">
+        <div class="col-md-12 mb-3">
+            <?= $this->Form->control('CustomerFile.Firm', [
+                'label' => ['text' => 'Société'],
+                'id' => 'firmsSelect',
+                'class' => 'form-control-plaintext',
+                'readonly' => true,
+                'value' => $firm->name
+            ]) ?>
+        </div>
+    </div>
     <div class="form-row">
         <div class="col-md-12 mb-3 custom-file">
             <?= $this->Form->control('file', [
@@ -30,44 +41,19 @@
     </div>
     <div class="form-row">
         <div class="col-md-12 mb-3">
-            <?= $this->Form->control('firm_id', [
-                'label' => ['text' => 'Société'],
-                'class' => 'form-control',
-                'id' => 'firmsSelect',
-                'options' => $firms,
-                'empty' => 'Sélectionnez une société'
-            ]) ?>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-12 mb-3">
             <?= $this->Form->control('dir_name', [
                 'label' => ['text' => 'Dossier'],
                 'class' => 'form-control',
                 'id' => 'dirsSelect',
                 'type' => 'select',
+                'options' => [
+                    [
+                        'value' => $firm->storage->read()[0],
+                        'text' => $firm->storage->read()[0]
+                    ]
+                ],
                 'empty' => 'Sélectionnez un dossier'
             ]) ?>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-6 mb-3">
-            <?= $this->Form->control('newDir', [
-                'class' => 'form-control',
-                'id' => 'newDirName',
-                'label' => ['text' => 'Nouveau dossier'],
-                'placeholder' => 'Nom du nouveau dossier'
-            ]) ?>
-        </div>
-        <div class="col-md-6 mb-3">
-            <?= $this->Html->link('Ajouter dossier <i class="fas fa-plus-circle"></i>', '#', [
-                'escape' => false,
-                'class' => 'btn btn-outline-dark',
-                'role' => 'button',
-                'id' => 'newDirBtn',
-                'data-link' => ''
-            ]) ?>
-            <small  class="form-text text-muted" id="newDirResult"></small >
         </div>
     </div>
 </div>

@@ -20,14 +20,6 @@ echo $this->element('modal');
             'role' => 'button',
             'class' => 'btn btn-outline-dark'
         ]) ?>
-        <?= $this->Html->link(__('Ajouter un document <i class="fas fa-plus-circle"></i>'), '#', [
-            'escape' => false,
-            'data-toggle' => 'modal',
-            'data-target' => '#modal',
-            'data-link' => $this->Url->build(['_name' => 'addCustomerFile']),
-            'role' => 'button',
-            'class' => 'btn btn-outline-dark'
-        ]) ?>
     </div>
 </div>
 <div class="row">
@@ -77,12 +69,12 @@ echo $this->element('modal');
                                 ], [
                                     'escape' => false
                                 ]) ?>
-                                <?= $this->Html->link('<i class="far fa-edit"></i>', '#', [
+                                <?= $this->Html->link(__('<i class="far fa-edit"></i>'), '#', [
                                     'escape' => false,
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
                                     'data-link' => $this->Url->build(['_name' => 'adminFirmEdit', $firm->id]),
-                                    'data-id' => $firm->id
+                                    'data-firm' => $firm->id
                                 ]) ?>
                                 <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
                                     '_name' => 'adminFirmDelete', $firm->id
@@ -94,9 +86,30 @@ echo $this->element('modal');
                         </div>
                     </div>
                 </div>
-                <?php if ((count($firm->storage->read()[0]) > 0) || ($firm->customer_files_count > 0)): ?>
                 <div id=<?= __('collapse_') . $firm->id ?> class="collapse" aria-labelledby=<?= __('heading_') . $firm->id ?> data-parent="#firmsList">
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col d-flex justify-content-center">
+                                <?= $this->Html->link(__('<i class="far fa-file"></i> Ajouter un document <i class="fas fa-plus-circle"></i>'), '#', [
+                                    'escape' => false,
+                                    'role' => 'button',
+                                    'class' => 'btn btn-outline-dark',
+                                    'data-toggle' => 'modal',
+                                    'data-target' => '#modal',
+                                    'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id]),
+                                    'data-firm' => $firm->id
+                                ]) ?>
+                                <?= $this->Html->link(__('<i class="far fa-folder"></i> Nouveau dossier <i class="fas fa-plus-circle"></i>'), '#', [
+                                    'escape' => false,
+                                    'role' => 'button',
+                                    'class' => 'btn btn-outline-dark',
+                                    'data-toggle' => 'modal',
+                                    'data-target' => '#modal',
+                                    'data-link' => $this->Url->build(['_name' => 'addDirectory', $firm->id]),
+                                    'data-firm' => $firm->id
+                                ]) ?>
+                            </div>
+                        </div>
                         <div class="accordion" id=<?= __('storage_firm_') . $firm->id ?>>
                             <?php if (count($firm->storage->read()[0]) > 0): ?>
                             <?php foreach($firm->storage->read()[0] as $key => $dir_name): ?>
@@ -178,7 +191,6 @@ echo $this->element('modal');
                         </div>
                     </div>
                 </div>
-                <?php endif; ?>
             </div>
             <?php endforeach; ?>
         </div>
