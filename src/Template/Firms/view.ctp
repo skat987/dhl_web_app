@@ -19,22 +19,22 @@ echo $this->element('modal');
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 mb-2">
+                <div class="col-md-4">
                     <p class="lead text-center">
                         <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->workers_count) ?></span>
-                        <?= __(' utilisateurs associés') ?>
+                        <?php echo ($firm->workers_count > 1) ? 'utilisateurs associés' : 'utilisateur associé' ?>
                     </p>
                 </div>
-                <div class="col-md-4 mb-2">
+                <div class="col-md-4">
                     <p class="lead text-center">
                         <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->storage->read()[0])) ?></span>
-                        <?= __(' dossiers') ?>
+                        <?php echo (count($firm->storage->read()[0]) > 1) ? 'dossiers' : 'dossier' ?>
                     </p>
                 </div>
-                <div class="col-md-4 mb-2">
+                <div class="col-md-4">
                     <p class="lead text-center">
                         <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
-                        <?= __(' documents') ?>
+                        <?php echo ($firm->customer_files_count > 1) ? 'documents' : 'document' ?>
                     </p>
                 </div>
             </div>
@@ -43,7 +43,7 @@ echo $this->element('modal');
 </div>
 <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
 <div class="row">
-    <div class="col d-flex justify-content-center">
+    <div class="col-md-6 mb-3 d-flex justify-content-center">
         <?= $this->Html->link(__('<i class="far fa-file"></i> Ajouter un document <i class="fas fa-plus-circle"></i>'), '#', [
             'escape' => false,
             'role' => 'button',
@@ -53,6 +53,8 @@ echo $this->element('modal');
             'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id]),
             'data-firm' => $firm->id
         ]) ?>
+    </div>
+    <div class="col-md-6 mb-3 d-flex justify-content-center">
         <?= $this->Html->link(__('<i class="far fa-folder"></i> Nouveau dossier <i class="fas fa-plus-circle"></i>'), '#', [
             'escape' => false,
             'role' => 'button',

@@ -13,7 +13,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-$appBaseTitle = 'DHL';
+$appBaseTitle = 'DHL : ';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -21,7 +21,7 @@ $appBaseTitle = 'DHL';
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <?= $appBaseTitle ?>:
+        <?= $appBaseTitle ?>
         <?= $this->fetch('title') ?>
     </title>  
     <?= $this->Html->css('bootstrap.min') ?>
@@ -41,7 +41,7 @@ $appBaseTitle = 'DHL';
     <header class="container-fluid">
         <div class="row">
             <div class="col">
-                <h1 class="text-center"><?= $appBaseTitle ?>: <?= $this->fetch('title') ?></h1>
+                <h1 class="text-center"><?= $appBaseTitle . $this->fetch('title') ?></h1>
             </div>
         </div>
         <?php if (!empty($this->request->getSession()->read('Auth.User'))): ?>

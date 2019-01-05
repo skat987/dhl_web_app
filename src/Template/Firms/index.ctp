@@ -18,7 +18,7 @@ echo $this->element('modal');
             'data-target' => '#modal',
             'data-link' => $this->Url->build(['_name' => 'adminFirmAdd']),
             'role' => 'button',
-            'class' => 'btn btn-outline-dark'
+            'class' => 'btn btn-outline-dark mt-3 mb-3'
         ]) ?>
     </div>
 </div>
@@ -44,16 +44,16 @@ echo $this->element('modal');
                         <div class="col-4">
                             <p class="mb-0">
                                 <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->workers_count) ?></span>
-                                <?= __(' utilisateurs associés') ?>
+                                <?php echo ($firm->workers_count > 1) ? 'utilisateurs associés' : 'utilisateur associé' ?>
                             </p>
                             <p class="mb-0">
                             <p class="mb-0">
                                 <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->storage->read()[0])) ?></span>
-                                <?= __(' dossiers') ?>
+                                <?php echo (count($firm->storage->read()[0]) > 1) ? 'dossiers' : 'dossier' ?>
                             </p>
                             <p class="mb-0">
                                 <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
-                                <?= __(' documents') ?>
+                                <?php echo ($firm->customer_files_count > 1) ? 'documents' : 'document' ?>
                             </p>
                         </div>
                         <div class="col-4">
@@ -63,14 +63,18 @@ echo $this->element('modal');
                                 </div>
                             </div>
                             <div class="row justify-content-center">
+                                <abbr title="Accéder à l'espace client">
                                 <?= $this->Html->link('<i class="far fa-eye"></i>', [
                                     '_name' => 'firmView', 
                                     $firm->id
                                 ], [
-                                    'escape' => false
+                                    'escape' => false,
+                                    'class' => 'mr-2'
                                 ]) ?>
+                                </abbr>
                                 <?= $this->Html->link(__('<i class="far fa-edit"></i>'), '#', [
                                     'escape' => false,
+                                    'class' => 'mr-2',
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
                                     'data-link' => $this->Url->build(['_name' => 'adminFirmEdit', $firm->id]),
@@ -89,7 +93,7 @@ echo $this->element('modal');
                 <div id=<?= __('collapse_') . $firm->id ?> class="collapse" aria-labelledby=<?= __('heading_') . $firm->id ?> data-parent="#firmsList">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col d-flex justify-content-center">
+                            <div class="col-md-6 mb-3 d-flex justify-content-center">
                                 <?= $this->Html->link(__('<i class="far fa-file"></i> Ajouter un document <i class="fas fa-plus-circle"></i>'), '#', [
                                     'escape' => false,
                                     'role' => 'button',
@@ -99,6 +103,8 @@ echo $this->element('modal');
                                     'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id]),
                                     'data-firm' => $firm->id
                                 ]) ?>
+                            </div>
+                            <div class="col-md-6 mb-3 d-flex justify-content-center">
                                 <?= $this->Html->link(__('<i class="far fa-folder"></i> Nouveau dossier <i class="fas fa-plus-circle"></i>'), '#', [
                                     'escape' => false,
                                     'role' => 'button',

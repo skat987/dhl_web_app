@@ -48,6 +48,9 @@ class FirmsController extends AppController
     {
         $this->paginate = [
             'contain' => ['CustomerFiles'],
+            'order' => [
+                'Firms.name' => 'asc'
+            ],
             'maxLimit' => 10
         ];
         $firms = $this->paginate($this->Firms);
