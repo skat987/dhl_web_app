@@ -12,13 +12,14 @@ echo $this->element('modal');
 ?>
 <div class="row">
     <div class="col">
-        <?= $this->Html->link(__('Ajouter une société <i class="fas fa-plus-circle"></i>'), '#', [
+        <?= $this->Html->link(__('Nouvelle société <i class="fas fa-plus-circle"></i>'), '#', [
             'escape' => false,
             'data-toggle' => 'modal',
             'data-target' => '#modal',
             'data-link' => $this->Url->build(['_name' => 'adminFirmAdd']),
             'role' => 'button',
-            'class' => 'btn btn-outline-dark mt-3 mb-3'
+            'class' => 'btn btn-outline-dark mt-3 mb-3',
+            'title' => 'Ajouter une société'
         ]) ?>
     </div>
 </div>
@@ -33,6 +34,7 @@ echo $this->element('modal');
                             <h5 class="mb-0">
                                 <?= $this->Form->button(h($firm->name), [
                                     'class' => 'btn btn-link',
+                                    'title' => 'Ouvrir',
                                     'type' => 'button',
                                     'data-toggle' => 'collapse',
                                     'data-target' => '#collapse_' . $firm->id,
@@ -63,18 +65,18 @@ echo $this->element('modal');
                                 </div>
                             </div>
                             <div class="row justify-content-center">
-                                <abbr title="Accéder à l'espace client">
                                 <?= $this->Html->link('<i class="far fa-eye"></i>', [
                                     '_name' => 'firmView', 
                                     $firm->id
                                 ], [
                                     'escape' => false,
-                                    'class' => 'mr-2'
+                                    'class' => 'mr-2',
+                                    'title' => 'Accéder à l\'espace client'
                                 ]) ?>
-                                </abbr>
                                 <?= $this->Html->link(__('<i class="far fa-edit"></i>'), '#', [
                                     'escape' => false,
                                     'class' => 'mr-2',
+                                    'title' => 'Renommer la société',
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
                                     'data-link' => $this->Url->build(['_name' => 'adminFirmEdit', $firm->id]),
@@ -84,6 +86,7 @@ echo $this->element('modal');
                                     '_name' => 'adminFirmDelete', $firm->id
                                 ], [
                                     'escape' => false,
+                                    'title' => 'Supprimer la société',
                                     'confirm' => __('Voulez-vous vraiment supprimer la société {0}?', $firm->name)
                                 ]) ?>
                             </div>
@@ -94,10 +97,11 @@ echo $this->element('modal');
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3 d-flex justify-content-center">
-                                <?= $this->Html->link(__('<i class="far fa-file"></i> Ajouter un document <i class="fas fa-plus-circle"></i>'), '#', [
+                                <?= $this->Html->link(__('<i class="far fa-file"></i> Nouveau document <i class="fas fa-plus-circle"></i>'), '#', [
                                     'escape' => false,
                                     'role' => 'button',
                                     'class' => 'btn btn-outline-dark',
+                                    'title' => __('Ajouter un document à la société {0}', $firm->name),
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
                                     'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id]),
@@ -109,6 +113,7 @@ echo $this->element('modal');
                                     'escape' => false,
                                     'role' => 'button',
                                     'class' => 'btn btn-outline-dark',
+                                    'title' => __('Ajouter un dossier à la société {0}', $firm->name),
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
                                     'data-link' => $this->Url->build(['_name' => 'addDirectory', $firm->id]),
@@ -126,6 +131,7 @@ echo $this->element('modal');
                                             <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($dir_name), [
                                                 'escape' => false,
                                                 'class' => 'btn btn-link',
+                                                'title' => 'Ouvrir',
                                                 'type' => 'button',
                                                 'data-toggle' => 'collapse',
                                                 'data-target' => '#collapse_storage_' . $firm->id . __('_dir_') . $key,
@@ -138,6 +144,7 @@ echo $this->element('modal');
                                                 '_name' => 'deleteDirectory', 'firm_id' => $firm->id, 'dir_name' => $dir_name
                                             ], [
                                                 'escape' => false,
+                                                'title' => 'Supprimer le dossier',
                                                 'confirm' => __('Voulez-vous vraiment supprimer le dossier {0}?', $dir_name)
                                             ]) ?>
                                         </div>
@@ -153,13 +160,15 @@ echo $this->element('modal');
                                                     '_name' => 'downloadCustomerFile', 
                                                     $customerFile->id
                                                 ], [
-                                                    'escape' => false
+                                                    'escape' => false,
+                                                    'title' => 'Télécharger'
                                                 ]) ?>
                                                 <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
                                                     '_name' => 'deleteCustomerFile', $customerFile->id
                                                 ], [
                                                     'escape' => false,
                                                     'class' => 'float-right',
+                                                    'title' => 'Supprimer le document',
                                                     'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                                                 ]) ?>
                                             </li>
@@ -180,13 +189,15 @@ echo $this->element('modal');
                                         '_name' => 'downloadCustomerFile',
                                         $customerFile->id
                                     ], [
-                                        'escape' => false
+                                        'escape' => false,
+                                        'title' => 'Télécharger'
                                     ]) ?>
                                     <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
                                         '_name' => 'deleteCustomerFile', $customerFile->id
                                     ], [
                                         'escape' => false,
                                         'class' => 'float-right',
+                                        'title' => 'Supprimer le document',
                                         'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                                     ]) ?>
                                 </li>

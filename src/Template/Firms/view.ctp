@@ -44,10 +44,11 @@ echo $this->element('modal');
 <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
 <div class="row">
     <div class="col-md-6 mb-3 d-flex justify-content-center">
-        <?= $this->Html->link(__('<i class="far fa-file"></i> Ajouter un document <i class="fas fa-plus-circle"></i>'), '#', [
+        <?= $this->Html->link(__('<i class="far fa-file"></i> Nouveau document <i class="fas fa-plus-circle"></i>'), '#', [
             'escape' => false,
             'role' => 'button',
             'class' => 'btn btn-outline-dark',
+            'title' => 'Ajouter un document',
             'data-toggle' => 'modal',
             'data-target' => '#modal',
             'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id]),
@@ -59,6 +60,7 @@ echo $this->element('modal');
             'escape' => false,
             'role' => 'button',
             'class' => 'btn btn-outline-dark',
+            'title' => 'Ajouter un dossier',
             'data-toggle' => 'modal',
             'data-target' => '#modal',
             'data-link' => $this->Url->build(['_name' => 'addDirectory', $firm->id]),
@@ -79,6 +81,7 @@ echo $this->element('modal');
                         <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($dir_name), [
                             'escape' => false,
                             'class' => 'btn btn-link',
+                            'title' => 'Ouvrir',
                             'type' => 'button',
                             'data-toggle' => 'collapse',
                             'data-target' => '#collapse_' . $key,
@@ -89,9 +92,12 @@ echo $this->element('modal');
                     <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
                     <div class="col-auto">
                         <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
-                            '_name' => 'deleteDirectory', 'firm_id' => $firm->id, 'dir_name' => $dir_name
+                            '_name' => 'deleteDirectory', 
+                            'firm_id' => $firm->id, 
+                            'dir_name' => $dir_name
                         ], [
                             'escape' => false,
+                            'title' => 'Supprimer le dossier',
                             'confirm' => __('Voulez-vous vraiment supprimer le dossier {0}?', $dir_name)
                         ]) ?>
                     </div>
@@ -108,7 +114,8 @@ echo $this->element('modal');
                                 '_name' => 'downloadCustomerFile',
                                 $customerFile->id
                             ], [
-                                'escape' => false
+                                'escape' => false,
+                                'title' => 'Télécharger'
                             ]) ?>
                             <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
                             <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
@@ -116,6 +123,7 @@ echo $this->element('modal');
                             ], [
                                 'escape' => false,
                                 'class' => 'float-right',
+                                'title' => 'Supprimer le document',
                                 'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                             ]) ?>
                             <?php endif; ?>
@@ -137,7 +145,8 @@ echo $this->element('modal');
                     '_name' => 'downloadCustomerFile',
                     $customerFile->id
                 ], [
-                    'escape' => false
+                    'escape' => false,
+                    'title' => 'Télécharger'
                 ]) ?>
                 <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
                 <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
@@ -145,6 +154,7 @@ echo $this->element('modal');
                 ], [
                     'escape' => false,
                     'class' => 'float-right',
+                    'title' => 'Télécharger',
                     'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                 ]) ?>
                 <?php endif; ?>
