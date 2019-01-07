@@ -80,7 +80,6 @@ class CustomerFilesController extends AppController
     public function add($firmId = null)
     {
         $customerFile = $this->CustomerFiles->newEntity();
-        $customerFile->firm_id = $firmId;
         if ($this->request->is('post')) {
             $customerFile = $this->CustomerFiles->patchEntity($customerFile, $this->request->getData());
             $customerFile->added_by = $this->Auth->user('id');    

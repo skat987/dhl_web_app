@@ -16,23 +16,25 @@
         'escape' => false
     ]) ?>
 </div>
-<?= $this->Form->create($customerFile, ['type' => 'file']) ?>
+<?= $this->Form->create($customerFile, [
+    'type' => 'file'
+]) ?>
 <div class="modal-body"> 
     <div class="form-row">
         <div class="col-md-12 mb-3">
-            <?= $this->Form->control('CustomerFile.Firm', [
-                'label' => ['text' => 'Société'],
-                'id' => 'firmsSelect',
-                'class' => 'form-control-plaintext',
-                'readonly' => true,
-                'value' => $firm->name
+            <p>Société : <?= h($firm->name) ?></p>
+            <?= $this->Form->hidden('firm_id', [
+                'value' => $firm->id
             ]) ?>
         </div>
     </div>
     <div class="form-row">
         <div class="col-md-12 mb-3 custom-file">
             <?= $this->Form->control('file', [
-                'label' => ['text' => 'Sélectionnez un fichier', 'class' => 'custom-file-label'],
+                'label' => [
+                    'text' => 'Sélectionnez un fichier', 
+                    'class' => 'custom-file-label'
+                ],
                 'type' => 'file',
                 'class' => 'form-control custom-file-input',
                 'id' => 'fileSelected'
@@ -42,16 +44,13 @@
     <div class="form-row">
         <div class="col-md-12 mb-3">
             <?= $this->Form->control('dir_name', [
-                'label' => ['text' => 'Dossier'],
-                'class' => 'form-control',
+                'label' => [
+                    'text' => 'Dossier'
+                ],
+                'class' => 'form-control custom-select',
                 'id' => 'dirsSelect',
                 'type' => 'select',
-                'options' => [
-                    [
-                        'value' => $firm->storage->read()[0],
-                        'text' => $firm->storage->read()[0]
-                    ]
-                ],
+                'options' => $firm->storage->read()[0],
                 'empty' => 'Sélectionnez un dossier'
             ]) ?>
         </div>

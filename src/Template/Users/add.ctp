@@ -60,15 +60,19 @@
                 'label' => ['text' => 'Mot de passe'],
                 'type' => 'password',
                 'class' => 'form-control',
+                'aria-describedby' => 'passwordHelpBlock',
                 'placeholder' => 'Mot de passe'
             ]) ?>
+            <small id="passwordHelpBlock" class="form-text text-muted">
+                Au moins 8 caractères. N'utilisez pas d'espace, ni de caractères spéciaux.
+            </small>
         </div>
     </div>
     <div class="form-row">
         <div class="col-md-6 mb-3">
             <?= $this->Form->control('user_type_id', [
                 'label' => ['text' => 'Type d\'utilisateur'],
-                'class' => 'form-control',
+                'class' => 'form-control custom-select',
                 'options' => $userTypes,
                 'empty' => 'Sélectionnez un type'
             ]) ?>
@@ -76,7 +80,7 @@
         <div class="col-md-6 mb-3">
             <?= $this->Form->control('firm_id', [
                 'label' => ['text' => 'Société'],
-                'class' => 'form-control',
+                'class' => 'form-control custom-select',
                 'options' => $firms,
                 'empty' => 'Selectionnez une société'
             ]) ?>

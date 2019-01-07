@@ -19,11 +19,13 @@
 <?= $this->Form->create(null) ?>
 <div class="modal-body">
     <div class="form-group">
-        <p>Société: <?= h($firm->name) ?></p>
+        <p>Société : <?= h($firm->name) ?></p>
     </div>
     <div class="form-group">
         <?= $this->Form->control('dirName', [
-            'label' => ['text' => 'Nom du dossier'],
+            'label' => [
+                'text' => 'Nom du dossier'
+            ],
             'type' => 'text',
             'class' => 'form-control',
             'placeholder' => 'Entrer le nom du dossier'

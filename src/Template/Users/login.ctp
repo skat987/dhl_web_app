@@ -4,6 +4,8 @@
  * 
  * @var \App\View\AppView $this
  */
+
+$this->assign('title', 'Connexion');
 ?>
 <?= $this->Flash->render('auth') ?>
 <div class="row">
