@@ -12,13 +12,14 @@ echo $this->element('modal');
 ?>
 <div class="row">
     <div class="col">
-        <?= $this->Html->link(__('Ajouter un utilisateur <i class="fas fa-plus-circle"></i>'), '#', [
+        <?= $this->Html->link(__('Nouvel utilisateur <i class="fas fa-plus-circle"></i>'), '#', [
             'escape' => false,
             'data-toggle' => 'modal',
             'data-target' => '#modal',
             'data-link' => $this->Url->build(['_name' => 'userAdd']),
             'role' => 'button',
-            'class' => 'btn btn-outline-dark'
+            'class' => 'btn btn-outline-dark mt-2 mb-2',
+            'title' => 'Ajouter un utilisateur'
         ]) ?>
     </div>
 </div>
@@ -42,27 +43,34 @@ echo $this->element('modal');
                 <td><?= h($user->phone) ?></td>
                 <td><?= h($user->email) ?></td>
                 <td><?= $user->has('user_type') ? h($user->user_type->name) : '' ?></td>
-                <td><?= $user->has('firm') ? $this->Html->link($user->firm->name, ['_name' => 'firmView', $user->firm->id]) : '' ?></td>
+                <td>
+                    <?= $user->has('firm') ? $this->Html->link($user->firm->name, [
+                        '_name' => 'firmView', 
+                        $user->firm->id
+                    ], [
+                        'title' => 'Accéder à l\'espace client'
+                    ]) : '' ?></td>
                 <td>
                     <?= $this->Html->link('<i class="far fa-eye"></i>', '#', [
                         'escape' => false,
+                        'title' => 'Voir le profil',
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
-                        'data-link' => $this->Url->build(['_name' => 'userView', $user->id]),
-                        'data-id' => $user->id
+                        'data-link' => $this->Url->build(['_name' => 'userView', $user->id])
                     ]) ?>
                     <?= $this->Html->link('<i class="far fa-edit"></i>', '#', [
                         'escape' => false,
+                        'title' => 'Modifier le profil',
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
-                        'data-link' => $this->Url->build(['_name' => 'userEdit', $user->id]),
-                        'data-id' => $user->id
+                        'data-link' => $this->Url->build(['_name' => 'userEdit', $user->id])
                     ]) ?>                    
                     <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
                         '_name' => 'userDelete', $user->id
                     ], [
                         'escape' => false,
-                        'confirm' => __('Voulez-vous vraiment supprimer l\'utilisateur: {0}?', $user->full_name)
+                        'title' => 'Supprimer l\'utilisateur',
+                        'confirm' => __('Voulez-vous vraiment supprimer l\'utilisateur {0}?', $user->full_name)
                     ]) ?>
                 </td>
             </tr>

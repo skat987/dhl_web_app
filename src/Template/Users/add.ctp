@@ -16,7 +16,10 @@
         'escape' => false
     ]) ?>
 </div>
-<?= $this->Form->create($user) ?>
+<?= $this->Form->create($user, [
+    'class' => 'needs-validation',
+    'novalidate' => true
+]) ?>
 <div class="modal-body">
     <div class="form-row">
         <div class="col-md-4 mb-3">
@@ -66,6 +69,9 @@
             <small id="passwordHelpBlock" class="form-text text-muted">
                 Au moins 8 caractères. N'utilisez pas d'espace, ni de caractères spéciaux.
             </small>
+            <div class="invalid-feedback">
+                Le mot de passe est incorrect !
+            </div>
         </div>
     </div>
     <div class="form-row">
@@ -82,7 +88,7 @@
                 'label' => ['text' => 'Société'],
                 'class' => 'form-control custom-select',
                 'options' => $firms,
-                'empty' => 'Selectionnez une société'
+                'empty' => 'Sélectionnez une société'
             ]) ?>
         </div>
     </div>

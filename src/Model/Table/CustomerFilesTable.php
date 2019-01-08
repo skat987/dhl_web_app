@@ -95,6 +95,10 @@ class CustomerFilesTable extends Table
             ->requirePresence('added_by', 'create')
             ->notEmpty('added_by');
 
+        $validator 
+            ->requirePresence('file', 'create')
+            ->notEmpty('file');
+
         return $validator;
     }
 

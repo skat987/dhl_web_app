@@ -79,8 +79,7 @@ echo $this->element('modal');
                                     'title' => 'Renommer la société',
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
-                                    'data-link' => $this->Url->build(['_name' => 'adminFirmEdit', $firm->id]),
-                                    'data-firm' => $firm->id
+                                    'data-link' => $this->Url->build(['_name' => 'adminFirmEdit', $firm->id])
                                 ]) ?>
                                 <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
                                     '_name' => 'adminFirmDelete', $firm->id
@@ -104,8 +103,7 @@ echo $this->element('modal');
                                     'title' => __('Ajouter un document à la société {0}', $firm->name),
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
-                                    'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id]),
-                                    'data-firm' => $firm->id
+                                    'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id])
                                 ]) ?>
                             </div>
                             <div class="col-md-6 mb-3 d-flex justify-content-center">
@@ -116,8 +114,7 @@ echo $this->element('modal');
                                     'title' => __('Ajouter un dossier à la société {0}', $firm->name),
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
-                                    'data-link' => $this->Url->build(['_name' => 'addDirectory', $firm->id]),
-                                    'data-firm' => $firm->id
+                                    'data-link' => $this->Url->build(['_name' => 'addDirectory', $firm->id])
                                 ]) ?>
                             </div>
                         </div>
@@ -164,7 +161,8 @@ echo $this->element('modal');
                                                     'title' => 'Télécharger'
                                                 ]) ?>
                                                 <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
-                                                    '_name' => 'deleteCustomerFile', $customerFile->id
+                                                    '_name' => 'deleteCustomerFile', 
+                                                    $customerFile->id
                                                 ], [
                                                     'escape' => false,
                                                     'class' => 'float-right',
@@ -193,7 +191,8 @@ echo $this->element('modal');
                                         'title' => 'Télécharger'
                                     ]) ?>
                                     <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
-                                        '_name' => 'deleteCustomerFile', $customerFile->id
+                                        '_name' => 'deleteCustomerFile', 
+                                        $customerFile->id
                                     ], [
                                         'escape' => false,
                                         'class' => 'float-right',

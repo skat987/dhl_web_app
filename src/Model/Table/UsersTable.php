@@ -100,8 +100,19 @@ class UsersTable extends Table
         $validator
             ->scalar('password')
             ->maxLength('password', 255)
+            ->minLength('password', 8)
             ->requirePresence('password', 'create')
             ->notEmpty('password');
+
+        $validator
+            ->integer('user_type_id')
+            ->requirePresence('user_type_id', 'create')
+            ->notEmpty('user_type_id');
+        
+        $validator
+            ->integer('firm_id')
+            ->requirePresence('firm_id', 'create')
+            ->notEmpty('firm_id');
 
         return $validator;
     }

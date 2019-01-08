@@ -52,7 +52,12 @@ class UsersController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['UserTypes', 'Firms']
+            'contain' => ['UserTypes', 'Firms'],
+            'order' => [
+                'Users.last_name' => 'asc',
+                'Users.first_name' => 'asc'
+            ],
+            'maxLimit' => 10
         ];
         $users = $this->paginate($this->Users);
         $this->set(compact('users'));
@@ -92,6 +97,7 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'index']);
             }            
             $this->Flash->error(__('L\'utilisateur n\'a pas pu être sauvegardé. Veuillez ré-essayer'));
+            //return $this->redirect($this->referer());
         }
         $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200]);
         $firms = $this->Users->Firms->find('list', ['limit' => 200]);
