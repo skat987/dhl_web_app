@@ -17,7 +17,7 @@
     ]) ?>
 </div>
 <?= $this->Form->create($user, [
-    'class' => 'needs-validation',
+    'class' => 'needs-validation was-validated',
     'novalidate' => true
 ]) ?>
 <div class="modal-body">
@@ -66,12 +66,12 @@
                 'aria-describedby' => 'passwordHelpBlock',
                 'placeholder' => 'Mot de passe'
             ]) ?>
-            <small id="passwordHelpBlock" class="form-text text-muted">
-                Au moins 8 caractères. N'utilisez pas d'espace, ni de caractères spéciaux.
-            </small>
             <div class="invalid-feedback">
                 Le mot de passe est incorrect !
             </div>
+            <small id="passwordHelpBlock" class="form-text text-muted">
+                Au moins 8 caractères. N'utilisez pas d'espace, ni de caractères spéciaux.
+            </small>
         </div>
     </div>
     <div class="form-row">
