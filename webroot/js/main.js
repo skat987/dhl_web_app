@@ -5,6 +5,7 @@
 /**
  * Global variables
  */ 
+const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 var modal, form;
 
 /**
@@ -27,7 +28,6 @@ function setUpModal(myModal) {
     myModal.on('show.bs.modal', function(event) {
         button = $(event.relatedTarget);
         url = button.data('link');
-        console.log('url= ', url);
         $.get({
             url: url,
             success: function(resp) {
@@ -44,10 +44,56 @@ function setUpModal(myModal) {
 }
 
 function setUpForm(myForm) {
-    //var submit = myForm.find('')
     var controls = myForm.find('.form-control');
-    myForm.on('submit', function(event) {
-        console.log('Submit', event);
-        event.preventDefault();
+    var inputFile = myForm.find('.custom-file-input');
+    if (inputFile) {
+        inputFile.change(function() {
+            inputFile[0].previousElementSibling.innerText = (inputFile[0].previousElementSibling.innerText == '') ? 'Sélectionnez un fichier' : inputFile[0].value;
+            console.log('file selected', inputFile);
+        });
+    }
+    controls.keyup(function() {
+        checkControls($(this)[0]);
+    });   
+    controls.change(function() {
+        checkControls($(this)[0]);
     });
+    myForm.on('submit', function(event) {
+       for (const control of controls) {
+           control.parentElement.nextElementSibling.innerText = '';
+           if (!control.checkValidity()) {
+               control.classList.add('is-invalid');
+               control.parentElement.nextElementSibling.innerText = control.validationMessage;
+               control.parentElement.nextElementSibling.style.display = 'block';
+               event.preventDefault();
+               event.stopPropagation();
+           } else {
+                control.classList.remove('is-invalid');
+                control.classList.add('is-valid');
+           }
+           if (control.type == 'email') {
+               if (!emailPattern.test(control.value)) {   
+                   control.classList.add('is-invalid');                
+                    control.parentElement.nextElementSibling.innerText = (control.parentElement.nextElementSibling.innerText == '') ? 'Veuillez saisir une adresse électronique valide.' : control.parentElement.nextElementSibling.innerText;
+                    control.parentElement.nextElementSibling.style.display = 'block';
+                    event.preventDefault();
+                    event.stopPropagation();
+               } 
+           }
+       }
+    });
+}
+
+function checkControls(input) {
+    var checks;
+    if (input.type == 'email') {
+        checks = input.checkValidity() && emailPattern.test(input.value);
+    } else {
+        checks = input.checkValidity();
+    }
+    if (checks) {
+        input.parentElement.nextElementSibling.style.display = '';
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+    }
 }

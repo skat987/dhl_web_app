@@ -16,7 +16,10 @@
         'escape' => false
     ]) ?>
 </div>
-<?= $this->Form->create($firm) ?>
+<?= $this->Form->create($firm, [
+    'class' => 'needs-validation',
+    'novalidate' => true
+]) ?>
 <div class="modal-body">
     <div class="form-group">
         <?= $this->Form->control('name', [
@@ -25,6 +28,7 @@
             'class' => 'form-control',
             'placeholder' => 'Entrer le nom de la société'
         ]) ?>
+        <div class="invalid-feedback"></div>
     </div>
 </div>
 <div class="modal-footer">

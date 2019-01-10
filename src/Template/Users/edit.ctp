@@ -16,7 +16,10 @@
         'escape' => false
     ]) ?>
 </div>
-<?= $this->Form->create($user) ?>
+<?= $this->Form->create($user, [
+    'class' => 'needs-validation',
+    'novalidate' => true
+]) ?>
 <div class="modal-body">
     <div class="form-row">
         <div class="col-md-4 mb-3">
@@ -27,6 +30,7 @@
                 'placeholder' => 'Prénom',
                 'required' => true
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
         <div class="col-md-4 mb-3">
             <?= $this->Form->control('last_name', [
@@ -36,6 +40,7 @@
                 'placeholder' => 'Nom',
                 'required' => true
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
         <div class="col-md-4 mb-3">
             <?= $this->Form->control('phone', [
@@ -44,6 +49,7 @@
                 'class' => 'form-control',
                 'placeholder' => 'N° téléphone'
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
     </div>
     <div class="form-row">
@@ -54,17 +60,20 @@
                 'class' => 'form-control',
                 'placeholder' => 'Adresse mail'
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
         <div class="col-md-6 mb-3">
             <?= $this->Form->control('password', [
                 'label' => ['text' => 'Mot de passe'],
                 'type' => 'password',
+                'minlength' => 8,
                 'class' => 'form-control',
                 'aria-describedby' => 'passwordHelpBlock',
                 'placeholder' => 'Mot de passe'
             ]) ?>
+            <div class="invalid-feedback"></div>
             <small id="passwordHelpBlock" class="form-text text-muted">
-                Au moins 8 caractères. N'utilisez pas d'espace, ni de caractères spéciaux.
+                <?= __('Au moins 8 caractères') ?>
             </small>
         </div>
     </div>
@@ -76,6 +85,7 @@
                 'options' => $userTypes,
                 'empty' => 'Sélectionnez un type'
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
         <div class="col-md-6 mb-3">
             <?= $this->Form->control('firm_id', [
@@ -84,6 +94,7 @@
                 'options' => $firms,
                 'empty' => 'Selectionnez une société'
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
     </div>
 </div>

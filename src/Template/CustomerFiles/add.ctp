@@ -17,7 +17,9 @@
     ]) ?>
 </div>
 <?= $this->Form->create($customerFile, [
-    'type' => 'file'
+    'type' => 'file',
+    'class' => 'needs-validation',
+    'novalidate' => true
 ]) ?>
 <div class="modal-body"> 
     <div class="form-row">
@@ -36,9 +38,9 @@
                     'class' => 'custom-file-label'
                 ],
                 'type' => 'file',
-                'class' => 'form-control custom-file-input',
-                'id' => 'fileSelected'
+                'class' => 'form-control custom-file-input'
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
     </div>
     <div class="form-row">
@@ -53,6 +55,7 @@
                 'options' => $firm->storage->read()[0],
                 'empty' => 'Sélectionnez un dossier'
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
     </div>
 </div>

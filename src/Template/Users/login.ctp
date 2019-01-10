@@ -15,7 +15,10 @@ $this->assign('title', 'Connexion');
 </div>
 <div class="row">
     <div class="col">
-        <?= $this->Form->create() ?>
+        <?= $this->Form->create(null, [
+            'class' => 'needs-validation',
+            'novalidate' => true
+        ]) ?>
         <div class="form-group">
             <?= $this->Form->control('email', [
                 'type' => 'email',
@@ -23,14 +26,17 @@ $this->assign('title', 'Connexion');
                 'class' => 'form-control',
                 'placeholder' => 'Entrer votre email'
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
         <div class="form-group">
             <?= $this->Form->control('password', [
                 'type' => 'password',
+                'minlength' => 8,
                 'label' => ['text' => 'Mot de passe'],
                 'class' => 'form-control',
                 'placeholder' => 'Entrer votre mot de passe'
             ]) ?>
+            <div class="invalid-feedback"></div>
         </div>
         <?= $this->Form->submit(__('Connexion'), ['class' => 'btn btn-dark']) ?>
         <?= $this->Form->end() ?>
