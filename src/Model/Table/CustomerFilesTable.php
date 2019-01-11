@@ -131,8 +131,8 @@ class CustomerFilesTable extends Table
                 return false;
             }
         }
+        $data['dir_name'] = ($data['dir_name'] == '') ? null : $data['dir_name'];
         if (isset($data['dir_name'])) {
-            $data['dir_name'] = ($data['dir_name'] == '') ? null : $data['dir_name'];
             $firm = $this->Firms->get($data['firm_id']);
             $data['dir_name'] = $firm->storage->read()[0][$data['dir_name']];
         }
