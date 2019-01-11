@@ -119,8 +119,11 @@ echo $this->element('modal');
                             </div>
                         </div>
                         <div class="accordion" id=<?= __('storage_firm_') . $firm->id ?>>
-                            <?php if (count($firm->storage->read()[0]) > 0): ?>
-                            <?php foreach($firm->storage->read()[0] as $key => $dir_name): ?>
+                            <?php if (count($firm->storage->read()[0]) > 0): 
+                                $currentStorage = $firm->storage->read()[0];
+                                arsort($currentStorage);
+                            ?>
+                            <?php foreach($currentStorage as $key => $dir_name): ?>
                             <div class="card">
                                 <div class="card-header" id=<?= __('heading_storage_') . $firm->id . __('_dir_') . $key ?>>
                                     <div class="row">
