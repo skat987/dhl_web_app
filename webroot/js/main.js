@@ -48,8 +48,8 @@ function setUpForm(myForm) {
     var inputFile = myForm.find('.custom-file-input');
     if (inputFile) {
         inputFile.change(function() {
-            inputFile[0].previousElementSibling.innerText = (inputFile[0].previousElementSibling.innerText == '') ? 'Sélectionnez un fichier' : inputFile[0].value;
-            console.log('file selected', inputFile);
+            var values = inputFile[0].value.split('\\');
+            inputFile[0].previousElementSibling.innerText = (inputFile[0].previousElementSibling.innerText == '') ? 'Sélectionnez un fichier' : values[2];
         });
     }
     controls.keyup(function() {
