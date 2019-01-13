@@ -34,9 +34,9 @@ class UsersController extends AppController
     public function isAuthorized($user)
     {
         if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete'];
+            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete', 'editMyAccess'];
         } else {
-            $actionsAllowed = ['edit'];
+            $actionsAllowed = ['editMyAccess'];
         }
         $action = $this->request->getParam('action');
         return in_array($action, $actionsAllowed);
@@ -97,7 +97,7 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'index']);
             }            
             $this->Flash->error(__('L\'utilisateur n\'a pas pu être sauvegardé. Veuillez ré-essayer'));
-            //return $this->redirect($this->referer());
+            return $this->redirect($this->referer());
         }
         $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200]);
         $firms = $this->Users->Firms->find('list', ['limit' => 200]);
@@ -190,5 +190,21 @@ class UsersController extends AppController
     {
         $this->Flash->success('Vous avez été déconnecté.');        
         return $this->redirect($this->Auth->logout()); 
+    }
+
+    public function editMyAccess()
+    {
+        $user = $this->Users->get($this->Auth->user('id'));
+        if ($this->request->is(['post', 'patch', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Auth->setUser($user);
+                $this->Flash->success(__('Vos accès ont été modifiés.'));
+            } else {
+                $this->Flash->error(__('Une erreur est survenue. Vos accès n\'ont pas pu être modifiés.'));
+            }
+            return $this->redirect($this->referer());
+        }
+        $this->set('user', $user);
     }
 }

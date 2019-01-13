@@ -6,25 +6,40 @@
  * Global variables
  */ 
 const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-var modal, form;
+var modal, accessDropdown;
 
 /**
  * This run once the entire page is ready
  */
-$(document).ready(function() {
+$(function() {
     setUp();
 
     if (modal) {
         setUpModal(modal);
     }
+
+    if (accessDropdown) {
+        console.log(accessDropdown);
+        setUpAccessForm(accessDropdown);
+    }
+    // $('#drop').droppable({
+    //     accept: '#drag',
+    //     drop: function() {
+    //         alert('Action terminée !');
+    //     }
+    // });
+    // $('#drag').draggable({
+    //     revert: 'invalid'
+    // });
 });
 
 function setUp() {
     modal = $('#modal');
+    accessDropdown = $('#accessDropdown');
 }
 
 function setUpModal(myModal) {
-    var button, url;
+    var button, url, form;
     myModal.on('show.bs.modal', function(event) {
         button = $(event.relatedTarget);
         url = button.data('link');
@@ -59,28 +74,37 @@ function setUpForm(myForm) {
         checkControls($(this)[0]);
     });
     myForm.on('submit', function(event) {
-       for (const control of controls) {
-           control.parentElement.nextElementSibling.innerText = '';
-           if (!control.checkValidity()) {
-               control.classList.add('is-invalid');
-               control.parentElement.nextElementSibling.innerText = control.validationMessage;
-               control.parentElement.nextElementSibling.style.display = 'block';
-               event.preventDefault();
-               event.stopPropagation();
-           } else {
+        for (const control of controls) {
+            control.parentElement.nextElementSibling.innerText = '';
+            if (!control.checkValidity()) {
+                control.classList.add('is-invalid');
+                control.parentElement.nextElementSibling.innerText = control.validationMessage;
+                control.parentElement.nextElementSibling.style.display = 'block';
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
                 control.classList.remove('is-invalid');
                 control.classList.add('is-valid');
-           }
-           if (control.type == 'email') {
-               if (!emailPattern.test(control.value)) {   
-                   control.classList.add('is-invalid');                
+            }
+            if (control.type == 'email') {
+                if (!emailPattern.test(control.value)) {   
+                    control.classList.add('is-invalid');                
                     control.parentElement.nextElementSibling.innerText = (control.parentElement.nextElementSibling.innerText == '') ? 'Veuillez saisir une adresse électronique valide.' : control.parentElement.nextElementSibling.innerText;
                     control.parentElement.nextElementSibling.style.display = 'block';
                     event.preventDefault();
                     event.stopPropagation();
-               } 
-           }
-       }
+                } 
+            }
+            if (control.name == 'dirName') {
+                if (control.value == '') {
+                    control.classList.add('is-invalid');
+                    control.parentElement.nextElementSibling.innerText = 'Veuillez saisir un nom de dossier';
+                    control.parentElement.nextElementSibling.style.display = 'block';
+                    event.preventDefault();
+                    event.stopPropagation();
+                } 
+            }    
+        }
     });
 }
 
@@ -96,4 +120,25 @@ function checkControls(input) {
         input.classList.remove('is-invalid');
         input.classList.add('is-valid');
     }
+}
+
+function setUpAccessForm(dropdown) {
+    var button, url, content, form;
+    dropdown.on('show.bs.dropdown', function(event) {
+        console.log($(this));
+        button = $(event.relatedTarget);
+        url = button.data('link');
+        content = $('#editMyAccessForm');
+        $.get({
+            url: url,
+            success: function(resp) {
+                content.html(resp);
+                form = content.find('form');
+                setUpForm(form);
+            },
+            error: function(resp) {
+                content.html('<p>Error : the menu cannot be filled with content.</p>');
+            }
+        });
+    });
 }

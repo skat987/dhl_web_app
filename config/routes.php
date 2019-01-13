@@ -83,6 +83,7 @@ Router::scope('/', function (RouteBuilder $routes) {
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
     $routes->connect('/admin/users/add', ['controller' => 'Users', 'action' => 'add'], ['_name' => 'userAdd']);
+    $routes->connect('/my-access/edit', ['controller' => 'Users', 'action' => 'editMyAccess'], ['_name' => 'editAccess']);
 
     /**
      * CustomerFile entity routes

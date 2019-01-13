@@ -23,7 +23,7 @@ echo $this->element('modal');
         ]) ?>
     </div>
 </div>
-<div class="row">
+<div class="row">	
     <div class="col">
         <div class="accordion" id="firmsList">
             <?php foreach ($firms as $firm): ?>
