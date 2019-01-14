@@ -22,19 +22,19 @@ echo $this->element('modal');
                 <div class="col-md-4">
                     <p class="lead text-center">
                         <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->workers_count) ?></span>
-                        <?php echo ($firm->workers_count > 1) ? 'utilisateurs associés' : 'utilisateur associé' ?>
+                        <?= ($firm->workers_count > 1) ? 'utilisateurs associés' : 'utilisateur associé' ?>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <p class="lead text-center">
                         <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->storage->read()[0])) ?></span>
-                        <?php echo (count($firm->storage->read()[0]) > 1) ? 'dossiers' : 'dossier' ?>
+                        <?= (count($firm->storage->read()[0]) > 1) ? 'dossiers' : 'dossier' ?>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <p class="lead text-center">
                         <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
-                        <?php echo ($firm->customer_files_count > 1) ? 'documents' : 'document' ?>
+                        <?= ($firm->customer_files_count > 1) ? 'documents' : 'document' ?>
                     </p>
                 </div>
             </div>
@@ -71,98 +71,8 @@ echo $this->element('modal');
 <?php endif; ?>
 <div class="row">
     <?php if ((count($firm->storage->read()[0]) > 0) || ($firm->customer_files_count > 0)): ?>
-    <div class="accordion col" id="firmStorage">
-        <?php if (count($firm->storage->read()[0]) > 0): ?>
-        <?php foreach ($firm->storage->read()[0] as $key => $dir_name): ?>
-        <div class="card">
-            <div class="card-header" id=<?= __('heading_') . $key ?>>
-                <div class="row">
-                    <div class="col-auto mr-auto">
-                        <?= $this->Form->button(__('<i class="far fa-folder"></i> ') . h($dir_name), [
-                            'escape' => false,
-                            'class' => 'btn btn-link',
-                            'title' => 'Ouvrir',
-                            'type' => 'button',
-                            'data-toggle' => 'collapse',
-                            'data-target' => '#collapse_' . $key,
-                            'aria-expanded' => 'false',
-                            'aria-controls' => 'collapse_' . $key
-                        ]) ?>
-                    </div>
-                    <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
-                    <div class="col-auto">
-                        <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
-                            '_name' => 'deleteDirectory', 
-                            'firm_id' => $firm->id, 
-                            'dir_name' => $dir_name
-                        ], [
-                            'escape' => false,
-                            'title' => 'Supprimer le dossier',
-                            'confirm' => __('Voulez-vous vraiment supprimer le dossier {0}?', $dir_name)
-                        ]) ?>
-                    </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <div id=<?= __('collapse_') . $key ?> class="collapse" aria-labelledby=<?= __('heading_') . $key ?> data-parent="#firmStorage">
-                <div class="card-body">
-                    <ul class="list-group">
-                        <?php foreach ($firm->customer_files as $customerFile): ?>
-                        <?php if ($customerFile->file->Folder->inPath($firm->storage->cd($dir_name))): ?>
-                        <li class="list-group-item">
-                            <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name), [
-                                '_name' => 'downloadCustomerFile',
-                                $customerFile->id
-                            ], [
-                                'escape' => false,
-                                'title' => 'Télécharger'
-                            ]) ?>
-                            <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
-                            <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
-                                '_name' => 'deleteCustomerFile', $customerFile->id
-                            ], [
-                                'escape' => false,
-                                'class' => 'float-right',
-                                'title' => 'Supprimer le document',
-                                'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
-                            ]) ?>
-                            <?php endif; ?>
-                        </li>
-                        <?php endif; ?>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <?php endforeach; ?>
-        <?php endif; ?>
-        <?php if (count($firm->storage->read()[1]) > 0): ?>
-        <ul class="list-group">
-            <?php foreach($firm->customer_files as $customerFile): ?>
-            <?php if ($customerFile->file->Folder->path == $firm->storage->path): ?>
-            <li class="list-group-item">
-                <?= $this->Html->link(__('<i class="far fa-file"></i> ') . h($customerFile->file_name), [
-                    '_name' => 'downloadCustomerFile',
-                    $customerFile->id
-                ], [
-                    'escape' => false,
-                    'title' => 'Télécharger'
-                ]) ?>
-                <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
-                <?= $this->Form->postLink(__('<i class="far fa-trash-alt"></i>'), [
-                    '_name' => 'deleteCustomerFile', $customerFile->id
-                ], [
-                    'escape' => false,
-                    'class' => 'float-right',
-                    'title' => 'Télécharger',
-                    'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
-                ]) ?>
-                <?php endif; ?>
-            </li>
-            <?php endif; ?>
-            <?php endforeach; ?>
-        </ul>
-        <?php endif; ?>
+    <div class="accordion col" id="firmStorage" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id]) ?>>
+        <!-- Storage content -->
     </div>
     <?php endif; ?>
 </div>

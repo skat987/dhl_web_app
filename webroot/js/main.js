@@ -6,21 +6,21 @@
  * Global variables
  */ 
 const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-var modal, accessDropdown;
+var modal, accessDropdown, storage;
 
 /**
  * This run once the entire page is ready
  */
 $(function() {
     setUp();
-
     if (modal) {
         setUpModal(modal);
     }
-
     if (accessDropdown) {
-        console.log(accessDropdown);
         setUpAccessForm(accessDropdown);
+    }
+    if (storage) {
+        setUpFirmStorage(storage);
     }
     // $('#drop').droppable({
     //     accept: '#drag',
@@ -36,6 +36,7 @@ $(function() {
 function setUp() {
     modal = $('#modal');
     accessDropdown = $('#accessDropdown');
+    storage = $('#firmStorage');
 }
 
 function setUpModal(myModal) {
@@ -51,7 +52,7 @@ function setUpModal(myModal) {
                 setUpForm(form);
             },
             error: function(resp) {
-                console.log('Error: the modal cannot be filled with content', resp);
+                console.log('Error : the modal cannot be filled with content', resp);
                 event.preventDefault();
             }
         });
@@ -125,7 +126,6 @@ function checkControls(input) {
 function setUpAccessForm(dropdown) {
     var button, url, content, form;
     dropdown.on('show.bs.dropdown', function(event) {
-        console.log($(this));
         button = $(event.relatedTarget);
         url = button.data('link');
         content = $('#editMyAccessForm');
@@ -137,8 +137,47 @@ function setUpAccessForm(dropdown) {
                 setUpForm(form);
             },
             error: function(resp) {
-                content.html('<p>Error : the menu cannot be filled with content.</p>');
+                console.log('Error access form : ', resp);
+                content.html('<p>Error : The menu cannot be filled with content.</p>');
             }
         });
+    });
+}
+
+function setUpFirmStorage(firmstorage) {
+    var url = firmstorage.data('link');
+    var pagingButtons;
+    $.get({
+        url: url,
+        success: function(resp) {
+            firmstorage.html(resp);
+            pagingButtons = firmstorage.find('.page-link');
+            setUpStoragePagination(firmstorage, pagingButtons);
+        },
+        error: function(resp) {
+            console.log('Error access storage : ', resp);
+            firmstorage.html('<p>Error : The list connot be filled with content.</p>');
+        }
+    });
+}
+
+function setUpStoragePagination(storage, buttons) {
+    var url;
+    buttons.on('click', function(event) {
+        event.preventDefault();
+        url = $(this).attr('href');
+        if (url) {
+            $.get({
+                url: url,
+                success: function(resp) {
+                    storage.html(resp);
+                    buttons = storage.find('.page-link');
+                    setUpStoragePagination(storage, buttons)
+                },
+                error: function(resp) {
+                    console.log('Error pagination : ', resp);
+                }
+            });
+        }
     });
 }

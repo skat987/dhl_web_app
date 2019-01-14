@@ -7,6 +7,7 @@ use App\Controller\AppController;
 use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 use Cake\Utility\Security;
+use Cake\ORM\Query;
 
 /**
  * Firms Controller

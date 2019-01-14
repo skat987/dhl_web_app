@@ -29,9 +29,9 @@ class CustomerFilesController extends AppController
     public function isAuthorized($user)
     {
         if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['add', 'delete', 'addDirectory', 'deleteDirectory', 'downloadCustomerFile'];
+            $actionsAllowed = ['add', 'delete', 'addDirectory', 'deleteDirectory', 'downloadCustomerFile', 'storageView'];
         } else {
-            $actionsAllowed = ['downloadCustomerFile'];
+            $actionsAllowed = ['downloadCustomerFile', 'storageView'];
         }
         $action = (isset($actionsAllowed)) ? $this->request->getParam('action') : null;
         if (isset($action)) {
@@ -219,6 +219,24 @@ class CustomerFilesController extends AppController
             $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
         }
         return $this->redirect($this->referer());
+    }
+
+    public function storageView($firmId = null)
+    {
+        $this->paginate = [
+            'order' => [
+                'CustomerFiles.dir_name' => 'desc',
+                'CustomerFiles.created' => 'desc'
+            ],
+            'maxLimit' => 1
+        ];
+        $query = $this->CustomerFiles->find()
+            ->where(['firm_id =' => $firmId])
+            ->group('dir_name')
+            ->orderDesc('dir_name');
+        $customerFiles = $this->paginate($query);
+        $firm = $this->CustomerFiles->Firms->get($firmId);
+        $this->set(compact('customerFiles', 'firm'));        
     }
 
     /**

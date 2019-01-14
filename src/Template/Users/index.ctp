@@ -48,19 +48,19 @@ echo $this->element('modal');
                         '_name' => 'firmView', 
                         $user->firm->id
                     ], [
-                        'title' => 'Accéder à l\'espace client'
+                        'title' => __('Accéder à l\'espace client')
                     ]) : '' ?></td>
                 <td>
                     <?= $this->Html->link('<i class="far fa-eye"></i>', '#', [
                         'escape' => false,
-                        'title' => 'Voir le profil',
+                        'title' => __('Voir le profil'),
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
                         'data-link' => $this->Url->build(['_name' => 'userView', $user->id])
                     ]) ?>
                     <?= $this->Html->link('<i class="far fa-edit"></i>', '#', [
                         'escape' => false,
-                        'title' => 'Modifier le profil',
+                        'title' => __('Modifier le profil'),
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
                         'data-link' => $this->Url->build(['_name' => 'userEdit', $user->id])
@@ -69,7 +69,7 @@ echo $this->element('modal');
                         '_name' => 'userDelete', $user->id
                     ], [
                         'escape' => false,
-                        'title' => 'Supprimer l\'utilisateur',
+                        'title' => __('Supprimer l\'utilisateur'),
                         'confirm' => __('Voulez-vous vraiment supprimer l\'utilisateur {0}?', $user->full_name)
                     ]) ?>
                 </td>
@@ -86,5 +86,5 @@ echo $this->element('modal');
         <?= $this->Paginator->next(__('Suivant') . ' >') ?>
         <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
     </ul>
-    <p><?= $this->Paginator->counter(['format' => __('Page {{page}} sur {{pages}}, {{current}} enregistrement(s) affichés sur {{count}}')]) ?></p>
+    <p><?= $this->Paginator->counter(['format' => __('Page {{page}} sur {{pages}}, {{current}} enregistrement(s) affiché(s) sur {{count}}')]) ?></p>
 </nav>

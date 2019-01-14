@@ -4,7 +4,7 @@
  */
 ?>
 <div class="navbar-nav mr-auto">
-    <span class="navbar-text"><?= __('Espace client: ') . h($firm->name) ?></span>
+    <span class="navbar-text"><?= __('Espace client : {0}', h($firm->name)) ?></span>
 </div>
 <div class="dropdown" id="accessDropdown">
     <?= $this->Form->button(__('{0}', $this->request->getSession()->read('Auth.User.full_name')), [

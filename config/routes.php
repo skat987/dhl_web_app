@@ -103,6 +103,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/customer-files/:id/download', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
+    $routes->connect('/customer-files/storage-view-:firm_id', ['controller' => 'CustomerFiles', 'action' => 'storageView'], ['_name' => 'getStorage'])
+        ->setPatterns(['firm_id' => '\d+'])
+        ->setPass(['firm_id']);
 
     /**
      * Connect catchall routes for all controllers.
