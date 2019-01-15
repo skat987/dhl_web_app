@@ -13,10 +13,10 @@ var modal, accessDropdown, firmStorage, firmsList;
  */
 $(function() {
     setUp();
-    if (modal) {
+    if (modal.length) {
         setUpModal(modal);
     }
-    if (accessDropdown) {
+    if (accessDropdown.length) {
         setUpAccessForm(accessDropdown);
     }
     if (firmStorage.length) {
@@ -188,15 +188,11 @@ function setUpFirmsList(list) {
     for (var i = 0; i < firms.length; i++) {
         firmsBtn[i] = firms.find('#firm_btn_' + i);
     }
-    console.log('boutons', firmsBtn);
     firmsBtn.forEach(function(btn) {
         btn.click(function() {
             var url = $(this).data('link');
-            console.log('url', url);
             var target = $(this).data('target');
-            console.log('target', target);
             var storage = firms.find(target);
-            console.log('storage', storage);
             $.get({
                 url: url,
                 success: function(resp) {
