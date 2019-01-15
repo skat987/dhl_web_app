@@ -221,6 +221,13 @@ class CustomerFilesController extends AppController
         return $this->redirect($this->referer());
     }
 
+    /**
+     * StorageView method
+     * 
+     * Display the storage content of a firm.
+     * 
+     * @param string|null $firmId Firm id
+     */
     public function storageView($firmId = null)
     {
         $this->paginate = [
@@ -228,12 +235,12 @@ class CustomerFilesController extends AppController
                 'CustomerFiles.dir_name' => 'desc',
                 'CustomerFiles.created' => 'desc'
             ],
-            'maxLimit' => 1
+            'maxLimit' => 25
         ];
-        $query = $this->CustomerFiles->find()
-            ->where(['firm_id =' => $firmId])
+        $query = $this->CustomerFiles->findByFirmId($firmId)
             ->group('dir_name')
-            ->orderDesc('dir_name');
+            ->orderDesc('dir_name')
+            ->orderDesc('created');
         $customerFiles = $this->paginate($query);
         $firm = $this->CustomerFiles->Firms->get($firmId);
         $this->set(compact('customerFiles', 'firm'));        

@@ -6,7 +6,7 @@
  * Global variables
  */ 
 const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-var modal, accessDropdown, storage;
+var modal, accessDropdown, firmStorage, firmsList;
 
 /**
  * This run once the entire page is ready
@@ -19,8 +19,11 @@ $(function() {
     if (accessDropdown) {
         setUpAccessForm(accessDropdown);
     }
-    if (storage) {
-        setUpFirmStorage(storage);
+    if (firmStorage.length) {
+        setUpFirmStorage(firmStorage);
+    }
+    if (firmsList.length) {
+        setUpFirmsList(firmsList);
     }
     // $('#drop').droppable({
     //     accept: '#drag',
@@ -36,32 +39,33 @@ $(function() {
 function setUp() {
     modal = $('#modal');
     accessDropdown = $('#accessDropdown');
-    storage = $('#firmStorage');
+    firmStorage = $('#storageContent');
+    firmsList = $('#allFirms');
 }
 
 function setUpModal(myModal) {
-    var button, url, form;
     myModal.on('show.bs.modal', function(event) {
-        button = $(event.relatedTarget);
-        url = button.data('link');
+        var button = $(event.relatedTarget);
+        var url = button.data('link');
         $.get({
             url: url,
             success: function(resp) {
                 myModal.find('#modalContent').html(resp);
-                form = myModal.find('form');
+                var form = myModal.find('form');
                 setUpForm(form);
             },
             error: function(resp) {
                 console.log('Error : the modal cannot be filled with content', resp);
                 event.preventDefault();
+                event.stopPropagation();
             }
         });
     });
 }
 
-function setUpForm(myForm) {
-    var controls = myForm.find('.form-control');
-    var inputFile = myForm.find('.custom-file-input');
+function setUpForm(form) {
+    var controls = form.find('.form-control');
+    var inputFile = form.find('.custom-file-input');
     if (inputFile) {
         inputFile.change(function() {
             var values = inputFile[0].value.split('\\');
@@ -74,7 +78,7 @@ function setUpForm(myForm) {
     controls.change(function() {
         checkControls($(this)[0]);
     });
-    myForm.on('submit', function(event) {
+    form.submit(function(event) {
         for (const control of controls) {
             control.parentElement.nextElementSibling.innerText = '';
             if (!control.checkValidity()) {
@@ -124,16 +128,15 @@ function checkControls(input) {
 }
 
 function setUpAccessForm(dropdown) {
-    var button, url, content, form;
     dropdown.on('show.bs.dropdown', function(event) {
-        button = $(event.relatedTarget);
-        url = button.data('link');
-        content = $('#editMyAccessForm');
+        var button = $(event.relatedTarget);
+        var url = button.data('link');
+        var content = $('#editMyAccessForm');
         $.get({
             url: url,
             success: function(resp) {
                 content.html(resp);
-                form = content.find('form');
+                var form = content.find('form');
                 setUpForm(form);
             },
             error: function(resp) {
@@ -144,40 +147,67 @@ function setUpAccessForm(dropdown) {
     });
 }
 
-function setUpFirmStorage(firmstorage) {
-    var url = firmstorage.data('link');
-    var pagingButtons;
+function setUpFirmStorage(storage) {
+    var url = storage.data('link');
     $.get({
         url: url,
         success: function(resp) {
-            firmstorage.html(resp);
-            pagingButtons = firmstorage.find('.page-link');
-            setUpStoragePagination(firmstorage, pagingButtons);
+            storage.html(resp);
+            setUpStoragePagination(storage, $('#customerFilesPagination').find('.page-link'));
         },
         error: function(resp) {
             console.log('Error access storage : ', resp);
-            firmstorage.html('<p>Error : The list connot be filled with content.</p>');
+            storage.html('<p>Error : Cannot reach the storage content.</p>');
         }
     });
 }
 
-function setUpStoragePagination(storage, buttons) {
-    var url;
-    buttons.on('click', function(event) {
+function setUpStoragePagination(container, buttons) {
+    buttons.click(function(event) {
         event.preventDefault();
-        url = $(this).attr('href');
+        event.stopPropagation();
+        var url = $(this).attr('href');
         if (url) {
             $.get({
                 url: url,
                 success: function(resp) {
-                    storage.html(resp);
-                    buttons = storage.find('.page-link');
-                    setUpStoragePagination(storage, buttons)
+                    container.html(resp);
+                    setUpStoragePagination(container, $('#customerFilesPagination').find('.page-link'));
                 },
                 error: function(resp) {
                     console.log('Error pagination : ', resp);
                 }
             });
         }
+    });
+}
+
+function setUpFirmsList(list) {
+    var firms = list.find('.card');
+    var firmsBtn = [];
+    for (var i = 0; i < firms.length; i++) {
+        firmsBtn[i] = firms.find('#firm_btn_' + i);
+    }
+    console.log('boutons', firmsBtn);
+    firmsBtn.forEach(function(btn) {
+        btn.click(function() {
+            var url = $(this).data('link');
+            console.log('url', url);
+            var target = $(this).data('target');
+            console.log('target', target);
+            var storage = firms.find(target);
+            console.log('storage', storage);
+            $.get({
+                url: url,
+                success: function(resp) {
+                    storage.find('.card-body').html(resp);
+                    setUpStoragePagination(storage.find('.card-body'), $('#customerFilesPagination').find('.page-link'));
+                },
+                error: function(resp) {
+                    console.log('Error : cannot reach the storage content');
+                    storage.html('<p>Error : Cannot reach the storage content</p>');
+                }
+            });
+        });
     });
 }
