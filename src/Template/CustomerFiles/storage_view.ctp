@@ -33,10 +33,11 @@
     </div>
 </div>
 <?php endif; ?>
-<?php if ($firm->customer_files_count > 0): ?>
+<?php if (($firm->customer_files_count > 0) || (count($firm->storage->read()[0]) > 0)): ?>
 <?php 
 if (count($firm->storage->read()[0]) > 0): 
-    $directories = $firm->storage->read()[0]; arsort($directories); 
+    $directories = $firm->storage->read()[0]; 
+    arsort($directories); 
 ?>
 <div class="accordion" id=<?= __('storage_firm_{0}', $firm->id) ?>>    
     <?php foreach ($directories as $key => $directory): ?>
@@ -104,7 +105,7 @@ if (count($firm->storage->read()[0]) > 0):
 <?php if (count($firm->storage->read()[1]) > 0): ?>
 <ul class="list-group">
     <?php foreach ($customerFiles as $customerFile): ?>
-    <?php if ($customerFile->has('dir_name') && ($customerFile->dir_name == $directory)): ?>
+    <?php if (!$customerFile->has('dir_name')): ?>
     <li class="list-group-item">
         <?= $this->Html->link(__('<i class="far fa-file"></i> {0}', h($customerFile->file_name)), [
             '_name' => 'downloadCustomerFile',

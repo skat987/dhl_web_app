@@ -27,49 +27,83 @@ $appBaseTitle = 'DHL : ';
     <?= $this->Html->css('bootstrap.min') ?>
     <?= $this->Html->css('jquery-ui.min') ?>
     <?= $this->Html->css('fa-all') ?>
+    <?= $this->Html->css('style') ?>
     <?= $this->Html->script('jquery-3.3.1.min') ?>
     <?= $this->Html->script('jquery-ui.min') ?>
     <?= $this->Html->script('main', ['block' => 'scriptBottom']) ?>
-    <?= $this->Html->script('popper.min', ['block' => 'scriptBottom']) ?>
-    <?= $this->Html->script('bootstrap.min', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('fa-all', ['block' => 'scriptBottom']) ?>
+    <?= $this->Html->script('bootstrap.min', ['block' => 'scriptBottom']) ?>
+    <?= $this->Html->script('popper.min', ['block' => 'scriptBottom']) ?>
 
     <!-- Fetch meta, css and script -->
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
 </head>
-<body>
+<body class="container-fluid">
     <!-- Header -->
-    <header class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <h1 class="text-center"><?= $appBaseTitle . $this->fetch('title') ?></h1>
+    <header class="row">
+        <div class="col-auto mx-0 px-0 my-0 py-0">
+            <?= $this->Html->image('dhl_logo.gif', [
+                'alt' => 'Logo DHL',
+                'class' => 'mx-0 my-0'
+            ]) ?>
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="text-center"><?= __('Site d\'échanges sécurisés de documents') ?></h1>
+                </div>
+                <div class="col-12">
+                    <h3 class="text-center"><?= $this->fetch('title') ?></h3>
+                </div>
             </div>
         </div>
         <?php if (!empty($this->request->getSession()->read('Auth.User'))): ?>
-        <div class="row">
-            <div class="col">
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <span class="navbar-brand mb-0 h1">Menu</span>
-                    <?= $this->Form->button('<span class="navbar-toggler-icon"></span>', [// TODO: afficher quel item est actif dans le menu
-                        'class' => 'navbar-toggler',
-                        'type' => 'button', 
-                        'data-toggle' => 'collapse',
-                        'data-target' => '#navbarAdmin',
-                        'aria-controls' => 'navbarAdmin',
-                        'aria-expanded' => 'false',
-                        'aria-label' => 'Toggle navigation',
-                        'escape' => false
-                    ]) ?>
-                    <div class="collapse navbar-collapse" id="navbarAdmin">
-                        <?php if ($this->request->getSession()->read('Auth.User.user_type_id') == 3): ?>
-                        <?php echo $this->element('customer-menu') ?>
-                        <?php else: ?>
-                        <?php echo $this->element('admin-menu') ?>
+        <?php if ($this->request->getSession()->read('Auth.User.user_type_id') == 3): ?>
+        <div class="col-xl-3 px-0">
+        <?php else: ?>
+        <div class="col-xl-4 px-0">
+        <?php endif; ?>
+            <nav class="navbar navbar-expand-lg navbar-light px-0">
+                <?= $this->Form->button('<span class="navbar-toggler-icon"></span>', ['class' => 'navbar-toggler', 'type' => 'button', 'data-toggle' => 'collapse', 'data-target' => '#navbar', 'aria-controls' => 'navbar', 'aria-expanded' => 'false', 'aria-label' => 'Toggle navigation', 'escape' => false]) ?>
+                <div class="collapse navbar-collapse" id="navbar">
+                    <div class="navbar-nav ml-auto">
+                        <div class="dropdown" id="accessDropdown">
+                            <?= $this->Form->button(h($this->request->getSession()->read('Auth.User.full_name')), [                                    
+                                'type' => 'button',
+                                'class' => 'btn btn-secondary dropdown-toggle',
+                                'id' => 'userAccess',
+                                'title' => __('Modifier mes accès'),
+                                'data-toggle' => 'dropdown',
+                                'aria-haspopup' => 'true',
+                                'aria-expanded' => 'false',
+                                'data-link' => $this->Url->build(['_name' => 'editAccess'])
+                            ]) ?>
+                            <div class="dropdown-menu" aria-labelledby="userAccess" id="editMyAccessForm">
+                                <!-- Edit Access Form -->
+                            </div>
+                        </div>
+                        <div class="border border-primary"></div>
+                        <?php if (in_array($this->request->getSession()->read('Auth.User.user_type_id'), [1, 2])): ?>
+                        <?= $this->Html->link(__('Sociétés'), [
+                            '_name' => 'adminHome'
+                        ], [
+                            'class' => 'nav-item nav-link'
+                        ]) ?>
+                        <?= $this->Html->link(__('Utilisateurs'), [
+                            '_name' => 'adminUsers'
+                        ], [
+                            'class' => 'nav-item nav-link'
+                        ]) ?>
                         <?php endif; ?>
+                        <?= $this->Html->link(__('Déconnexion'), [
+                            '_name' => 'logout'
+                        ], [
+                            'class' => 'nav-item nav-link'
+                        ]) ?>
                     </div>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </div>
         <?php endif; ?>
     </header>
@@ -83,7 +117,13 @@ $appBaseTitle = 'DHL : ';
     </div>
 
     <!-- Footer -->
-    <footer>
+    <footer class="row">
+        <div class="col d-flex justify-content-center">
+            <?= $this->Html->image('iaora systems-logo-rvb 2018_300x100.jpg', [
+                'alt' => 'Logo Iaora Systems',
+                'style' => 'width: 100px'
+            ]) ?>
+        </div>
     </footer>
     <?= $this->fetch('scriptBottom') ?>
 </body>

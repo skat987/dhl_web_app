@@ -25,15 +25,6 @@ $(function() {
     if (firmsList.length) {
         setUpFirmsList(firmsList);
     }
-    // $('#drop').droppable({
-    //     accept: '#drag',
-    //     drop: function() {
-    //         alert('Action terminée !');
-    //     }
-    // });
-    // $('#drag').draggable({
-    //     revert: 'invalid'
-    // });
 });
 
 function setUp() {
