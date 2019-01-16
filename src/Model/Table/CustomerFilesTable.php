@@ -86,6 +86,11 @@ class CustomerFilesTable extends Table
             ->notEmpty('file_key');
 
         $validator
+            ->integer('firm_id')
+            ->requirePresence('firm_id', 'create')
+            ->notEmpty('firm_id');
+
+        $validator
             ->scalar('dir_name')
             ->maxLength('dir_name', 100)
             ->allowEmpty('dir_name');
