@@ -72,9 +72,7 @@
                 'placeholder' => 'Mot de passe'
             ]) ?>
             <div class="invalid-feedback"></div>
-            <small id="passwordHelpBlock" class="form-text text-muted">
-                <?= __('Au moins 8 caractères') ?>
-            </small>
+            <small id="passwordHelpBlock" class="form-text text-muted"><?= __('Au moins 8 caractères') ?></small>
         </div>
     </div>
     <div class="form-row">

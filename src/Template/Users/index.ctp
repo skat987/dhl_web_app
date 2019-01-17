@@ -16,7 +16,7 @@ echo $this->element('modal');
             'escape' => false,
             'data-toggle' => 'modal',
             'data-target' => '#modal',
-            'data-link' => $this->Url->build(['_name' => 'userAdd']),
+            'data-link' => $this->Url->build(['_name' => 'addUser']),
             'role' => 'button',
             'class' => 'btn btn-outline-dark mt-2 mb-2',
             'title' => 'Ajouter un utilisateur'
@@ -45,7 +45,7 @@ echo $this->element('modal');
                 <td><?= $user->has('user_type') ? h($user->user_type->name) : '' ?></td>
                 <td>
                     <?= $user->has('firm') ? $this->Html->link($user->firm->name, [
-                        '_name' => 'firmView', 
+                        '_name' => 'viewFirm', 
                         $user->firm->id
                     ], [
                         'title' => __('Accéder à l\'espace client')
@@ -56,17 +56,18 @@ echo $this->element('modal');
                         'title' => __('Voir le profil'),
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
-                        'data-link' => $this->Url->build(['_name' => 'userView', $user->id])
+                        'data-link' => $this->Url->build(['_name' => 'viewUser', $user->id])
                     ]) ?>
                     <?= $this->Html->link('<i class="far fa-edit"></i>', '#', [
                         'escape' => false,
                         'title' => __('Modifier le profil'),
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
-                        'data-link' => $this->Url->build(['_name' => 'userEdit', $user->id])
+                        'data-link' => $this->Url->build(['_name' => 'editUser', $user->id])
                     ]) ?>                    
                     <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
-                        '_name' => 'userDelete', $user->id
+                        '_name' => 'deleteUser', 
+                        $user->id
                     ], [
                         'escape' => false,
                         'title' => __('Supprimer l\'utilisateur'),

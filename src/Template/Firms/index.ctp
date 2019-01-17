@@ -16,7 +16,7 @@ echo $this->element('modal');
             'escape' => false,
             'data-toggle' => 'modal',
             'data-target' => '#modal',
-            'data-link' => $this->Url->build(['_name' => 'adminFirmAdd']),
+            'data-link' => $this->Url->build(['_name' => 'addFirm']),
             'role' => 'button',
             'class' => 'btn btn-outline-dark mt-3 mb-3',
             'title' => __('Ajouter une société')
@@ -67,7 +67,7 @@ echo $this->element('modal');
                             </div>
                             <div class="row justify-content-center">
                                 <?= $this->Html->link('<i class="far fa-eye"></i>', [
-                                    '_name' => 'firmView', 
+                                    '_name' => 'viewFirm', 
                                     $firm->id
                                 ], [
                                     'escape' => false,
@@ -80,10 +80,11 @@ echo $this->element('modal');
                                     'title' => __('Renommer la société'),
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
-                                    'data-link' => $this->Url->build(['_name' => 'adminFirmEdit', $firm->id])
+                                    'data-link' => $this->Url->build(['_name' => 'editFirm', $firm->id])
                                 ]) ?>
                                 <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
-                                    '_name' => 'adminFirmDelete', $firm->id
+                                    '_name' => 'deleteFirm', 
+                                    $firm->id
                                 ], [
                                     'escape' => false,
                                     'title' => __('Supprimer la société'),
@@ -93,7 +94,7 @@ echo $this->element('modal');
                         </div>
                     </div>
                 </div>
-                <div id=<?= __('firm_{0}_storage', $firm->id) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_heading', $firm->id) ?> data-parent="#allFirms" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id]) ?>>
+                <div id=<?= __('firm_{0}_storage', $firm->id) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_heading', $firm->id) ?> data-parent="#allFirms">
                     <div class="card-body">
                         <!-- Storage content -->
                     </div>
@@ -111,5 +112,5 @@ echo $this->element('modal');
         <?= $this->Paginator->next(__('Suivant') . ' >') ?>
         <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
     </ul>
-    <!-- <p><?= $this->Paginator->counter(['format' => __('Page {{page}} sur {{pages}}, {{current}} enregistrement(s) affiché(s) sur {{count}}')]) ?></p> -->
+    <p><?= $this->Paginator->counter(['format' => __('Page {{page}} sur {{pages}}, {{current}} enregistrement(s) affiché(s) sur {{count}}')]) ?></p>
 </nav>

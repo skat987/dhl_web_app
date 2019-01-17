@@ -46,7 +46,7 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="col-md-12 mb-3 custom-file">
+        <div class="col-md-12 mb-4 custom-file">
             <?= $this->Form->control('file_0', [
                 'label' => [
                     'text' => 'Sélectionnez un fichier', 
@@ -59,7 +59,7 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="col-md-12 mb-3 custom-file">
+        <div class="col-md-12 mb-4 custom-file">
             <?= $this->Form->control('file_1', [
                 'label' => [
                     'text' => 'Sélectionnez un fichier', 
@@ -72,7 +72,7 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="col-md-12 mb-3 custom-file">
+        <div class="col-md-12 mb-4 custom-file">
             <?= $this->Form->control('file_2', [
                 'label' => [
                     'text' => 'Sélectionnez un fichier', 
@@ -85,7 +85,7 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="col-md-12 mb-3 custom-file">
+        <div class="col-md-12 mb-4 custom-file">
             <?= $this->Form->control('file_3', [
                 'label' => [
                     'text' => 'Sélectionnez un fichier', 
@@ -98,7 +98,7 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="col-md-12 mb-3 custom-file">
+        <div class="col-md-12 mb-4 custom-file">
             <?= $this->Form->control('file_4', [
                 'label' => [
                     'text' => 'Sélectionnez un fichier', 

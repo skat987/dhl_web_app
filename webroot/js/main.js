@@ -71,17 +71,39 @@ function setUpForm(form) {
         checkControls($(this)[0]);
     });
     form.submit(function(event) {
-        for (const control of controls) {
-            control.parentElement.nextElementSibling.innerText = '';
-            if (!control.checkValidity()) {
-                control.classList.add('is-invalid');
-                control.parentElement.nextElementSibling.innerText = control.validationMessage;
-                control.parentElement.nextElementSibling.style.display = 'block';
+        if (inputsFile.length) {
+            var file = false;
+            for (const input of inputsFile) {
+                if (input.value != '') {
+                    file = true;
+                    break;
+                }
+            }
+            if (!file) {
+                console.log('Action stop !', inputsFile[0]);
+                //inputsFile[0].classList.remove('is-valid');
+                inputsFile[0].previousElementSibling.classList.add('is-invalid');
+                inputsFile[0].parentElement.nextElementSibling.innerHTML = '<small>Vous devez sélectionner au moins un document.</small>';
+                inputsFile[0].parentElement.nextElementSibling.style.display = 'block';
                 event.preventDefault();
                 event.stopPropagation();
-            } else {
-                control.classList.remove('is-invalid');
-                control.classList.add('is-valid');
+            }
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        for (const control of controls) {
+            if (control.type != 'file') {                
+                control.parentElement.nextElementSibling.innerText = '';
+                if (!control.checkValidity()) {
+                    control.classList.add('is-invalid');
+                    control.parentElement.nextElementSibling.innerText = control.validationMessage;
+                    control.parentElement.nextElementSibling.style.display = 'block';
+                    event.preventDefault();
+                    event.stopPropagation();
+                } else {
+                    control.classList.remove('is-invalid');
+                    control.classList.add('is-valid');
+                }
             }
             if (control.type == 'email') {
                 if (!emailPattern.test(control.value)) {   

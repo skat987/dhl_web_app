@@ -86,12 +86,12 @@ $appBaseTitle = 'DHL : ';
                         <div class="border border-primary"></div>
                         <?php if (in_array($this->request->getSession()->read('Auth.User.user_type_id'), [1, 2])): ?>
                         <?= $this->Html->link(__('Sociétés'), [
-                            '_name' => 'adminHome'
+                            '_name' => 'allFirms'
                         ], [
                             'class' => 'nav-item nav-link'
                         ]) ?>
                         <?= $this->Html->link(__('Utilisateurs'), [
-                            '_name' => 'adminUsers'
+                            '_name' => 'allUsers'
                         ], [
                             'class' => 'nav-item nav-link'
                         ]) ?>

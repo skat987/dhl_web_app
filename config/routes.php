@@ -52,58 +52,58 @@ Router::scope('/', function (RouteBuilder $routes) {
      * Default routes
      */
     $routes->connect('/', ['controller' => 'Users', 'action' => 'login'], ['_name' => 'login']);
-    $routes->connect('/logout', ['controller' => 'Users', 'action' => 'logout'], ['_name' => 'logout']);
+    $routes->connect('/deconnexion', ['controller' => 'Users', 'action' => 'logout'], ['_name' => 'logout']);
 
     /**
      * Firm entity routes
      */
-    $routes->connect('/admin/home', ['controller' => 'Firms', 'action' => 'index'], ['_name' => 'adminHome']);
-    $routes->connect('/admin/firm/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'firmView'])
+    $routes->connect('/admin/liste-des-societes', ['controller' => 'Firms', 'action' => 'index'], ['_name' => 'allFirms']);
+    $routes->connect('/esapce-client/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'viewFirm'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/admin/firm/:id/edit', ['controller' => 'Firms', 'action' => 'edit'], ['_name' => 'adminFirmEdit'])
+    $routes->connect('/admin/societe-:id/modifier', ['controller' => 'Firms', 'action' => 'edit'], ['_name' => 'editFirm'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/admin/firm/:id/delete', ['controller' => 'Firms', 'action' => 'delete'], ['_name' => 'adminFirmDelete'])
+    $routes->connect('/admin/societe-:id/supprimer', ['controller' => 'Firms', 'action' => 'delete'], ['_name' => 'deleteFirm'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/admin/firms/add', ['controller' => 'Firms', 'action' => 'add'], ['_name' => 'adminFirmAdd']);
+    $routes->connect('/admin/societe/creer', ['controller' => 'Firms', 'action' => 'add'], ['_name' => 'addFirm']);
     
     /**
      * User entity routes
      */
-    $routes->connect('/admin/users', ['controller' => 'Users', 'action' => 'index'], ['_name' => 'adminUsers']);
-    $routes->connect('/admin/users/:id', ['controller' => 'Users', 'action' => 'view'], ['_name' => 'userView'])
+    $routes->connect('/admin/liste-des-utilisateurs', ['controller' => 'Users', 'action' => 'index'], ['_name' => 'allUsers']);
+    $routes->connect('/admin/utilisateur/:id', ['controller' => 'Users', 'action' => 'view'], ['_name' => 'viewUser'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/admin/users/edit/:id', ['controller' => 'Users', 'action' => 'edit'], ['_name' => 'userEdit'])
+    $routes->connect('/admin/utilisateur-:id/modifier', ['controller' => 'Users', 'action' => 'edit'], ['_name' => 'editUser'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/admin/users/delete/:id', ['controller' => 'Users', 'action' => 'delete'], ['_name' => 'userDelete'])
+    $routes->connect('/admin/utilisateur-:id/supprimer', ['controller' => 'Users', 'action' => 'delete'], ['_name' => 'deleteUser'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/admin/users/add', ['controller' => 'Users', 'action' => 'add'], ['_name' => 'userAdd']);
-    $routes->connect('/my-access/edit', ['controller' => 'Users', 'action' => 'editMyAccess'], ['_name' => 'editAccess']);
+    $routes->connect('/admin/utilisateur/creer', ['controller' => 'Users', 'action' => 'add'], ['_name' => 'addUser']);
+    $routes->connect('/modifier-mes-acces', ['controller' => 'Users', 'action' => 'editMyAccess'], ['_name' => 'editAccess']);
 
     /**
      * CustomerFile entity routes
      */
-    $routes->connect('/customer-files/firm-:firm_id/add', ['controller' => 'CustomerFiles', 'action' => 'add'], ['_name' => 'addCustomerFile'])
+    $routes->connect('/admin/societe-:firm_id/document/creer', ['controller' => 'CustomerFiles', 'action' => 'add'], ['_name' => 'addCustomerFile'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id']);
-    $routes->connect('/customer-files/:id/delete', ['controller' => 'CustomerFiles', 'action' => 'delete'], ['_name' => 'deleteCustomerFile'])
+    $routes->connect('/admin/document-:id/supprimer', ['controller' => 'CustomerFiles', 'action' => 'delete'], ['_name' => 'deleteCustomerFile'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/customer-files/firm-:firm_id/add-directory', ['controller' => 'CustomerFiles', 'action' => 'addDirectory'], ['_name' => 'addDirectory'])
+    $routes->connect('/admin/societe-:firm_id/dossier/creer', ['controller' => 'CustomerFiles', 'action' => 'addDirectory'], ['_name' => 'addDirectory'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id']);
-    $routes->connect('/customer-files/:firm_id-:dir_name/delete', ['controller' => 'CustomerFiles', 'action' => 'deleteDirectory'], ['_name' => 'deleteDirectory'])
+    $routes->connect('/admin/societe-:firm_id/dossier-:dir_name/supprimer', ['controller' => 'CustomerFiles', 'action' => 'deleteDirectory'], ['_name' => 'deleteDirectory'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id', 'dir_name']);
-    $routes->connect('/customer-files/:id/download', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])
+    $routes->connect('/document-:id/telecharger', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/customer-files/storage-view-:firm_id', ['controller' => 'CustomerFiles', 'action' => 'storageView'], ['_name' => 'getStorage'])
+    $routes->connect('/societe-:firm_id/liste-des-documents', ['controller' => 'CustomerFiles', 'action' => 'storageView'], ['_name' => 'getStorage'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id']);
 
