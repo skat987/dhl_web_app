@@ -109,3 +109,8 @@ define('DEFAULT_ENCRYPTION_METHOD', 'AES-256-CBC');
  * Define the size of each chunk encrypted by the method.
  */
 define('CHUNK_ENCRYPTION_SIZE', 16);
+
+/**
+ * Define the maximum number of files that can be uploaded.
+ */
+define('MAX_UPLOADS_COUNT', 5);

@@ -5,7 +5,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\CustomerFile[]|\Cake\Collection\CollectionInterface $customerFiles
  */
-
 ?>
 <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
 <div class="row">

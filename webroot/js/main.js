@@ -56,11 +56,12 @@ function setUpModal(myModal) {
 
 function setUpForm(form) {
     var controls = form.find('.form-control');
-    var inputFile = form.find('.custom-file-input');
-    if (inputFile) {
-        inputFile.change(function() {
-            var values = inputFile[0].value.split('\\');
-            inputFile[0].previousElementSibling.innerText = (inputFile[0].previousElementSibling.innerText == '') ? 'Sélectionnez un fichier' : values[2];
+    var inputsFile = form.find('.custom-file-input');
+    if (inputsFile.length) {
+        inputsFile.change(function() {
+            var fileName = $(this).val().split('\\')[2];
+            var label = $(this).prev();
+            label.text(fileName);
         });
     }
     controls.keyup(function() {

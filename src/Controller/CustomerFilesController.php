@@ -79,22 +79,30 @@ class CustomerFilesController extends AppController
      */
     public function add($firmId = null)
     {
-        $customerFile = $this->CustomerFiles->newEntity();
+        for ($i = 0; $i < MAX_UPLOADS_COUNT; $i++) {
+            $customerFiles[$i] = $this->CustomerFiles->newEntity();
+        }
         if ($this->request->is('post')) {
-            $customerFile = $this->CustomerFiles->patchEntity($customerFile, $this->request->getData());
-            $customerFile->added_by = $this->Auth->user('id');    
-            $customerFile->file_key = Security::randomBytes(CHUNK_ENCRYPTION_SIZE); 
-            if ($this->CustomerFiles->save($customerFile)) {          
-                $this->Flash->success(__('Le fichier a bien été sauvegardé.'));
+            $data = $this->getDataCustomerFile($this->request->getData());
+            $customerFiles = $this->CustomerFiles->patchEntities($customerFiles, $data);
+            $fileError = [];
+            foreach ($customerFiles as $customerFile) {
+                if (!$this->CustomerFiles->save($customerFile)) {
+                    array_push($fileError, $customerFile->file_name);
+                }
+            }
+            if (count($fileError) > 0) {  
+                $message = $this->getUploadMessageError($fileError);        
+                $this->Flash->error(__($message, $fileError));
             } else {
-                $this->Flash->error(__('Le fichier n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));  
+                $this->Flash->success(__('Tous les documents ont été sauvegardé.'));  
             }     
             return $this->redirect($this->referer());
         }
         $firm = $this->CustomerFiles->Firms->get($firmId, [
             'contain' => []
         ]);
-        $this->set(compact('customerFile', 'firm'));
+        $this->set(compact('customerFiles', 'firm'));
     }
 
     /**
@@ -238,7 +246,6 @@ class CustomerFilesController extends AppController
             'maxLimit' => 25
         ];
         $query = $this->CustomerFiles->findByFirmId($firmId)
-            ->group('dir_name')
             ->orderDesc('dir_name')
             ->orderDesc('created');
         $customerFiles = $this->paginate($query);
@@ -297,5 +304,50 @@ class CustomerFilesController extends AppController
         header('Expires: 0');
         flush();
         readfile($file->path);
+    }
+
+    /**
+     * GetDataCustomerFile method
+     * 
+     * Rearrange the data in an array to match the properties of a CustomerFile entity
+     * 
+     * @param Array $data array of request data
+     * @return Array $dataReordered array of request data reorganized
+     */
+    private function getDataCustomerFile($data) 
+    {
+        $fileCount = 0;
+        $dataReordered = [];
+        for ($i = 0; $i < MAX_UPLOADS_COUNT; $i++) {
+            if ($data['file_' . $i]['error'] === 0) {
+                $dataReordered[$fileCount]['firm_id'] = $data['firm_id'];
+                $dataReordered[$fileCount]['dir_name'] = $data['dir_name'];
+                $dataReordered[$fileCount]['file'] = $data['file_' . $i];
+                $dataReordered[$fileCount]['added_by'] = $this->Auth->user('id');
+                $dataReordered[$fileCount]['file_key'] = Security::randomBytes(CHUNK_ENCRYPTION_SIZE);
+                $fileCount++;
+            }
+        }
+        return $dataReordered;
+    }
+
+    /**
+     * GetUploadMessageError method
+     * 
+     * Get the message to display when an error occurs on an upload.
+     * 
+     * @param Array $errors files that didn't be uploaded
+     * @return string $message message to display
+     */
+    private function getUploadMessageError($errors)
+    {
+        $message = 'Les documents suivant n\'ont pas pu être sauvegarder : ';
+        foreach ($errors as $key => $error) {
+            $message .= '{' . $key . '}';
+            if ($key < (count($errors) - 1)) {
+                $message .= ', ';
+            }
+        }
+        return $message;
     }
 }

@@ -16,31 +16,18 @@
         'escape' => false
     ]) ?>
 </div>
-<?= $this->Form->create($customerFile, [
+<?= $this->Form->create($customerFiles, [
     'type' => 'file',
     'class' => 'needs-validation',
     'novalidate' => true
 ]) ?>
 <div class="modal-body"> 
     <div class="form-row">
-        <div class="col-md-12 mb-3">
+        <div class="col-md-12">
             <p>Société : <?= h($firm->name) ?></p>
             <?= $this->Form->hidden('firm_id', [
                 'value' => $firm->id
             ]) ?>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-12 mb-3 custom-file">
-            <?= $this->Form->control('file', [
-                'label' => [
-                    'text' => 'Sélectionnez un fichier', 
-                    'class' => 'custom-file-label'
-                ],
-                'type' => 'file',
-                'class' => 'form-control custom-file-input'
-            ]) ?>
-            <div class="invalid-feedback"></div>
         </div>
     </div>
     <div class="form-row">
@@ -54,6 +41,71 @@
                 'type' => 'select',
                 'options' => $firm->storage->read()[0],
                 'empty' => 'Sélectionnez un dossier'
+            ]) ?>
+            <div class="invalid-feedback"></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12 mb-3 custom-file">
+            <?= $this->Form->control('file_0', [
+                'label' => [
+                    'text' => 'Sélectionnez un fichier', 
+                    'class' => 'custom-file-label'
+                ],
+                'type' => 'file',
+                'class' => 'form-control custom-file-input'
+            ]) ?>
+            <div class="invalid-feedback"></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12 mb-3 custom-file">
+            <?= $this->Form->control('file_1', [
+                'label' => [
+                    'text' => 'Sélectionnez un fichier', 
+                    'class' => 'custom-file-label'
+                ],
+                'type' => 'file',
+                'class' => 'form-control custom-file-input'
+            ]) ?>
+            <div class="invalid-feedback"></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12 mb-3 custom-file">
+            <?= $this->Form->control('file_2', [
+                'label' => [
+                    'text' => 'Sélectionnez un fichier', 
+                    'class' => 'custom-file-label'
+                ],
+                'type' => 'file',
+                'class' => 'form-control custom-file-input'
+            ]) ?>
+            <div class="invalid-feedback"></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12 mb-3 custom-file">
+            <?= $this->Form->control('file_3', [
+                'label' => [
+                    'text' => 'Sélectionnez un fichier', 
+                    'class' => 'custom-file-label'
+                ],
+                'type' => 'file',
+                'class' => 'form-control custom-file-input'
+            ]) ?>
+            <div class="invalid-feedback"></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-12 mb-3 custom-file">
+            <?= $this->Form->control('file_4', [
+                'label' => [
+                    'text' => 'Sélectionnez un fichier', 
+                    'class' => 'custom-file-label'
+                ],
+                'type' => 'file',
+                'class' => 'form-control custom-file-input'
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>
