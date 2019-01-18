@@ -250,7 +250,7 @@ class CustomerFilesController extends AppController
             ->orderDesc('created');
         $customerFiles = $this->paginate($query);
         $firm = $this->CustomerFiles->Firms->get($firmId);
-        $this->set(compact('customerFiles', 'firm'));        
+        $this->set(compact('customerFiles', 'firm'));     
     }
 
     /**

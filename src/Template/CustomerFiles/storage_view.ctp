@@ -33,8 +33,7 @@
 </div>
 <?php endif; ?>
 <?php if (($firm->customer_files_count > 0) || (count($firm->storage->read()[0]) > 0)): ?>
-<?php 
-if (count($firm->storage->read()[0]) > 0): 
+<?php if (count($firm->storage->read()[0]) > 0): 
     $directories = $firm->storage->read()[0]; 
     arsort($directories); 
 ?>
