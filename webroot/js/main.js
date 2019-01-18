@@ -61,18 +61,7 @@ function setUpAllFirms(page) {
             btn.click(function() {
                 var collapse = $(firms[key]).find($(this).data('target'));
                 collapse.on('show.bs.collapse', function() {
-                    setUpStorage($(this).find('.card-body'))
-                    // $.get({
-                    //     url: url,
-                    //     success: function(resp) {
-                    //         collapse.find('.card-body').html(resp);
-                    //         setUpStoragePagination(storage.find('.card-body'), $('#customerFilesPagination').find('.page-link'));
-                    //     },
-                    //     error: function(resp) {
-                    //         console.log('Error : cannot reach the storage content', resp);
-                    //         collapse.find('.card-body').html('<p>Error : Cannot reach the storage content</p>');
-                    //     }
-                    // });
+                    setUpStorage($(this).find('.card-body'));
                 });    
                 collapse.on('hidden.bs.collapse', function() {
                     collapse.find('.card-body').empty();
