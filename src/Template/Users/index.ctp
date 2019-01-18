@@ -25,7 +25,6 @@ echo $this->element('modal');
 </div>
 <div class="table-responsive">
     <table class="table">
-        <caption><?= __('Liste des utilisateurs') ?></caption>
         <thead class="thead-light">
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('full_name', 'Nom') ?></th>

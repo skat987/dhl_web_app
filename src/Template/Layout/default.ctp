@@ -67,11 +67,11 @@ $appBaseTitle = 'DHL : ';
             <nav class="navbar navbar-expand-lg navbar-light px-0">
                 <?= $this->Form->button('<span class="navbar-toggler-icon"></span>', ['class' => 'navbar-toggler', 'type' => 'button', 'data-toggle' => 'collapse', 'data-target' => '#navbar', 'aria-controls' => 'navbar', 'aria-expanded' => 'false', 'aria-label' => 'Toggle navigation', 'escape' => false]) ?>
                 <div class="collapse navbar-collapse" id="navbar">
-                    <div class="navbar-nav ml-auto">
-                        <div class="dropdown" id="accessDropdown">
-                            <?= $this->Form->button(h($this->request->getSession()->read('Auth.User.full_name')), [                                    
-                                'type' => 'button',
-                                'class' => 'btn btn-secondary dropdown-toggle',
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown" id="accessDropdown">
+                            <?= $this->Html->link(h($this->request->getSession()->read('Auth.User.full_name')), '#', [                                    
+                                'role' => 'button',
+                                'class' => 'nav-link dropdown-toggle',
                                 'id' => 'userAccess',
                                 'title' => __('Modifier mes accès'),
                                 'data-toggle' => 'dropdown',
@@ -82,26 +82,32 @@ $appBaseTitle = 'DHL : ';
                             <div class="dropdown-menu" aria-labelledby="userAccess" id="editMyAccessForm">
                                 <!-- Edit Access Form -->
                             </div>
-                        </div>
-                        <div class="border border-primary"></div>
+                        </li>
+                        <li class="border border-secondary"></li>
                         <?php if (in_array($this->request->getSession()->read('Auth.User.user_type_id'), [1, 2])): ?>
-                        <?= $this->Html->link(__('Sociétés'), [
-                            '_name' => 'allFirms'
-                        ], [
-                            'class' => 'nav-item nav-link'
-                        ]) ?>
-                        <?= $this->Html->link(__('Utilisateurs'), [
-                            '_name' => 'allUsers'
-                        ], [
-                            'class' => 'nav-item nav-link'
-                        ]) ?>
+                        <li class="nav-item">
+                            <?= $this->Html->link(__('Sociétés'), [
+                                '_name' => 'allFirms'
+                            ], [
+                                'class' => 'nav-link'
+                            ]) ?>
+                        </li>
+                        <li class="nav-item">
+                            <?= $this->Html->link(__('Utilisateurs'), [
+                                '_name' => 'allUsers'
+                            ], [
+                                'class' => 'nav-link'
+                            ]) ?>
+                        </li>
                         <?php endif; ?>
-                        <?= $this->Html->link(__('Déconnexion'), [
-                            '_name' => 'logout'
-                        ], [
-                            'class' => 'nav-item nav-link'
-                        ]) ?>
-                    </div>
+                        <li class="nav-item">
+                            <?= $this->Html->link(__('Déconnexion'), [
+                                '_name' => 'logout'
+                            ], [
+                                'class' => 'nav-link'
+                            ]) ?>
+                        </li>
+                    </ul>
                 </div>
             </nav>
         </div>

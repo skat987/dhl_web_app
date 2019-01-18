@@ -30,7 +30,8 @@
             'text' => 'Modifier mon mot de passe'
         ],
         'type' => 'password',
-        'class' => 'form-control'
+        'class' => 'form-control',
+        'minlength' => 8
     ]) ?>
     <div class="invalid-feedback"></div>
 </div>

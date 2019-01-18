@@ -88,7 +88,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     /**
      * CustomerFile entity routes
      */
-    $routes->connect('/admin/societe-:firm_id/document/creer', ['controller' => 'CustomerFiles', 'action' => 'add'], ['_name' => 'addCustomerFile'])
+    $routes->connect('/admin/societe-:firm_id/documents/creer', ['controller' => 'CustomerFiles', 'action' => 'add'], ['_name' => 'addCustomerFile'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id']);
     $routes->connect('/admin/document-:id/supprimer', ['controller' => 'CustomerFiles', 'action' => 'delete'], ['_name' => 'deleteCustomerFile'])

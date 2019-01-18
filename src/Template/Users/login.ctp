@@ -24,7 +24,8 @@ $this->assign('title', 'Connexion');
                 'type' => 'email',
                 'label' => ['text' => 'Email'],
                 'class' => 'form-control',
-                'placeholder' => 'Entrer votre email'
+                'placeholder' => 'Entrer votre email',
+                'required' => 'required'
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>
@@ -34,7 +35,8 @@ $this->assign('title', 'Connexion');
                 'minlength' => 8,
                 'label' => ['text' => 'Mot de passe'],
                 'class' => 'form-control',
-                'placeholder' => 'Entrer votre mot de passe'
+                'placeholder' => 'Entrer votre mot de passe',
+                'required' => 'required'
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>

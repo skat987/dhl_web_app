@@ -95,7 +95,7 @@ echo $this->element('modal');
                     </div>
                 </div>
                 <div id=<?= __('firm_{0}_storage', $firm->id) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_heading', $firm->id) ?> data-parent="#allFirms">
-                    <div class="card-body">
+                    <div class="card-body" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id]) ?>>
                         <!-- Storage content -->
                     </div>
                 </div>

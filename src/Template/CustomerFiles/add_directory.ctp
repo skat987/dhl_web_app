@@ -31,7 +31,8 @@
             ],
             'type' => 'text',
             'class' => 'form-control',
-            'placeholder' => 'Entrer le nom du dossier'
+            'placeholder' => 'Entrer le nom du dossier',
+            'required' => 'required'
         ]) ?>
         <div class="invalid-feedback"></div>
     </div>

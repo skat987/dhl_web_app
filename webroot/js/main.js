@@ -5,126 +5,167 @@
 /**
  * Global variables
  */ 
+const pages = ['/', '/admin/liste-des-societes', '/admin/liste-des-utilisateurs', '/esapce-client/:id'];
 const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-var modal, accessDropdown, firmStorage, firmsList;
 
 /**
  * This run once the entire page is ready
  */
 $(function() {
-    setUp();
-    if (modal.length) {
-        setUpModal(modal);
-    }
-    if (accessDropdown.length) {
-        setUpAccessForm(accessDropdown);
-    }
-    if (firmStorage.length) {
-        setUpFirmStorage(firmStorage);
-    }
-    if (firmsList.length) {
-        setUpFirmsList(firmsList);
-    }
+    var page = initializePage();
+    setUpPage(page);
 });
 
-function setUp() {
-    modal = $('#modal');
-    accessDropdown = $('#accessDropdown');
-    firmStorage = $('#storageContent');
-    firmsList = $('#allFirms');
+function initializePage() {
+    var pathName = $(location).attr('pathname');
+    var current = 3;
+    $.each(pages, function(key, value) {
+        if (pathName == value) {
+            current = key;
+        } 
+    });
+    return current;
 }
 
-function setUpModal(myModal) {
-    myModal.on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var url = button.data('link');
+function setUpPage(index) {
+    switch (index) {
+        case 1:
+            setUpAllFirms(index);
+            break;
+        case 2:
+            setUpAllUsers(index);
+            break;
+        case 3:
+            setUpViewFirm();
+            break;
+        default:
+            setUpLoginPage();
+    }
+}
+
+function setUpLoginPage() {
+    setUpForm();
+}
+
+function setUpAllFirms(page) {
+    var firms = $('#allFirms').find('.card');
+    var firmsBtn = [];
+    setUpNavBar(page);
+    setUpAccessDropdown();
+    setUpModal();
+    $.each(firms, function(key, firm) {
+        firmsBtn[key] = $(firm).find('#firm_btn_' + key);
+    });
+    if (firmsBtn.length) {
+        $.each(firmsBtn, function(key, btn) {
+            btn.click(function() {
+                var collapse = $(firms[key]).find($(this).data('target'));
+                collapse.on('show.bs.collapse', function() {
+                    setUpStorage($(this).find('.card-body'))
+                    // $.get({
+                    //     url: url,
+                    //     success: function(resp) {
+                    //         collapse.find('.card-body').html(resp);
+                    //         setUpStoragePagination(storage.find('.card-body'), $('#customerFilesPagination').find('.page-link'));
+                    //     },
+                    //     error: function(resp) {
+                    //         console.log('Error : cannot reach the storage content', resp);
+                    //         collapse.find('.card-body').html('<p>Error : Cannot reach the storage content</p>');
+                    //     }
+                    // });
+                });    
+                collapse.on('hidden.bs.collapse', function() {
+                    collapse.find('.card-body').empty();
+                });
+            });
+        });
+    }
+}
+
+function setUpAllUsers(page) {
+    setUpNavBar(page);
+    setUpAccessDropdown();
+    setUpModal();
+}
+
+function setUpViewFirm() {
+    setUpAccessDropdown();
+    setUpModal();
+    setUpStorage($('#storageContent'));
+}
+
+function setUpAccessDropdown() {
+    var dropdown = $('#accessDropdown');
+    dropdown.on('show.bs.dropdown', function(e) {
         $.get({
-            url: url,
+            url: $(e.relatedTarget).data('link'),
             success: function(resp) {
-                myModal.find('#modalContent').html(resp);
-                var form = myModal.find('form');
-                setUpForm(form);
+                dropdown.children().last().html(resp);
+                setUpForm();
+            },
+            error: function(resp) {
+                console.log('Error access form : ', resp);
+                dropdown.children().last().html('<p>Error : The menu cannot be filled with content.</p>');
+            }
+        });
+    });
+}
+
+function setUpModal() {
+    var modal = $('#modal');
+    modal.on('show.bs.modal', function(e) {
+        $.get({
+            url: $(e.relatedTarget).data('link'),
+            success: function(resp) {
+                modal.find('#modalContent').html(resp);
             },
             error: function(resp) {
                 console.log('Error : the modal cannot be filled with content', resp);
-                event.preventDefault();
-                event.stopPropagation();
+                e.preventDefault();
+                e.stopPropagation();
             }
         });
+    });
+    modal.on('shown.bs.modal', function() {
+        setUpForm();
+    });
+    modal.on('hidden.bs.modal', function() {
+        $(this).find('#modalContent').empty();
     });
 }
 
-function setUpForm(form) {
-    var controls = form.find('.form-control');
-    var inputsFile = form.find('.custom-file-input');
-    if (inputsFile.length) {
-        inputsFile.change(function() {
-            var fileName = $(this).val().split('\\')[2];
-            var label = $(this).prev();
-            label.text(fileName);
-        });
-    }
-    controls.keyup(function() {
-        checkControls($(this)[0]);
-    });   
-    controls.change(function() {
-        checkControls($(this)[0]);
-    });
-    form.submit(function(event) {
-        if (inputsFile.length) {
-            var file = false;
-            for (const input of inputsFile) {
-                if (input.value != '') {
-                    file = true;
-                    break;
-                }
-            }
-            if (!file) {
-                console.log('Action stop !', inputsFile[0]);
-                //inputsFile[0].classList.remove('is-valid');
-                inputsFile[0].previousElementSibling.classList.add('is-invalid');
-                inputsFile[0].parentElement.nextElementSibling.innerHTML = '<small>Vous devez sélectionner au moins un document.</small>';
-                inputsFile[0].parentElement.nextElementSibling.style.display = 'block';
-                event.preventDefault();
-                event.stopPropagation();
-            }
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        for (const control of controls) {
-            if (control.type != 'file') {                
-                control.parentElement.nextElementSibling.innerText = '';
-                if (!control.checkValidity()) {
-                    control.classList.add('is-invalid');
-                    control.parentElement.nextElementSibling.innerText = control.validationMessage;
-                    control.parentElement.nextElementSibling.style.display = 'block';
-                    event.preventDefault();
-                    event.stopPropagation();
-                } else {
-                    control.classList.remove('is-invalid');
-                    control.classList.add('is-valid');
-                }
-            }
-            if (control.type == 'email') {
-                if (!emailPattern.test(control.value)) {   
-                    control.classList.add('is-invalid');                
-                    control.parentElement.nextElementSibling.innerText = (control.parentElement.nextElementSibling.innerText == '') ? 'Veuillez saisir une adresse électronique valide.' : control.parentElement.nextElementSibling.innerText;
-                    control.parentElement.nextElementSibling.style.display = 'block';
-                    event.preventDefault();
-                    event.stopPropagation();
-                } 
-            }
-            if (control.name == 'dirName') {
-                if (control.value == '') {
-                    control.classList.add('is-invalid');
-                    control.parentElement.nextElementSibling.innerText = 'Veuillez saisir un nom de dossier';
-                    control.parentElement.nextElementSibling.style.display = 'block';
-                    event.preventDefault();
-                    event.stopPropagation();
-                } 
-            }    
+function setUpNavBar(page) {
+    $.each($('#navbar').find('.nav-link'), function(key, item) {
+        if (pages[page] == $(item).attr('href')) {
+            $(item).parent().addClass('active');
+            $(item).append('<span class="sr-only">(current)</span>');
         }
     });
+}
+
+function setValidation(controls) {
+    var isValid = true;
+    var isFile = false;
+    $.each(controls, function(key, control) {
+        if (!checkControls(control)) {
+            isValid = false;
+        }
+        if (control.type == 'file') {
+            if (control.value != '') {
+                isFile = true;
+            }
+            if (!isFile) {
+                isValid = false;
+                $.each(controls, function(key, control) {
+                    if (control.type == 'file') {
+                        control.classList.remove('is-valid');
+                        $(controls[1]).attr('required', 'required');
+                    }
+                });
+            }
+        }
+    });
+    return isValid;
 }
 
 function checkControls(input) {
@@ -138,40 +179,38 @@ function checkControls(input) {
         input.parentElement.nextElementSibling.style.display = '';
         input.classList.remove('is-invalid');
         input.classList.add('is-valid');
+    } else {
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+        input.parentElement.nextElementSibling.innerHTML = '<small>' + input.validationMessage + '</small>';
+        input.parentElement.nextElementSibling.style.display = 'block';
     }
+    return checks;
 }
 
-function setUpAccessForm(dropdown) {
-    dropdown.on('show.bs.dropdown', function(event) {
-        var button = $(event.relatedTarget);
-        var url = button.data('link');
-        var content = $('#editMyAccessForm');
-        $.get({
-            url: url,
-            success: function(resp) {
-                content.html(resp);
-                var form = content.find('form');
-                setUpForm(form);
-            },
-            error: function(resp) {
-                console.log('Error access form : ', resp);
-                content.html('<p>Error : The menu cannot be filled with content.</p>');
-            }
-        });
+function setUpForm() {
+    var controls = $('form').find('.form-control');
+    controls.change(function() {
+        setValidation($(this));
+    });
+    $('form').submit(function(e) { 
+        if (!setValidation(controls)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
     });
 }
 
-function setUpFirmStorage(storage) {
-    var url = storage.data('link');
+function setUpStorage(container) {
     $.get({
-        url: url,
+        url: container.data('link'),
         success: function(resp) {
-            storage.html(resp);
-            setUpStoragePagination(storage, $('#customerFilesPagination').find('.page-link'));
+            container.html(resp);
+            setUpStoragePagination(container, $('#customerFilesPagination').find('.page-link'));
         },
         error: function(resp) {
             console.log('Error access storage : ', resp);
-            storage.html('<p>Error : Cannot reach the storage content.</p>');
+            container.html('<p>Error : Cannot reach the storage content.</p>');
         }
     });
 }
@@ -180,44 +219,16 @@ function setUpStoragePagination(container, buttons) {
     buttons.click(function(event) {
         event.preventDefault();
         event.stopPropagation();
-        var url = $(this).attr('href');
-        if (url) {
-            $.get({
-                url: url,
-                success: function(resp) {
-                    container.html(resp);
-                    setUpStoragePagination(container, $('#customerFilesPagination').find('.page-link'));
-                },
-                error: function(resp) {
-                    console.log('Error pagination : ', resp);
-                }
-            });
-        }
-    });
-}
-
-function setUpFirmsList(list) {
-    var firms = list.find('.card');
-    var firmsBtn = [];
-    for (var i = 0; i < firms.length; i++) {
-        firmsBtn[i] = firms.find('#firm_btn_' + i);
-    }
-    firmsBtn.forEach(function(btn) {
-        btn.click(function() {
-            var url = $(this).data('link');
-            var target = $(this).data('target');
-            var storage = firms.find(target);
-            $.get({
-                url: url,
-                success: function(resp) {
-                    storage.find('.card-body').html(resp);
-                    setUpStoragePagination(storage.find('.card-body'), $('#customerFilesPagination').find('.page-link'));
-                },
-                error: function(resp) {
-                    console.log('Error : cannot reach the storage content');
-                    storage.html('<p>Error : Cannot reach the storage content</p>');
-                }
-            });
+        $.get({
+            url: $(this).attr('href'),
+            success: function(resp) {
+                container.html(resp);
+                setUpStoragePagination(container, $('#customerFilesPagination').find('.page-link'));
+            },
+            error: function(resp) {
+                console.log('Error pagination : ', resp);
+                container.html('<p>Error : Cannot reach the storage content.</p>');
+            }
         });
     });
 }
