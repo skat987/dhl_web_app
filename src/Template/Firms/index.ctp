@@ -37,7 +37,7 @@ echo $this->element('modal');
                                     'id' => __('firm_btn_{0}', $firmKey),
                                     'title' => __('Ouvrir'),
                                     'type' => 'button',
-                                    'data-toggle' => 'collapse',
+                                    'data-toggle' => 'false',
                                     'data-target' => __('#firm_{0}_storage', $firm->id),
                                     'aria-expanded' => 'false',
                                     'aria-controls' => __('firm_{0}_storage', $firm->id),

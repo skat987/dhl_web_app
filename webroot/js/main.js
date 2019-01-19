@@ -50,6 +50,7 @@ function setUpLoginPage() {
 function setUpAllFirms(page) {
     var firms = $('#allFirms').find('.card');
     var firmsBtn = [];
+    var lastCollapse;
     setUpNavBar(page);
     setUpAccessDropdown();
     setUpModal();
@@ -58,14 +59,24 @@ function setUpAllFirms(page) {
     });
     if (firmsBtn.length) {
         $.each(firmsBtn, function(key, btn) {
-            btn.click(function() {
+            btn.click(function(e) {
                 var collapse = $(firms[key]).find($(this).data('target'));
-                collapse.on('show.bs.collapse', function() {
-                    setUpStorage($(this).find('.card-body'));
-                });    
-                collapse.on('hidden.bs.collapse', function() {
-                    collapse.find('.card-body').empty();
-                });
+                if (!lastCollapse) {  
+                    setUpStorage(collapse.find('.card-body'));
+                    collapse.collapse('show');
+                    lastCollapse = collapse; 
+                } else {                
+                    if (lastCollapse.attr('id') == collapse.attr('id')) {
+                        lastCollapse.collapse('hide');
+                        lastCollapse.find('.card-body').empty();
+                        lastCollapse = null;                        
+                    } else {
+                        setUpStorage(collapse.find('.card-body'));
+                        collapse.collapse('show');
+                        lastCollapse.find('.card-body').empty();
+                        lastCollapse = collapse;
+                    }
+                }               
             });
         });
     }
