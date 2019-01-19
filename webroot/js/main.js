@@ -7,6 +7,7 @@
  */ 
 const pages = ['/', '/admin/liste-des-societes', '/admin/liste-des-utilisateurs', '/esapce-client/:id'];
 const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+const passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
 /**
  * This run once the entire page is ready
@@ -172,6 +173,9 @@ function checkControls(input) {
     var checks;
     if (input.type == 'email') {
         checks = input.checkValidity() && emailPattern.test(input.value);
+    } else if (input.type == 'password') {
+        checks = input.checkValidity() && passwordPattern.test(input.value);
+        console.log('pass match', passwordPattern.test(input.value));
     } else {
         checks = input.checkValidity();
     }
