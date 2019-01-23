@@ -16,7 +16,7 @@ echo $this->element('modal');
             'escape' => false,
             'data-toggle' => 'modal',
             'data-target' => '#modal',
-            'data-link' => $this->Url->build(['_name' => 'addUser']),
+            'data-link' => $this->Url->build(['_name' => 'addUser'], true),
             'role' => 'button',
             'class' => 'btn btn-outline-dark mt-2 mb-2',
             'title' => 'Ajouter un utilisateur'
@@ -55,14 +55,14 @@ echo $this->element('modal');
                         'title' => __('Voir le profil'),
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
-                        'data-link' => $this->Url->build(['_name' => 'viewUser', $user->id])
+                        'data-link' => $this->Url->build(['_name' => 'viewUser', $user->id], true)
                     ]) ?>
                     <?= $this->Html->link('<i class="far fa-edit"></i>', '#', [
                         'escape' => false,
                         'title' => __('Modifier le profil'),
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
-                        'data-link' => $this->Url->build(['_name' => 'editUser', $user->id])
+                        'data-link' => $this->Url->build(['_name' => 'editUser', $user->id], true)
                     ]) ?>                    
                     <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
                         '_name' => 'deleteUser', 
