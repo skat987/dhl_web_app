@@ -30,10 +30,10 @@ $appBaseTitle = 'DHL : ';
     <?= $this->Html->css('style') ?>
     <?= $this->Html->script('jquery-3.3.1.min') ?>
     <?= $this->Html->script('jquery-ui.min') ?>
-    <?= $this->Html->script('main', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('fa-all', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('bootstrap.min', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('popper.min', ['block' => 'scriptBottom']) ?>
+    <?= $this->Html->script('main', ['block' => 'scriptBottom']) ?>
 
     <!-- Fetch meta, css and script -->
     <?= $this->fetch('meta') ?>

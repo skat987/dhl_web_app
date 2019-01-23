@@ -58,7 +58,7 @@ Router::scope('/', function (RouteBuilder $routes) {
      * Firm entity routes
      */
     $routes->connect('/admin/liste-des-societes', ['controller' => 'Firms', 'action' => 'index'], ['_name' => 'allFirms']);
-    $routes->connect('/esapce-client/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'viewFirm'])
+    $routes->connect('/espace-client/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'viewFirm'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
     $routes->connect('/admin/societe-:id/modifier', ['controller' => 'Firms', 'action' => 'edit'], ['_name' => 'editFirm'])
