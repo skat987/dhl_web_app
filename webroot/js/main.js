@@ -5,6 +5,7 @@
 /**
  * Global variables
  */ 
+const baseUrl = ''; // To use preview mode
 const pages = ['/', '/admin/liste-des-societes', '/admin/liste-des-utilisateurs', '/esapce-client/:id'];
 const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 const passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
@@ -23,7 +24,7 @@ function initializePage() {
     var current = 3;
     console.log('current', current);
     $.each(pages, function(key, value) {
-        if (pathName == value) {
+        if (pathName == (baseUrl + value)) {
             current = key;
         } 
     });
@@ -139,7 +140,7 @@ function setUpModal() {
 
 function setUpNavBar(page) {
     $.each($('#navbar').find('.nav-link'), function(key, item) {
-        if (pages[page] == $(item).attr('href')) {
+        if ((baseUrl + pages[page]) == $(item).attr('href')) {
             $(item).parent().addClass('active');
             $(item).append('<span class="sr-only">(current)</span>');
         }
@@ -177,7 +178,6 @@ function checkControls(input) {
         checks = input.checkValidity() && emailPattern.test(input.value);
     } else if (input.type == 'password') {
         checks = input.checkValidity() && passwordPattern.test(input.value);
-        console.log('pass match', passwordPattern.test(input.value));
     } else {
         checks = input.checkValidity();
     }

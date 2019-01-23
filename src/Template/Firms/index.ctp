@@ -16,7 +16,7 @@ echo $this->element('modal');
             'escape' => false,
             'data-toggle' => 'modal',
             'data-target' => '#modal',
-            'data-link' => $this->Url->build(['_name' => 'addFirm']),
+            'data-link' => $this->Url->build(['_name' => 'addFirm'], true),
             'role' => 'button',
             'class' => 'btn btn-outline-dark mt-3 mb-3',
             'title' => __('Ajouter une société')
@@ -40,8 +40,7 @@ echo $this->element('modal');
                                     'data-toggle' => 'false',
                                     'data-target' => __('#firm_{0}_storage', $firm->id),
                                     'aria-expanded' => 'false',
-                                    'aria-controls' => __('firm_{0}_storage', $firm->id),
-                                    'data-link' => $this->Url->build(['_name' => 'getStorage', $firm->id])
+                                    'aria-controls' => __('firm_{0}_storage', $firm->id)
                                 ]) ?>
                             </h5>
                         </div>
@@ -80,7 +79,7 @@ echo $this->element('modal');
                                     'title' => __('Renommer la société'),
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
-                                    'data-link' => $this->Url->build(['_name' => 'editFirm', $firm->id])
+                                    'data-link' => $this->Url->build(['_name' => 'editFirm', $firm->id], true)
                                 ]) ?>
                                 <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
                                     '_name' => 'deleteFirm', 
@@ -95,7 +94,7 @@ echo $this->element('modal');
                     </div>
                 </div>
                 <div id=<?= __('firm_{0}_storage', $firm->id) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_heading', $firm->id) ?> data-parent="#allFirms">
-                    <div class="card-body" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id]) ?>>
+                    <div class="card-body" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id], true) ?>>
                         <!-- Storage content -->
                     </div>
                 </div>

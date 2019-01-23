@@ -16,7 +16,7 @@
             'title' => __('Ajouter un document à la société {0}', $firm->name),
             'data-toggle' => 'modal',
             'data-target' => '#modal',
-            'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id])
+            'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id], true)
         ]) ?>
     </div>
     <div class="col-md-6 mb-3 d-flex justify-content-center">
@@ -27,7 +27,7 @@
             'title' => __('Ajouter un dossier à la société {0}', $firm->name),
             'data-toggle' => 'modal',
             'data-target' => '#modal',
-            'data-link' => $this->Url->build(['_name' => 'addDirectory', $firm->id])
+            'data-link' => $this->Url->build(['_name' => 'addDirectory', $firm->id], true)
         ]) ?>
     </div>
 </div>
