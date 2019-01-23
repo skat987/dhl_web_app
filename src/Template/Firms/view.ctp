@@ -41,6 +41,6 @@ echo $this->element('modal');
         </div>
     </div>
 </div>
-<div id="storageContent" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id]) ?>>
+<div id="storageContent" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id], true) ?>>
     <!-- Storage content -->
 </div>
