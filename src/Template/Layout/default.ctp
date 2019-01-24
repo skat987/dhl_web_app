@@ -123,12 +123,48 @@ $appBaseTitle = 'DHL : ';
     </div>
 
     <!-- Footer -->
-    <footer class="row">
-        <div class="col d-flex justify-content-center">
-            <?= $this->Html->image('iaora systems-logo-rvb 2018_300x100.jpg', [
-                'alt' => 'Logo Iaora Systems',
-                'style' => 'width: 100px'
-            ]) ?>
+    <footer class="row py-3 px-2">
+        <div class="col-12 d-flex justify-content-md-center">
+            <?php if (!empty($this->request->getSession()->read('Auth.User')) && ($this->request->getSession()->read('Auth.User.user_type_id') != 3)): ?>
+            <div class="row border border-dark rounded align-items-center">
+            <?php else: ?>
+            <div class="row align-items-center">
+            <?php endif; ?>
+                <div class="col-auto my-0 mx-0">
+                    <?= $this->Html->link(
+                        $this->Html->image('iaora systems-logo-rvb 2018_300x100.jpg', [
+                            'alt' => 'Logo Iaora Systems',
+                            'style' => 'width: 100px'
+                        ]), 
+                        $this->Url->build('http://www.iaora-systems.pf/'),
+                        [
+                            'escape' => false,
+                            'target' => '_blank',
+                            'title' => 'Visiter le site'
+                        ]
+                    ) ?>
+                </div>
+                <?php if (!empty($this->request->getSession()->read('Auth.User')) && ($this->request->getSession()->read('Auth.User.user_type_id') != 3)): ?>
+                <address class="col col-md-auto my-0 mx-0">
+                    <small>Pour d'éventuels renseignements, veuillez contacter l'administrateur du site :</small>                        
+                    <ul>
+                        <li>
+                            <small>
+                            <?= __('Par mail : {0}',
+                                $this->Html->link(
+                                    __('courrier@ios.pf'),
+                                    $this->Url->build('mailto:courrier@ios.pf')
+                                )
+                            ) ?> 
+                            </small>
+                        </li>
+                        <li>
+                            <small><?= __('Par Téléphone : +(689) 40 54 26 60') ?></small>
+                        </li>
+                    </ul>
+                </address>
+                <?php endif; ?>
+            </div>
         </div>
     </footer>
     <?= $this->fetch('scriptBottom') ?>
