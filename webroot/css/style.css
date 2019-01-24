@@ -1,3 +1,7 @@
+html {
+    font-size: 1rem;
+}
+
 html, body {
     height: 100%;
     margin: 0;
@@ -16,7 +20,11 @@ footer {
     background-color: #cc0000;
 }
 
+address {
+    background-color: #ffffff;
+    font-size: 0.7rem;
+}
+
 #editMyAccessForm {
     width: 300px;
 }
-
