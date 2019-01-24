@@ -20,9 +20,7 @@ $(function() {
 
 function initializePage() {
     var pathName = $(location).attr('pathname');
-    console.log('pathName', pathName);
     var current = 3;
-    console.log('current', current);
     $.each(pages, function(key, value) {
         if (pathName == (baseUrl + value)) {
             current = key;
