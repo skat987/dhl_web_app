@@ -220,9 +220,9 @@ class CustomerFilesController extends AppController
             if ($isDecrypt) {
                 $this->setHeaders($tempFile);
             } else {
+                $tempFile->delete();
                 $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
             }
-            $tempFile->delete();
         } else {
             $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
         }
@@ -302,8 +302,11 @@ class CustomerFilesController extends AppController
         header('Pragma: no-cache');
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
         header('Expires: 0');
+        ob_flush();
         flush();
         readfile($file->path);
+        $file->delete();
+        exit();
     }
 
     /**
