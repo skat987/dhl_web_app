@@ -39,79 +39,81 @@ $appBaseTitle = 'DHL : ';
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
 </head>
-<body class="container-fluid">
+<body>
     <!-- Header -->
-    <header class="row">
-        <div class="col-auto mx-0 px-0 my-0 py-0">
-            <?= $this->Html->image('dhl_logo.gif', [
-                'alt' => 'Logo DHL',
-                'class' => 'mx-0 my-0'
-            ]) ?>
-        </div>
-        <div class="col">
-            <div class="row">
-                <div class="col-12">
-                    <h1 class="text-center"><?= __('Site d\'échanges sécurisés de documents') ?></h1>
-                </div>
-                <div class="col-12">
-                    <h3 class="text-center"><?= $this->fetch('title') ?></h3>
+    <header class="container-fluid clearfix">
+        <div class="row py-2 px-2">
+            <div class="col-auto mx-0 px-0 my-0 py-0">
+                <?= $this->Html->image('dhl_logo.gif', [
+                    'alt' => 'Logo DHL',
+                    'class' => 'mx-0 my-0'
+                ]) ?>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="text-center"><?= __('Site d\'échanges sécurisés de documents') ?></h1>
+                    </div>
+                    <div class="col-12">
+                        <h3 class="text-center"><?= $this->fetch('title') ?></h3>
+                    </div>
                 </div>
             </div>
+            <?php if (!empty($this->request->getSession()->read('Auth.User'))): ?>
+            <?php if ($this->request->getSession()->read('Auth.User.user_type_id') == 3): ?>
+            <div class="col-xl-3 px-0">
+            <?php else: ?>
+            <div class="col-xl-4 px-0">
+            <?php endif; ?>
+                <nav class="navbar navbar-expand-lg navbar-light px-0">
+                    <?= $this->Form->button('<span class="navbar-toggler-icon"></span>', ['class' => 'navbar-toggler', 'type' => 'button', 'data-toggle' => 'collapse', 'data-target' => '#navbar', 'aria-controls' => 'navbar', 'aria-expanded' => 'false', 'aria-label' => 'Toggle navigation', 'escape' => false]) ?>
+                    <div class="collapse navbar-collapse" id="navbar">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item dropdown" id="accessDropdown">
+                                <?= $this->Html->link(h($this->request->getSession()->read('Auth.User.full_name')), '#', [                                    
+                                    'role' => 'button',
+                                    'class' => 'nav-link dropdown-toggle',
+                                    'id' => 'userAccess',
+                                    'title' => __('Modifier mes accès'),
+                                    'data-toggle' => 'dropdown',
+                                    'aria-haspopup' => 'true',
+                                    'aria-expanded' => 'false',
+                                    'data-link' => $this->Url->build(['_name' => 'editAccess'], true)
+                                ]) ?>
+                                <div class="dropdown-menu" aria-labelledby="userAccess" id="editMyAccessForm">
+                                    <!-- Edit Access Form -->
+                                </div>
+                            </li>
+                            <li class="border border-secondary"></li>
+                            <?php if (in_array($this->request->getSession()->read('Auth.User.user_type_id'), [1, 2])): ?>
+                            <li class="nav-item">
+                                <?= $this->Html->link(__('Sociétés'), [
+                                    '_name' => 'allFirms'
+                                ], [
+                                    'class' => 'nav-link'
+                                ]) ?>
+                            </li>
+                            <li class="nav-item">
+                                <?= $this->Html->link(__('Utilisateurs'), [
+                                    '_name' => 'allUsers'
+                                ], [
+                                    'class' => 'nav-link'
+                                ]) ?>
+                            </li>
+                            <?php endif; ?>
+                            <li class="nav-item">
+                                <?= $this->Html->link(__('Déconnexion'), [
+                                    '_name' => 'logout'
+                                ], [
+                                    'class' => 'nav-link'
+                                ]) ?>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <?php endif; ?>
         </div>
-        <?php if (!empty($this->request->getSession()->read('Auth.User'))): ?>
-        <?php if ($this->request->getSession()->read('Auth.User.user_type_id') == 3): ?>
-        <div class="col-xl-3 px-0">
-        <?php else: ?>
-        <div class="col-xl-4 px-0">
-        <?php endif; ?>
-            <nav class="navbar navbar-expand-lg navbar-light px-0">
-                <?= $this->Form->button('<span class="navbar-toggler-icon"></span>', ['class' => 'navbar-toggler', 'type' => 'button', 'data-toggle' => 'collapse', 'data-target' => '#navbar', 'aria-controls' => 'navbar', 'aria-expanded' => 'false', 'aria-label' => 'Toggle navigation', 'escape' => false]) ?>
-                <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown" id="accessDropdown">
-                            <?= $this->Html->link(h($this->request->getSession()->read('Auth.User.full_name')), '#', [                                    
-                                'role' => 'button',
-                                'class' => 'nav-link dropdown-toggle',
-                                'id' => 'userAccess',
-                                'title' => __('Modifier mes accès'),
-                                'data-toggle' => 'dropdown',
-                                'aria-haspopup' => 'true',
-                                'aria-expanded' => 'false',
-                                'data-link' => $this->Url->build(['_name' => 'editAccess'], true)
-                            ]) ?>
-                            <div class="dropdown-menu" aria-labelledby="userAccess" id="editMyAccessForm">
-                                <!-- Edit Access Form -->
-                            </div>
-                        </li>
-                        <li class="border border-secondary"></li>
-                        <?php if (in_array($this->request->getSession()->read('Auth.User.user_type_id'), [1, 2])): ?>
-                        <li class="nav-item">
-                            <?= $this->Html->link(__('Sociétés'), [
-                                '_name' => 'allFirms'
-                            ], [
-                                'class' => 'nav-link'
-                            ]) ?>
-                        </li>
-                        <li class="nav-item">
-                            <?= $this->Html->link(__('Utilisateurs'), [
-                                '_name' => 'allUsers'
-                            ], [
-                                'class' => 'nav-link'
-                            ]) ?>
-                        </li>
-                        <?php endif; ?>
-                        <li class="nav-item">
-                            <?= $this->Html->link(__('Déconnexion'), [
-                                '_name' => 'logout'
-                            ], [
-                                'class' => 'nav-link'
-                            ]) ?>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-        <?php endif; ?>
     </header>
 
     <!-- Flash component render -->
@@ -123,47 +125,44 @@ $appBaseTitle = 'DHL : ';
     </div>
 
     <!-- Footer -->
-    <footer class="row py-3 px-2">
-        <div class="col-12 d-flex justify-content-md-center">
-            <?php if (!empty($this->request->getSession()->read('Auth.User')) && ($this->request->getSession()->read('Auth.User.user_type_id') != 3)): ?>
-            <div class="row border border-dark rounded align-items-center">
-            <?php else: ?>
-            <div class="row align-items-center">
-            <?php endif; ?>
-                <div class="col-auto my-0 mx-0">
-                    <?= $this->Html->link(
-                        $this->Html->image('iaora systems-logo-rvb 2018_300x100.jpg', [
-                            'alt' => 'Logo Iaora Systems',
-                            'style' => 'width: 100px'
-                        ]), 
-                        $this->Url->build('http://www.iaora-systems.pf/'),
-                        [
-                            'escape' => false,
-                            'target' => '_blank',
-                            'title' => 'Visiter le site'
-                        ]
-                    ) ?>
+    <footer class="container-fluid clearfix">
+        <div class="row py-2 px-2">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="row align-items-center">
+                    <div class="col-auto my-0 mx-0">
+                        <?= $this->Html->link(
+                            $this->Html->image('iaora systems-logo-rvb 2018_300x100.jpg', [
+                                'alt' => 'Logo Iaora Systems',
+                                'style' => 'width: 100px',
+                                'class' => 'rounded'
+                            ]), 
+                            $this->Url->build('http://www.iaora-systems.pf/'),
+                            [
+                                'escape' => false,
+                                'target' => '_blank',
+                                'title' => 'Visiter le site'
+                            ]
+                        ) ?>
+                    </div>
+                    <?php if (!empty($this->request->getSession()->read('Auth.User')) && ($this->request->getSession()->read('Auth.User.user_type_id') != 3)): ?>
+                    <address class="col col-md-auto my-0 mx-0">
+                        <small>Pour d'éventuels renseignements, veuillez contacter l'administrateur du site :</small>                        
+                        <ul class="mb-0">
+                            <li>
+                                <small>
+                                    <i class="far fa-envelope"></i> :                                
+                                    <?= $this->Html->link(__(' courrier@ios.pf'),
+                                        $this->Url->build('mailto:courrier@ios.pf')
+                                    ) ?> 
+                                </small>
+                            </li>
+                            <li>
+                                <small><i class="fas fa-phone"></i><?= __(' : +(689) 40 54 26 60') ?></small>
+                            </li>
+                        </ul>
+                    </address>
+                    <?php endif; ?>
                 </div>
-                <?php if (!empty($this->request->getSession()->read('Auth.User')) && ($this->request->getSession()->read('Auth.User.user_type_id') != 3)): ?>
-                <address class="col col-md-auto my-0 mx-0">
-                    <small>Pour d'éventuels renseignements, veuillez contacter l'administrateur du site :</small>                        
-                    <ul>
-                        <li>
-                            <small>
-                            <?= __('Par mail : {0}',
-                                $this->Html->link(
-                                    __('courrier@ios.pf'),
-                                    $this->Url->build('mailto:courrier@ios.pf')
-                                )
-                            ) ?> 
-                            </small>
-                        </li>
-                        <li>
-                            <small><?= __('Par Téléphone : +(689) 40 54 26 60') ?></small>
-                        </li>
-                    </ul>
-                </address>
-                <?php endif; ?>
             </div>
         </div>
     </footer>

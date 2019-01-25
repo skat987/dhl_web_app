@@ -136,6 +136,6 @@
         <?= $this->Paginator->next(__('Suivant') . ' >') ?>
         <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
     </ul>
-    <p><?= $this->Paginator->counter(['format' => __('Page {{page}} sur {{pages}}, {{current}} enregistrement(s) affiché(s) sur {{count}}')]) ?></p>
+    <p><?= $this->Paginator->counter(['format' => __('Page {{page}} sur {{pages}}')]) ?></p>
 </nav>
 <?php endif; ?>

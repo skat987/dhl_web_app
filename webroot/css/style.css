@@ -1,11 +1,5 @@
-html {
-    font-size: 1rem;
-}
-
 html, body {
     height: 100%;
-    margin: 0;
-    padding: 0;
 }
 
 header {
@@ -15,14 +9,16 @@ header {
 footer {
     position: sticky;
     top: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: #cc0000;
+    background-color: #323232;
+}
+
+footer ul {
+    list-style-type: none;
 }
 
 address {
-    background-color: #ffffff;
-    font-size: 0.7rem;
+    color: #ffffff;
+    font-size: 0.65rem;
 }
 
 #editMyAccessForm {
