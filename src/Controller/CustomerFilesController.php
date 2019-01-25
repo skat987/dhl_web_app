@@ -95,7 +95,7 @@ class CustomerFilesController extends AppController
                 $message = $this->getUploadMessageError($fileError);        
                 $this->Flash->error(__($message, $fileError));
             } else {
-                $this->Flash->success(__('Tous les documents ont été sauvegardé.'));  
+                $this->Flash->success(__('Tous les documents ont été sauvegardés.'));  
             }     
             return $this->redirect($this->referer());
         }

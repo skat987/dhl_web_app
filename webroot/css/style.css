@@ -24,3 +24,28 @@ address {
 #editMyAccessForm {
     width: 300px;
 }
+
+form small {
+    font-size: 0.55rem;
+}
+
+.custom-file-label::after {
+    content: "Parcourir";
+}
+
+.required > label::after {
+    content: "*";
+    color: #cc0000;
+}
+
+#helpRequired {
+    color: #cc0000;
+}
+
+.custom-file-label.is-invalid {
+    border-color: #dc3545;
+}
+
+.custom-file-label.is-valid {
+    border-color: #28a745;
+}

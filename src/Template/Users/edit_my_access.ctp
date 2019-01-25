@@ -35,6 +35,9 @@
     ]) ?>
     <div class="invalid-feedback"></div>
 </div>
+<div class="col py-0 px-0">
+    <p class="form-text text-muted py-0 px-0 my-0"><small>(<span id="helpRequired">*</span>) Champs obligatoires</small></p>
+</div>
 <?= $this->Form->button(__('Envoyer <i class="far fa-paper-plane"></i>'), [
     'escape' => false,
     'type' => 'submit',
