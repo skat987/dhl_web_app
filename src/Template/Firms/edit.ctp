@@ -24,6 +24,9 @@
         ]) ?>
         <div class="invalid-feedback"></div>
     </div>
+    <div class="col py-0 px-0">
+        <p class="form-text text-muted py-0 px-0 my-0"><small>(<span id="helpRequired">*</span>) Champs obligatoires</small></p>
+    </div>
 </div>
 <div class="modal-footer">
     <?= $this->Form->button(__('Annuler'), [

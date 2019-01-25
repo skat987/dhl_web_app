@@ -9,12 +9,13 @@ const baseUrl = ''; // To use preview mode
 const pages = ['/', '/admin/liste-des-societes', '/admin/liste-des-utilisateurs', '/esapce-client/:id'];
 const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 const passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+var page;
 
 /**
  * This run once the entire page is ready
  */
 $(function() {
-    var page = initializePage();
+    page = initializePage();
     setUpPage(page);
 });
 
@@ -162,6 +163,8 @@ function setValidation(controls) {
                     if (control.type == 'file') {
                         control.classList.remove('is-valid');
                         $(controls[1]).attr('required', 'required');
+                        checkControls(controls[1]);
+                        $(controls[1]).prev().addClass('is-invalid');
                     }
                 });
             }
@@ -195,6 +198,14 @@ function checkControls(input) {
 function setUpForm() {
     var controls = $('form').find('.form-control');
     controls.change(function() {
+        if ($(this).attr('type') == 'file') {
+            var fileName = $(this).val().split('\\')[2];
+            if (fileName != '') {
+                $(this).prev().removeClass('is-invalid');
+                $(this).prev().addClass('is-valid');
+            }
+            $(this).prev().text(fileName);
+        }
         setValidation($(this));
     });
     $('form').submit(function(e) { 

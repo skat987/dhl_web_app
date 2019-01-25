@@ -73,7 +73,7 @@
             ]) ?>
             <div class="invalid-feedback"></div>
             <small id="passwordHelpBlock" class="form-text text-muted">
-                <?= __('Au moins 8 caractères') ?>
+                <?= __('Au moins 8 caractères, 1 majuscule et 1 chiffre. Les caractères spéciaux sont exclus.') ?>
             </small>
         </div>
     </div>
@@ -96,6 +96,9 @@
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>
+    </div>
+    <div class="col py-0 px-0">
+        <p class="form-text text-muted py-0 px-0 my-0"><small>(<span id="helpRequired">*</span>) Champs obligatoires</small></p>
     </div>
 </div>
 <div class="modal-footer">

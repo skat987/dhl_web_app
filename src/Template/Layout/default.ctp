@@ -84,7 +84,7 @@ $appBaseTitle = 'DHL : ';
                                     <!-- Edit Access Form -->
                                 </div>
                             </li>
-                            <li class="border border-secondary"></li>
+                            <li class="border border-dark"></li>
                             <?php if (in_array($this->request->getSession()->read('Auth.User.user_type_id'), [1, 2])): ?>
                             <li class="nav-item">
                                 <?= $this->Html->link(__('Sociétés'), [
