@@ -9,10 +9,10 @@
 <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
 <div class="row">
     <div class="col-md-6 mb-3 d-flex justify-content-center">
-        <?= $this->Html->link(__('<i class="far fa-file"></i> Nouveau document <i class="fas fa-plus-circle"></i>'), '#', [
+        <?= $this->Html->link(__('<i class="fas fa-file"></i> Nouveau document <i class="fas fa-plus-circle"></i>'), '#', [
             'escape' => false,
             'role' => 'button',
-            'class' => 'btn btn-outline-dark',
+            'class' => 'btn dhl-custom-btn',
             'title' => __('Ajouter un document à la société {0}', $firm->name),
             'data-toggle' => 'modal',
             'data-target' => '#modal',
@@ -20,10 +20,10 @@
         ]) ?>
     </div>
     <div class="col-md-6 mb-3 d-flex justify-content-center">
-        <?= $this->Html->link(__('<i class="far fa-folder"></i> Nouveau dossier <i class="fas fa-plus-circle"></i>'), '#', [
+        <?= $this->Html->link(__('<i class="fas fa-folder"></i> Nouveau dossier <i class="fas fa-plus-circle"></i>'), '#', [
             'escape' => false,
             'role' => 'button',
-            'class' => 'btn btn-outline-dark',
+            'class' => 'btn dhl-custom-btn',
             'title' => __('Ajouter un dossier à la société {0}', $firm->name),
             'data-toggle' => 'modal',
             'data-target' => '#modal',
@@ -42,7 +42,7 @@
     <div class="card">
         <div class="card-header" id=<?= __('firm_{0}_dir_{1}_heading', [$firm->id, $key]) ?>>
             <h5 class="mb-0">
-                <?= $this->Form->button(__('<i class="far fa-folder"></i> {0}', $directory), [
+                <?= $this->Form->button(__('<i class="fas fa-folder"></i> {0}', $directory), [
                     'escape' => false,
                     'class' => 'btn btn-link',
                     'title' => __('Ouvrir'),
@@ -72,7 +72,7 @@
                     <?php foreach ($customerFiles as $customerFile): ?>
                     <?php if ($customerFile->has('dir_name') && ($customerFile->dir_name == $directory)): ?>
                     <li class="list-group-item">
-                        <?= $this->Html->link(__('<i class="far fa-file"></i> {0}', h($customerFile->file_name)), [
+                        <?= $this->Html->link(__('<i class="fas fa-file"></i> {0}', h($customerFile->file_name)), [
                             '_name' => 'downloadCustomerFile',
                             $customerFile->id
                         ], [
@@ -105,7 +105,7 @@
     <?php foreach ($customerFiles as $customerFile): ?>
     <?php if (!$customerFile->has('dir_name')): ?>
     <li class="list-group-item">
-        <?= $this->Html->link(__('<i class="far fa-file"></i> {0}', h($customerFile->file_name)), [
+        <?= $this->Html->link(__('<i class="fas fa-file"></i> {0}', h($customerFile->file_name)), [
             '_name' => 'downloadCustomerFile',
             $customerFile->id
         ], [
