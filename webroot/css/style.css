@@ -17,7 +17,7 @@ footer ul {
 }
 
 address {
-    color: #ffffff;
+    color: #fff;
     font-size: 0.65rem;
 }
 
@@ -48,4 +48,30 @@ form small {
 
 .custom-file-label.is-valid {
     border-color: #28a745;
+}
+
+.dhl-custom-btn, .dhl-custom-btn:hover, .dhl-custom-btn-2, .dhl-custom-btn-2:hover {
+    color: #fff;
+}
+
+.dhl-custom-btn {
+    background-color: #d40511;
+}
+
+.dhl-custom-btn:hover {
+    box-shadow: 0 4px #920b11;
+    top: 2px;
+}
+
+.dhl-custom-btn-2 {
+    background-color: #db696e;
+}
+
+.dhl-custom-btn-2:hover {
+    box-shadow: 0 4px #99494d;
+    top: 2px; 
+}
+
+.dhl-custom-btn:focus, .dhl-custom-btn-2:focus {
+    box-shadow: 0 0 0 .2rem #e9d397;
 }

@@ -37,6 +37,9 @@ $this->assign('title', 'Connexion');
     <div class="col py-0 px-0">
         <p class="form-text text-muted py-0 px-0 my-0"><small>(<span id="helpRequired">*</span>) Champs obligatoires</small></p>
     </div>
-    <?= $this->Form->submit(__('Connexion'), ['class' => 'btn btn-dark']) ?>
+    <?= $this->Form->submit(__('Se connecter <i class="fas fa-check"></i>'), [
+        'class' => 'btn dhl-custom-btn',
+        'escape' => false
+    ]) ?>
     <?= $this->Form->end() ?>
 </div>

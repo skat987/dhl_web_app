@@ -10,19 +10,19 @@ $this->assign('title', 'Liste des sociétés');
 // Call the Modal element
 echo $this->element('modal');
 ?>
-<div class="row">
+<section class="row">
     <div class="col">
-        <?= $this->Html->link(__('Nouvelle société <i class="fas fa-plus-circle"></i>'), '#', [
+        <?= $this->Html->link(__('<i class="fas fa-building"></i> Nouvelle société <i class="fas fa-plus-circle"></i>'), '#', [
             'escape' => false,
             'data-toggle' => 'modal',
             'data-target' => '#modal',
             'data-link' => $this->Url->build(['_name' => 'addFirm'], true),
             'role' => 'button',
-            'class' => 'btn btn-outline-dark mt-3 mb-3',
+            'class' => 'dhl-custom-btn btn btn-block mt-3 mb-3',
             'title' => __('Ajouter une société')
         ]) ?>
     </div>
-</div>
+</section>
 <div class="row">	
     <div class="col">
         <div class="accordion" id="allFirms">
@@ -32,7 +32,7 @@ echo $this->element('modal');
                     <div class="row">
                         <div class="col-4">
                             <h5 class="mb-0">
-                                <?= $this->Form->button(h($firm->name), [
+                                <?= $this->Form->button(__('<i class="fas fa-building"></i> {0}', $firm->name), [
                                     'class' => 'btn btn-link',
                                     'id' => __('firm_btn_{0}', $firmKey),
                                     'title' => __('Ouvrir'),
