@@ -31,13 +31,13 @@
 <div class="modal-footer">
     <?= $this->Form->button(__('Annuler'), [
         'type' => 'button',
-        'class' => 'btn btn-secondary',
+        'class' => 'btn dhl-custom-btn-2',
         'data-dismiss' => 'modal'
     ]) ?>
-    <?= $this->Form->button(__('Envoyer <i class="far fa-paper-plane"></i>'), [
+    <?= $this->Form->button(__('Valider <i class="fas fa-check"></i>'), [
         'escape' => false,
         'type' => 'submit',
-        'class' => 'btn btn-dark'
+        'class' => 'btn dhl-custom-btn'
     ]) ?>
 </div>
 <?= $this->Form->end() ?>

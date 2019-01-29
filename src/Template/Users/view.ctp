@@ -86,7 +86,7 @@
 <div class="modal-footer">
     <?= $this->Form->button(__('Retour'), [
         'type' => 'button',
-        'class' => 'btn btn-secondary',
+        'class' => 'btn dhl-custom-btn-2',
         'data-dismiss' => 'modal'
     ]) ?>
 </div>
