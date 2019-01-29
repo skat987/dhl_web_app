@@ -10,20 +10,20 @@ $this->assign('title', 'Liste des utilisateurs');
 // Call the Modal element
 echo $this->element('modal');
 ?>
-<div class="row">
+<section class="row">
     <div class="col">
-        <?= $this->Html->link(__('Nouvel utilisateur <i class="fas fa-plus-circle"></i>'), '#', [
+        <?= $this->Html->link(__('<i class="fas fa-user"></i> Nouvel utilisateur <i class="fas fa-plus-circle"></i>'), '#', [
             'escape' => false,
             'data-toggle' => 'modal',
             'data-target' => '#modal',
             'data-link' => $this->Url->build(['_name' => 'addUser'], true),
             'role' => 'button',
-            'class' => 'btn btn-outline-dark mt-2 mb-2',
-            'title' => 'Ajouter un utilisateur'
+            'class' => 'dhl-custom-btn btn btn-block mt-3 mb-3',
+            'title' => __('Ajouter un utilisateur')
         ]) ?>
     </div>
-</div>
-<div class="table-responsive">
+</section>
+<section class="table-responsive">
     <table class="table">
         <thead class="thead-light">
             <tr>
@@ -77,14 +77,15 @@ echo $this->element('modal');
             <?php endforeach; ?>
         </tbody>
     </table>
-</div>
-<nav aria-label="user list pagination">
-    <ul class="pagination justify-content-center">
-        <?= $this->Paginator->first('<< ' . __('Premier')) ?>
-        <?= $this->Paginator->prev('< ' . __('Précédent')) ?>
-        <?= $this->Paginator->numbers() ?>
-        <?= $this->Paginator->next(__('Suivant') . ' >') ?>
-        <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
-    </ul>
-    <p><?= $this->Paginator->counter(['format' => __('Page {{page}} sur {{pages}}, {{current}} enregistrement(s) affiché(s) sur {{count}}')]) ?></p>
-</nav>
+</section>
+<section>
+    <nav aria-label="users list pagination">
+        <ul class="pagination justify-content-center">
+            <?= $this->Paginator->first('<< ' . __('Premier')) ?>
+            <?= $this->Paginator->prev('< ' . __('Précédent')) ?>
+            <?= $this->Paginator->numbers() ?>
+            <?= $this->Paginator->next(__('Suivant') . ' >') ?>
+            <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
+        </ul>
+    </nav>
+</section>

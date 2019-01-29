@@ -23,7 +23,7 @@ echo $this->element('modal');
         ]) ?>
     </div>
 </section>
-<div class="row">	
+<section class="row">	
     <div class="col">
         <div class="accordion" id="allFirms">
             <?php foreach ($firms as $firmKey => $firm): ?>
@@ -102,13 +102,15 @@ echo $this->element('modal');
             <?php endforeach; ?>
         </div>
     </div>
-</div>
-<nav>
-    <ul class="pagination justify-content-center">
-        <?= $this->Paginator->first('<< ' . __('Premier')) ?>
-        <?= $this->Paginator->prev('< ' . __('Précédent')) ?>
-        <?= $this->Paginator->numbers() ?>
-        <?= $this->Paginator->next(__('Suivant') . ' >') ?>
-        <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
-    </ul>
-</nav>
+</section>
+<section>
+    <nav aria-label="firms list pagination">
+        <ul class="pagination justify-content-center">
+            <?= $this->Paginator->first('<< ' . __('Premier')) ?>
+            <?= $this->Paginator->prev('< ' . __('Précédent')) ?>
+            <?= $this->Paginator->numbers() ?>
+            <?= $this->Paginator->next(__('Suivant') . ' >') ?>
+            <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
+        </ul>
+    </nav>
+</section>

@@ -105,6 +105,10 @@ function setUpAccessDropdown() {
             success: function(resp) {
                 dropdown.children().last().html(resp);
                 setUpForm();
+                $('#cancelBtn').click(function() {
+                    dropdown.dropdown();
+                    dropdown.children().last().empty();
+                });
             },
             error: function(resp) {
                 console.log('Error access form : ', resp);
