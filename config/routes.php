@@ -47,17 +47,69 @@ use Cake\Routing\Route\DashedRoute;
 Router::defaultRouteClass(DashedRoute::class);
 
 Router::scope('/', function (RouteBuilder $routes) {
-    /**
-     * Here, we are connecting '/' (base path) to a controller called 'Pages',
-     * its action called 'display', and we pass a param to select the view file
-     * to use (in this case, src/Template/Pages/home.ctp)...
-     */
-    $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
     /**
-     * ...and connect the rest of 'Pages' controller's URLs.
+     * Default routes
      */
-    $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
+    $routes->connect('/', ['controller' => 'Users', 'action' => 'login'], ['_name' => 'login']);
+    $routes->connect('/deconnexion', ['controller' => 'Users', 'action' => 'logout'], ['_name' => 'logout']);
+
+    /**
+     * Firm entity routes
+     */
+    $routes->connect('/admin/liste-des-societes', ['controller' => 'Firms', 'action' => 'index'], ['_name' => 'allFirms']);
+    $routes->connect('/espace-client/:id', ['controller' => 'Firms', 'action' => 'view'], ['_name' => 'viewFirm'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+    $routes->connect('/admin/societe-:id/modifier', ['controller' => 'Firms', 'action' => 'edit'], ['_name' => 'editFirm'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+    $routes->connect('/admin/societe-:id/supprimer', ['controller' => 'Firms', 'action' => 'delete'], ['_name' => 'deleteFirm'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+    $routes->connect('/admin/societe/creer', ['controller' => 'Firms', 'action' => 'add'], ['_name' => 'addFirm']);
+    
+    /**
+     * User entity routes
+     */
+    $routes->connect('/admin/liste-des-utilisateurs', ['controller' => 'Users', 'action' => 'index'], ['_name' => 'allUsers']);
+    $routes->connect('/admin/utilisateur/:id', ['controller' => 'Users', 'action' => 'view'], ['_name' => 'viewUser'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+    $routes->connect('/admin/utilisateur-:id/modifier', ['controller' => 'Users', 'action' => 'edit'], ['_name' => 'editUser'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+    $routes->connect('/admin/utilisateur-:id/supprimer', ['controller' => 'Users', 'action' => 'delete'], ['_name' => 'deleteUser'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+    $routes->connect('/admin/utilisateur/creer', ['controller' => 'Users', 'action' => 'add'], ['_name' => 'addUser']);
+    $routes->connect('/modifier-mes-acces', ['controller' => 'Users', 'action' => 'editMyAccess'], ['_name' => 'editAccess']);
+
+    /**
+     * CustomerFile entity routes
+     */
+    $routes->connect('/admin/societe-:firm_id/documents/creer', ['controller' => 'CustomerFiles', 'action' => 'add'], ['_name' => 'addCustomerFile'])
+        ->setPatterns(['firm_id' => '\d+'])
+        ->setPass(['firm_id']);
+    $routes->connect('/admin/document-:id/supprimer', ['controller' => 'CustomerFiles', 'action' => 'delete'], ['_name' => 'deleteCustomerFile'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);    
+    $routes->connect('/document-:id/telecharger', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+    $routes->connect('/societe-:firm_id/liste-des-documents', ['controller' => 'CustomerFiles', 'action' => 'storageView'], ['_name' => 'getStorage'])
+        ->setPatterns(['firm_id' => '\d+'])
+        ->setPass(['firm_id']);
+
+    /**
+     * CustomerDirectory entity routes
+     */
+    $routes->connect('/admin/societe-:firm_id/dossier/creer', ['controller' => 'CustomerDirectories', 'action' => 'add'], ['_name' => 'addDirectory'])
+        ->setPatterns(['firm_id' => '\d+'])
+        ->setPass(['firm_id']);
+    $routes->connect('/admin/dossier-:id/supprimer', ['controller' => 'CustomerDirectories', 'action' => 'delete'], ['_name' => 'deleteDirectory'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
 
     /**
      * Connect catchall routes for all controllers.

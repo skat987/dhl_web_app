@@ -83,3 +83,29 @@ define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor' . DS . 'cakephp' . DS . 'c
  */
 define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
 define('CAKE', CORE_PATH . 'src' . DS);
+
+//---------------------------------- Ajout christopher 2018/11/19 -------------------------//
+/**
+ * Path to the uploads directory.
+ */
+define('UPLOADS', WWW_ROOT . 'uploads' . DS);
+/**
+ * Path to the uploads/Temp directory
+ */
+define('TMP_UPLOADS', WWW_ROOT . 'tmp' . DS);
+/**
+ * Define the number of blocks that should be read from the source file for each chunk.
+ */
+define('FILE_ENCRYPTION_BLOCKS', 10000);
+/**
+ * Define the default encryption method
+ */
+define('DEFAULT_ENCRYPTION_METHOD', 'AES-256-CBC');
+/**
+ * Define the size of each chunk encrypted by the method.
+ */
+define('CHUNK_ENCRYPTION_SIZE', 16);
+/**
+ * Define the maximum number of files that can be uploaded.
+ */
+define('MAX_UPLOADS_COUNT', 5);
