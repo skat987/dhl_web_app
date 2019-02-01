@@ -31,16 +31,16 @@ class UsersController extends AppController
      * @param string|array $user user's authenticated informations
      * @return bool if the authenticated user is authorized or not.
      */
-    // public function isAuthorized($user)
-    // {
-    //     if (in_array($user['user_type_id'], [1, 2])) {
-    //         $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete', 'editMyAccess'];
-    //     } else {
-    //         $actionsAllowed = ['editMyAccess'];
-    //     }
-    //     $action = $this->request->getParam('action');
-    //     return in_array($action, $actionsAllowed);
-    // }
+    public function isAuthorized($user)
+    {
+        if (in_array($user['user_type_id'], [1, 2])) {
+            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete', 'editMyAccess'];
+        } else {
+            $actionsAllowed = ['editMyAccess'];
+        }
+        $action = $this->request->getParam('action');
+        return in_array($action, $actionsAllowed);
+    }
 
     /**
      * Index method

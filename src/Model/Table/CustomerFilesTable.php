@@ -83,10 +83,15 @@ class CustomerFilesTable extends Table
             ->notEmpty('extension');
 
         $validator
-            ->scalar('key')
-            ->maxLength('key', 16)
-            ->requirePresence('key', 'create')
-            ->notEmpty('key');
+            ->scalar('file_key')
+            ->maxLength('file_key', 16)
+            ->requirePresence('file_key', 'create')
+            ->notEmpty('file_key');
+
+        $validator
+            ->integer('firm_id')
+            ->requirePresence('firm_id', 'create')
+            ->notEmpty('firm_id');
 
         $validator
             ->integer('customer_directory_id')
@@ -146,12 +151,13 @@ class CustomerFilesTable extends Table
     {
         $destinationBasePath = UPLOADS . $entity->firm_id . DS;
         $baseName = pathinfo($entity->file['name'], PATHINFO_BASENAME);
-        $destinationPath = ($entity->has('customer_directory_id')) ? $destinationBasePath . $entity->customer_directory->name . DS . $baseName : $destinationBasePath . $baseName;
+        $dir = $entity->has('customer_directory_id') ? $this->CustomerDirectories->get($entity->customer_directory_id) : null;
+        $destinationPath = (isset($dir)) ? $destinationBasePath . $dir->name . DS . $baseName : $destinationBasePath . $baseName;
         $tempPath = TMP_UPLOADS . $baseName;
         if (!file_exists($tempPath)) {
             if (move_uploaded_file($entity->file['tmp_name'], $tempPath)) {
                 $newFile = new File($destinationPath, true);
-                $isEncrypted = $this->encryptCustomerFile($tempPath, $entity->key, $destinationPath);
+                $isEncrypted = $this->encryptCustomerFile($tempPath, $entity->file_key, $destinationPath);
                 if (!$isEncrypted) {
                     $newFile->delete();
                     return false;

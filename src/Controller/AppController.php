@@ -83,8 +83,8 @@ class AppController extends Controller
      * @param string|array $user user's authenticated informations
      * @return bool if the authenticated user is authorized or not.
      */
-    // public function isAuthorized($user)
-    // {
-    //     return false;
-    // }
+    public function isAuthorized($user)
+    {
+        return false;
+    }
 }

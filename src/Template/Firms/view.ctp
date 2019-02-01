@@ -26,8 +26,8 @@ echo $this->element('modal');
                 </div>
                 <div class="col-md-4">
                     <p class="lead text-center">
-                        <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->storage->read()[0])) ?></span>
-                        <?= (count($firm->storage->read()[0]) > 1) ? 'dossiers' : 'dossier' ?>
+                        <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_directories_count) ?></span>
+                        <?= ($firm->customer_directories_count > 1) ? 'dossiers' : 'dossier' ?>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -40,6 +40,6 @@ echo $this->element('modal');
         </div>
     </div>
 </div>
-<div id="storageContent" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id], true) ?>>
+<div id="storageContent" class="container-fluid clearfix" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id], true) ?>>
     <!-- Storage content -->
 </div>

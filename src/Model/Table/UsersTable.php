@@ -6,6 +6,11 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
+// for additionnal methods
+use Cake\Event\Event;
+use Cake\Datasource\EntityInterface;
+use ArrayObject;
+
 /**
  * Users Model
  *

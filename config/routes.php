@@ -97,9 +97,6 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/document-:id/telecharger', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/societe-:firm_id/liste-des-documents', ['controller' => 'CustomerFiles', 'action' => 'storageView'], ['_name' => 'getStorage'])
-        ->setPatterns(['firm_id' => '\d+'])
-        ->setPass(['firm_id']);
 
     /**
      * CustomerDirectory entity routes
@@ -110,6 +107,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/admin/dossier-:id/supprimer', ['controller' => 'CustomerDirectories', 'action' => 'delete'], ['_name' => 'deleteDirectory'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
+    $routes->connect('/societe-:firm_id/liste-des-documents', ['controller' => 'CustomerDirectories', 'action' => 'storageView'], ['_name' => 'getStorage'])
+        ->setPatterns(['firm_id' => '\d+'])
+        ->setPass(['firm_id']);
 
     /**
      * Connect catchall routes for all controllers.

@@ -32,14 +32,13 @@
     </div>
     <div class="form-row">
         <div class="col-md-12 mb-3">
-            <?= $this->Form->control('dir_name', [
+            <?= $this->Form->control('customer_directory_id', [
                 'label' => [
                     'text' => 'Dossier'
                 ],
                 'class' => 'form-control custom-select',
-                'id' => 'dirsSelect',
                 'type' => 'select',
-                'options' => $firm->customer_directories,
+                'options' => $customerDirectories,
                 'empty' => 'Sélectionnez un dossier'
             ]) ?>
             <div class="invalid-feedback"></div>

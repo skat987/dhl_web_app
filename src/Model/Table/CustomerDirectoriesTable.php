@@ -109,7 +109,7 @@ class CustomerDirectoriesTable extends Table
             $newFolder = new Folder();
             $path = UPLOADS . $entity->firm_id . DS . $entity->name;
             if (!file_exists($path)) {
-                if (!$newFolder->create()) {
+                if (!$newFolder->create($path)) {
                     return false;
                 }
             } else {

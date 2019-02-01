@@ -23,7 +23,7 @@ class CustomerDirectoriesController extends AppController
     public function isAuthorized($user)
     {
         if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['add', 'delete'];
+            $actionsAllowed = ['add', 'delete', 'storageView'];
         } else {
             $actionsAllowed = null;
         }
@@ -132,5 +132,25 @@ class CustomerDirectoriesController extends AppController
         }
 
         return $this->redirect($this->referer());
+    }    
+
+    /**
+     * StorageView method
+     * 
+     * Display the storage content of a firm.
+     * 
+     * @param string|null $firmId Firm id
+     */
+    public function storageView($firmId = null)
+    {
+        $this->paginate = [
+            'contain' => ['CustomerFiles'],
+            'maxLimit' => 10
+        ];
+        $customerDirectories = $this->paginate($this->CustomerDirectories->findByFirmId($firmId));    
+        $firm = $this->CustomerDirectories->Firms->get($firmId, [
+            'contain' => ['CustomerFiles']
+        ]);
+        $this->set(compact('customerDirectories', 'firm'));
     }
 }

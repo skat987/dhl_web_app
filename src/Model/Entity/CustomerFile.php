@@ -6,6 +6,7 @@ use Cake\ORM\Entity;
 // for additionnals method
 use Cake\Filesystem\File;
 use Cake\Utility\Security;
+use Cake\ORM\TableRegistry;
 
 /**
  * CustomerFile Entity
@@ -13,7 +14,7 @@ use Cake\Utility\Security;
  * @property int $id
  * @property string $name
  * @property string $extension
- * @property string $key
+ * @property string $file_key
  * @property int $firm_id
  * @property int $customer_directory_id
  * @property int $added_by
@@ -40,7 +41,7 @@ class CustomerFile extends Entity
     protected $_accessible = [
         'name' => true,
         'extension' => true,
-        'key' => true,
+        'file_key' => true,
         'firm_id' => true,
         'customer_directory_id' => true,
         'added_by' => true,
@@ -57,7 +58,7 @@ class CustomerFile extends Entity
      * @var array
      */
     protected $_hidden = [
-        'key'
+        'file_key'
     ];
 
     /**
@@ -72,9 +73,9 @@ class CustomerFile extends Entity
     {
         if (!$this->isNew()) { 
             $basePath = UPLOADS . $this->_properties['firm_id'] . DS;
-            $baseName = $this->_properties['name'] . '.' . $this->_properties['extension'];          
-            $path = ($this->has('customer_directory_id')) ? $basePath . $this->_properties['customer_directory']['name'] . DS . $baseName : $basePath . $baseName;
-            
+            $baseName = $this->_properties['name'] . '.' . $this->_properties['extension']; 
+            $customerDirectory = ($this->has('customer_directory_id')) ? TableRegistry::get('CustomerDirectories')->get($this->_properties['customer_directory_id']) : null;      
+            $path = (isset($customerDirectory)) ? $basePath . $customerDirectory->name . DS . $baseName : $basePath . $baseName;            
             return new File($path);
         } else {
             if (isset($file)) {
@@ -89,7 +90,7 @@ class CustomerFile extends Entity
      * @param string $value key to assign to the entity
      * @return string Hashed with the 'sha3-512' algo.
      */
-    protected function _setKey($value)
+    protected function _setFileKey($value)
     {
         if (strlen($value) >= CHUNK_ENCRYPTION_SIZE) {
             return substr(Security::hash($value, 'sha3-512'), 0, CHUNK_ENCRYPTION_SIZE);

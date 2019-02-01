@@ -77,7 +77,7 @@ echo $this->element('modal');
         </tbody>
     </table>
 </section>
-<section>
+<section class="mt-2">
     <nav aria-label="users list pagination">
         <ul class="pagination justify-content-center">
             <?= $this->Paginator->first('<< ' . __('Premier')) ?>

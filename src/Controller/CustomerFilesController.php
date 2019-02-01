@@ -100,10 +100,9 @@ class CustomerFilesController extends AppController
             }     
             return $this->redirect($this->referer());
         }
-        $firm = $this->CustomerFiles->Firms->get($firmId, [
-            'contain' => ['CustomerDirectories']
-        ]);
-        $this->set(compact('customerFiles', 'firm'));
+        $firm = $this->CustomerFiles->Firms->get($firmId);
+        $customerDirectories = $this->CustomerFiles->CustomerDirectories->findListByFirmId($firmId, ['limit' => 200]);
+        $this->set(compact('customerFiles', 'firm', 'customerDirectories'));
     }
 
     /**
@@ -162,13 +161,11 @@ class CustomerFilesController extends AppController
      */
     public function downloadCustomerFile($id = null)
     {
-        $customerFile = $this->CustomerFiles->get($id, [
-            'contain' => []
-        ]);
+        $customerFile = $this->CustomerFiles->get($id);
         $tempPath = TMP_UPLOADS . $customerFile->file->name;
         if (!file_exists($tempPath)) {
             $tempFile = new File($tempPath, true);
-            $isDecrypt = $this->decryptCustomerFile($customerFile->file->path, $customerFile->key, $tempPath);
+            $isDecrypt = $this->decryptCustomerFile($customerFile->file->path, $customerFile->file_key, $tempPath);
             if ($isDecrypt) {
                 $this->setHeaders($tempFile);
             } else {
@@ -211,6 +208,7 @@ class CustomerFilesController extends AppController
         } else {
             $error = true;
         }
+
         return $error ? false : $dest;
     }
 
@@ -256,10 +254,11 @@ class CustomerFilesController extends AppController
                 $dataReordered[$fileCount]['customer_directory_id'] = $data['customer_directory_id'];
                 $dataReordered[$fileCount]['file'] = $data['file_' . $i];
                 $dataReordered[$fileCount]['added_by'] = $this->Auth->user('id');
-                $dataReordered[$fileCount]['key'] = Security::randomBytes(CHUNK_ENCRYPTION_SIZE);
+                $dataReordered[$fileCount]['file_key'] = Security::randomBytes(CHUNK_ENCRYPTION_SIZE);
                 $fileCount++;
             }
         }
+
         return $dataReordered;
     }
 
