@@ -80,7 +80,7 @@ class FirmsController extends AppController
         $firm = $this->Firms->newEntity();
         if ($this->request->is('post')) {
             $firm = $this->Firms->patchEntity($firm, $this->request->getData());
-            $firm->added_by = 1;//$this->Auth->user('id');
+            $firm->added_by = $this->Auth->user('id');
             if ($this->Firms->save($firm)) {
                 $this->Flash->success(__('La société a bien été sauvegardée.'));
             } else {
