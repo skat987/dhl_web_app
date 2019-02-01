@@ -9,6 +9,23 @@
 <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
 <section>
     <div class="row">
+        <div class="col d-flex justify-content-center">
+            <?= $this->Form->create(null, [
+                'class' => 'form-inline'
+            ]) ?>
+            <?= $this->Form->search('search', [
+                'type' => 'search',
+                'class' => 'form-control mr-sm-2',
+                'placeholder' => __('Rechercher un dossier'),
+                'aria-label' => 'Search'
+            ]) ?>
+            <?= $this->Form->button(__('Rechercher <i class="fas fa-search"></i>'), [
+                'type' => 'submit',
+                'class' => 'btn btn-outline-success my-2 my-sm-0',
+                'escape' => false
+            ]) ?>
+            <?= $this->Form->end() ?>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-6 mb-3 d-flex justify-content-center">
