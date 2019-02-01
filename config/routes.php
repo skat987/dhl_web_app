@@ -47,7 +47,7 @@ use Cake\Routing\Route\DashedRoute;
 Router::defaultRouteClass(DashedRoute::class);
 
 Router::scope('/', function (RouteBuilder $routes) {
-   
+
     /**
      * Default routes
      */
@@ -93,17 +93,21 @@ Router::scope('/', function (RouteBuilder $routes) {
         ->setPass(['firm_id']);
     $routes->connect('/admin/document-:id/supprimer', ['controller' => 'CustomerFiles', 'action' => 'delete'], ['_name' => 'deleteCustomerFile'])
         ->setPatterns(['id' => '\d+'])
-        ->setPass(['id']);
-    $routes->connect('/admin/societe-:firm_id/dossier/creer', ['controller' => 'CustomerFiles', 'action' => 'addDirectory'], ['_name' => 'addDirectory'])
-        ->setPatterns(['firm_id' => '\d+'])
-        ->setPass(['firm_id']);
-    $routes->connect('/admin/societe-:firm_id/dossier-:dir_name/supprimer', ['controller' => 'CustomerFiles', 'action' => 'deleteDirectory'], ['_name' => 'deleteDirectory'])
-        ->setPatterns(['firm_id' => '\d+'])
-        ->setPass(['firm_id', 'dir_name']);
+        ->setPass(['id']);    
     $routes->connect('/document-:id/telecharger', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/societe-:firm_id/liste-des-documents', ['controller' => 'CustomerFiles', 'action' => 'storageView'], ['_name' => 'getStorage'])
+
+    /**
+     * CustomerDirectory entity routes
+     */
+    $routes->connect('/admin/societe-:firm_id/dossier/creer', ['controller' => 'CustomerDirectories', 'action' => 'add'], ['_name' => 'addDirectory'])
+        ->setPatterns(['firm_id' => '\d+'])
+        ->setPass(['firm_id']);
+    $routes->connect('/admin/dossier-:id/supprimer', ['controller' => 'CustomerDirectories', 'action' => 'delete'], ['_name' => 'deleteDirectory'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
+    $routes->connect('/societe-:firm_id/liste-des-documents', ['controller' => 'CustomerDirectories', 'action' => 'storageView'], ['_name' => 'getStorage'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id']);
 

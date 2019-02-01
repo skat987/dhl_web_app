@@ -45,7 +45,7 @@ class UsersController extends AppController
     /**
      * Index method
      * 
-     * Show the users list page.
+     * Display all users.
      *
      * @return \Cake\Http\Response|void
      */
@@ -65,9 +65,9 @@ class UsersController extends AppController
 
     /**
      * View method
-     * 
-     * Show the profile of the selected user.
      *
+     * Display the profile of the selected user.
+     * 
      * @param string|null $id User id.
      * @return \Cake\Http\Response|void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
@@ -92,12 +92,13 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {                
-                $this->Flash->success(__('L\'utilisateur a bien été sauvegardé.'));    
-                return $this->redirect(['action' => 'index']);
-            }            
-            $this->Flash->error(__('L\'utilisateur n\'a pas pu être sauvegardé. Veuillez ré-essayer'));
-            return $this->redirect($this->referer());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('L\'utilisateur a bien été sauvegardé.'));
+            } else {
+                $this->Flash->error(__('L\'utilisateur n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));
+            }
+
+            return $this->redirect(['action' => 'index']);
         }
         $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200]);
         $firms = $this->Users->Firms->find('list', ['limit' => 200]);
@@ -120,11 +121,13 @@ class UsersController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {          
-                $this->Flash->success(__('L\'utilisateur a bien été sauvegaré.'));
-                return $this->redirect(['action' => 'index']);
-            }   
-            $this->Flash->error(__('L\'utilisateur n\'a pas pu être sauvegardé. Veuillez ré-essayer'));         
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('L\'utilisateur a bien été sauvegardé.'));
+            } else {
+                $this->Flash->error(__('L\'utilisateur n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));
+            }
+
+            return $this->redirect(['action' => 'index']);
         }
         $userTypes = $this->Users->UserTypes->find('list', ['limit' => 200]);
         $firms = $this->Users->Firms->find('list', ['limit' => 200]);
@@ -149,6 +152,7 @@ class UsersController extends AppController
         } else {
             $this->Flash->error(__('L\'utilisateur n\'a pas pu être supprimé. Veuillez ré-essayer.'));
         }
+        
         return $this->redirect(['action' => 'index']);
     }
 
@@ -172,6 +176,7 @@ class UsersController extends AppController
                     $url = ['controller' => 'Firms', 'action' => 'view', $this->Auth->user('firm_id')];
                 }
                 $this->Flash->success(__('Bienvenu(e) {0} !', $this->Auth->user('full_name')));
+                
                 return $this->redirect($url);
             } else {
                 $this->Flash->error(__('Login ou mot de passe incorrect.'));
@@ -188,7 +193,8 @@ class UsersController extends AppController
      */
     public function logout()
     {
-        $this->Flash->success(__('Vous avez été déconnecté.'));        
+        $this->Flash->success(__('Vous avez été déconnecté.'));  
+
         return $this->redirect($this->Auth->logout()); 
     }
 
@@ -203,6 +209,7 @@ class UsersController extends AppController
             } else {
                 $this->Flash->error(__('Une erreur est survenue. Vos accès n\'ont pas pu être modifiés.'));
             }
+            
             return $this->redirect($this->referer());
         }
         $this->set('user', $user);

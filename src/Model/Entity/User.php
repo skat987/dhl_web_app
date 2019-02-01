@@ -11,7 +11,7 @@ use App\Auth\LegacyPasswordHasher;
  * @property string $first_name
  * @property string $last_name
  * @property string $full_name
- * @property int $phone
+ * @property string $phone
  * @property string $email
  * @property string $password
  * @property int $user_type_id

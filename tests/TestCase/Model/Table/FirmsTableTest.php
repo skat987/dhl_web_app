@@ -25,6 +25,7 @@ class FirmsTableTest extends TestCase
      */
     public $fixtures = [
         'app.firms',
+        'app.customer_directories',
         'app.customer_files',
         'app.users'
     ];

@@ -6,7 +6,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
-// for additionnals method
+// for additionnal methods
 use Cake\Event\Event;
 use Cake\Datasource\EntityInterface;
 use ArrayObject;
@@ -15,6 +15,7 @@ use Cake\Filesystem\Folder;
 /**
  * Firms Model
  *
+ * @property \App\Model\Table\CustomerDirectoriesTable|\Cake\ORM\Association\HasMany $CustomerDirectories
  * @property \App\Model\Table\CustomerFilesTable|\Cake\ORM\Association\HasMany $CustomerFiles
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $Users
  *
@@ -48,6 +49,9 @@ class FirmsTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->hasMany('CustomerDirectories', [
+            'foreignKey' => 'firm_id'
+        ]);
         $this->hasMany('CustomerFiles', [
             'foreignKey' => 'firm_id'
         ]);
@@ -79,6 +83,10 @@ class FirmsTable extends Table
             ->allowEmpty('workers_count');
 
         $validator
+            ->integer('customer_directories_count')
+            ->allowEmpty('customer_directories_count');
+
+        $validator
             ->integer('customer_files_count')
             ->allowEmpty('customer_files_count');
 
@@ -105,7 +113,7 @@ class FirmsTable extends Table
             }
         }
     }   
-
+    
     /**
      * BeforeDelete method
      * 

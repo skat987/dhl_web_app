@@ -10,6 +10,8 @@
         <li><?= $this->Html->link(__('New Customer File'), ['action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Firms'), ['controller' => 'Firms', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Firm'), ['controller' => 'Firms', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Customer Directories'), ['controller' => 'CustomerDirectories', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Customer Directory'), ['controller' => 'CustomerDirectories', 'action' => 'add']) ?></li>
     </ul>
 </nav>
 <div class="customerFiles index large-9 medium-8 columns content">
@@ -18,9 +20,11 @@
         <thead>
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('file_name') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('name') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('extension') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('key') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('firm_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('dir_name') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('customer_directory_id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('added_by') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
@@ -31,9 +35,11 @@
             <?php foreach ($customerFiles as $customerFile): ?>
             <tr>
                 <td><?= $this->Number->format($customerFile->id) ?></td>
-                <td><?= h($customerFile->file_name) ?></td>
+                <td><?= h($customerFile->name) ?></td>
+                <td><?= h($customerFile->extension) ?></td>
+                <td><?= h($customerFile->key) ?></td>
                 <td><?= $customerFile->has('firm') ? $this->Html->link($customerFile->firm->name, ['controller' => 'Firms', 'action' => 'view', $customerFile->firm->id]) : '' ?></td>
-                <td><?= h($customerFile->dir_name) ?></td>
+                <td><?= $customerFile->has('customer_directory') ? $this->Html->link($customerFile->customer_directory->name, ['controller' => 'CustomerDirectories', 'action' => 'view', $customerFile->customer_directory->id]) : '' ?></td>
                 <td><?= $this->Number->format($customerFile->added_by) ?></td>
                 <td><?= h($customerFile->created) ?></td>
                 <td><?= h($customerFile->modified) ?></td>

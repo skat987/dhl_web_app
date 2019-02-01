@@ -6,11 +6,10 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
-// for additionnals method
+// for additionnal methods
 use Cake\Event\Event;
 use Cake\Datasource\EntityInterface;
 use ArrayObject;
-use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 use Cake\Utility\Security;
 
@@ -18,6 +17,7 @@ use Cake\Utility\Security;
  * CustomerFiles Model
  *
  * @property \App\Model\Table\FirmsTable|\Cake\ORM\Association\BelongsTo $Firms
+ * @property \App\Model\Table\CustomerDirectoriesTable|\Cake\ORM\Association\BelongsTo $CustomerDirectories
  *
  * @method \App\Model\Entity\CustomerFile get($primaryKey, $options = [])
  * @method \App\Model\Entity\CustomerFile newEntity($data = null, array $options = [])
@@ -44,7 +44,7 @@ class CustomerFilesTable extends Table
         parent::initialize($config);
 
         $this->setTable('customer_files');
-        $this->setDisplayField('file_name');
+        $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -52,6 +52,9 @@ class CustomerFilesTable extends Table
         $this->belongsTo('Firms', [
             'foreignKey' => 'firm_id',
             'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('CustomerDirectories', [
+            'foreignKey' => 'customer_directory_id'
         ]);
     }
 
@@ -68,16 +71,16 @@ class CustomerFilesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('file_name')
-            ->maxLength('file_name', 100)
-            ->requirePresence('file_name', 'create')
-            ->notEmpty('file_name');
+            ->scalar('name')
+            ->maxLength('name', 100)
+            ->requirePresence('name', 'create')
+            ->notEmpty('name');
 
         $validator
-            ->scalar('file_extension')
-            ->maxLength('file_extension', 10)
-            ->requirePresence('file_extension', 'create')
-            ->notEmpty('file_extension');
+            ->scalar('extension')
+            ->maxLength('extension', 10)
+            ->requirePresence('extension', 'create')
+            ->notEmpty('extension');
 
         $validator
             ->scalar('file_key')
@@ -91,9 +94,8 @@ class CustomerFilesTable extends Table
             ->notEmpty('firm_id');
 
         $validator
-            ->scalar('dir_name')
-            ->maxLength('dir_name', 100)
-            ->allowEmpty('dir_name');
+            ->integer('customer_directory_id')
+            ->allowEmpty('customer_directory_id', 'create');
 
         $validator
             ->integer('added_by')
@@ -117,6 +119,7 @@ class CustomerFilesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['firm_id'], 'Firms'));
+        $rules->add($rules->existsIn(['customer_directory_id'], 'CustomerDirectories'));
 
         return $rules;
     }
@@ -130,16 +133,11 @@ class CustomerFilesTable extends Table
     {
         if (isset($data['file'])) {
             if ($this->isTypeAllowed($data['file']['tmp_name'])) {                
-                $data['file_name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
-                $data['file_extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
+                $data['name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
+                $data['extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
             } else {
                 return false;
             }
-        }
-        $data['dir_name'] = ($data['dir_name'] == '') ? null : $data['dir_name'];
-        if (isset($data['dir_name'])) {
-            $firm = $this->Firms->get($data['firm_id']);
-            $data['dir_name'] = $firm->storage->read()[0][$data['dir_name']];
         }
     }
 
@@ -151,27 +149,26 @@ class CustomerFilesTable extends Table
      */
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        if ($entity->isNew()) {
-            $destinationBasePath = UPLOADS . $entity->firm_id . DS;
-            $baseName = pathinfo($entity->file['name'], PATHINFO_BASENAME);
-            $destinationPath = (isset($entity->dir_name)) ? $destinationBasePath . $entity->dir_name . DS . $baseName : $destinationBasePath . $baseName;
-            $tempPath = TMP_UPLOADS . $baseName;
-            if (!file_exists($tempPath)) {
-                if (move_uploaded_file($entity->file['tmp_name'], $tempPath)) {
-                    $newFile = new File($destinationPath, true);
-                    $isEncrypted = $this->encryptCustomerFile($tempPath, $entity->file_key, $destinationPath);
-                    if (!$isEncrypted) {
-                        $newFile->delete();
-                        return false;
-                    }
-                } else {
+        $destinationBasePath = UPLOADS . $entity->firm_id . DS;
+        $baseName = pathinfo($entity->file['name'], PATHINFO_BASENAME);
+        $dir = $entity->has('customer_directory_id') ? $this->CustomerDirectories->get($entity->customer_directory_id) : null;
+        $destinationPath = (isset($dir)) ? $destinationBasePath . $dir->name . DS . $baseName : $destinationBasePath . $baseName;
+        $tempPath = TMP_UPLOADS . $baseName;
+        if (!file_exists($tempPath)) {
+            if (move_uploaded_file($entity->file['tmp_name'], $tempPath)) {
+                $newFile = new File($destinationPath, true);
+                $isEncrypted = $this->encryptCustomerFile($tempPath, $entity->file_key, $destinationPath);
+                if (!$isEncrypted) {
+                    $newFile->delete();
+                    
                     return false;
                 }
             } else {
                 return false;
             }
+        } else {
+            return false;
         }
-
     }
 
     /**
@@ -181,11 +178,9 @@ class CustomerFilesTable extends Table
      */
     public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        if ($entity->isDirty('firm_id')) {
-            $firm = $this->Firms->get($entity->firm_id);
-            $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
-            $this->Firms->save($firm);
-        }
+        $firm = $this->Firms->get($entity->firm_id);
+        $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
+        $this->Firms->save($firm);
     }
 
     /**
@@ -238,7 +233,8 @@ class CustomerFilesTable extends Table
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        ];        
+        ];  
+
         return in_array(mime_content_type($file), $typeAllowed);
     }
 
@@ -279,6 +275,7 @@ class CustomerFilesTable extends Table
         } else {
             $error = true;
         }
+        
         return $error ? false : $dest;
     }
 }

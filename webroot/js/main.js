@@ -225,7 +225,7 @@ function setUpStorage(container) {
         url: container.data('link'),
         success: function(resp) {
             container.html(resp);
-            setUpStoragePagination(container, $('#customerFilesPagination').find('.page-link'));
+            setUpStoragePagination(container, $('#storagePagination').find('.page-link'));
         },
         error: function(resp) {
             console.log('Error access storage : ', resp);
@@ -242,7 +242,7 @@ function setUpStoragePagination(container, buttons) {
             url: $(this).attr('href'),
             success: function(resp) {
                 container.html(resp);
-                setUpStoragePagination(container, $('#customerFilesPagination').find('.page-link'));
+                setUpStoragePagination(container, $('#storagePagination').find('.page-link'));
             },
             error: function(resp) {
                 console.log('Error pagination : ', resp);

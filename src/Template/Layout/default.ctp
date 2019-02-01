@@ -12,7 +12,6 @@
  * @since         0.10.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-
 $appBaseTitle = 'DHL : ';
 ?>
 <!DOCTYPE html>
@@ -23,14 +22,14 @@ $appBaseTitle = 'DHL : ';
     <title>
         <?= $appBaseTitle ?>
         <?= $this->fetch('title') ?>
-    </title>  
+    </title>      
     <?= $this->Html->css('bootstrap.min') ?>
     <?= $this->Html->css('jquery-ui.min') ?>
-    <?= $this->Html->css('fa-all') ?>
+    <?= $this->Html->css('all') ?>
     <?= $this->Html->css('style') ?>
     <?= $this->Html->script('jquery-3.3.1.min') ?>
     <?= $this->Html->script('jquery-ui.min') ?>
-    <?= $this->Html->script('fa-all', ['block' => 'scriptBottom']) ?>
+    <?= $this->Html->script('all', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('bootstrap.min', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('popper.min', ['block' => 'scriptBottom']) ?>
     <?= $this->Html->script('main', ['block' => 'scriptBottom']) ?>

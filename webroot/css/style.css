@@ -31,6 +31,7 @@ form small {
 
 .custom-file-label::after {
     content: "Parcourir";
+<<<<<<< HEAD
 }
 
 .required > label::after {
@@ -54,6 +55,31 @@ form small {
     color: #fff;
 }
 
+=======
+}
+
+.required > label::after {
+    content: "*";
+    color: #cc0000;
+}
+
+#helpRequired {
+    color: #cc0000;
+}
+
+.custom-file-label.is-invalid {
+    border-color: #dc3545;
+}
+
+.custom-file-label.is-valid {
+    border-color: #28a745;
+}
+
+.dhl-custom-btn, .dhl-custom-btn:hover, .dhl-custom-btn-2, .dhl-custom-btn-2:hover {
+    color: #fff;
+}
+
+>>>>>>> christopher_directory
 .dhl-custom-btn {
     background-color: #d40511;
 }
@@ -74,4 +100,8 @@ form small {
 
 .dhl-custom-btn:focus, .dhl-custom-btn-2:focus {
     box-shadow: 0 0 0 .2rem #e9d397;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> christopher_directory

@@ -7,24 +7,21 @@ use Cake\ORM\Entity;
 use Cake\Filesystem\Folder;
 
 /**
- * Firm Entity
+ * CustomerDirectory Entity
  *
  * @property int $id
  * @property string $name
- * @property int $workers_count
- * @property int $customer_directories_count
- * @property int $customer_files_count
+ * @property int $firm_id
  * @property int $added_by
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \App\Model\Entity\CustomerDirectory[] $customer_directories
+ * @property \App\Model\Entity\Firm $firm
  * @property \App\Model\Entity\CustomerFile[] $customer_files
- * @property \App\Model\Entity\User[] $users
  * 
- * @property \Cake\Filesystem\Folder $storage
+ * @property \Cake\Filesystem\Folder $folder
  */
-class Firm extends Entity
+class CustomerDirectory extends Entity
 {
 
     /**
@@ -38,29 +35,28 @@ class Firm extends Entity
      */
     protected $_accessible = [
         'name' => true,
-        'workers_count' => true,
-        'customer_directories_count' => true,
-        'customer_files_count' => true,
+        'firm_id' => true,
         'added_by' => true,
         'created' => true,
         'modified' => true,
-        'customer_directories' => true,
+        'firm' => true,
         'customer_files' => true,
-        'users' => true,
-        'storage' => true
+        'folder' => true
     ];
 
     /**
-     * Accessor for the storage property
+     * Accessor of the folder property
      * 
-     * Get the firm's files storage.
+     * Returns the folder linked to the entity.
      * 
-     * @return \Cake\Filesystem\Folder Folder object used to store the firm's files.
+     * @return \Cake\Filesystem\Folder folder object
      */
-    protected function _getStorage()
+    protected function _getFolder()
     {
         if (!$this->isNew()) {
-            return new Folder(UPLOADS . $this->_properties['id']);
+            $path = UPLOADS . $this->_properties['firm_id'] . DS . $this->_properties['name'];
+
+            return new Folder($path);
         }
     }
 }

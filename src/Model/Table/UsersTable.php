@@ -6,7 +6,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
-// for additionnals method
+// for additionnal methods
 use Cake\Event\Event;
 use Cake\Datasource\EntityInterface;
 use ArrayObject;
@@ -71,21 +71,21 @@ class UsersTable extends Table
 
         $validator
             ->scalar('first_name')
-            ->maxLength('first_name', 45)
+            ->maxLength('first_name', 100)
             ->requirePresence('first_name', 'create')
             ->notEmpty('first_name');
 
         $validator
             ->scalar('last_name')
-            ->maxLength('last_name', 45)
+            ->maxLength('last_name', 100)
             ->requirePresence('last_name', 'create')
             ->notEmpty('last_name');
 
         $validator
             ->scalar('full_name')
-            ->maxLength('full_name', 45)
+            ->maxLength('full_name', 150)
             ->allowEmpty('full_name');
-        
+
         $validator
             ->scalar('phone')
             ->maxLength('phone', 45)
@@ -149,7 +149,7 @@ class UsersTable extends Table
             $this->Firms->save($oldFirm);
         }
     }
-
+    
     /**
      * AfterSave method
      * 

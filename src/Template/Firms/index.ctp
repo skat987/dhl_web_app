@@ -5,7 +5,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Firm[]|\Cake\Collection\CollectionInterface $firms
  */
-
 $this->assign('title', 'Liste des sociétés');
 // Call the Modal element
 echo $this->element('modal');
@@ -50,8 +49,8 @@ echo $this->element('modal');
                                 <?= ($firm->workers_count > 1) ? __('utilisateurs associés') : __('utilisateur associé') ?>
                             </p>
                             <p class="mb-0">
-                                <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format(count($firm->storage->read()[0])) ?></span>
-                                <?= (count($firm->storage->read()[0]) > 1) ? __('dossiers') : __('dossier') ?>
+                                <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_directories_count) ?></span>
+                                <?= ($firm->customer_directories_count > 1) ? __('dossiers') : __('dossier') ?>
                             </p>
                             <p class="mb-0">
                                 <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
@@ -94,7 +93,7 @@ echo $this->element('modal');
                     </div>
                 </div>
                 <div id=<?= __('firm_{0}_storage', $firm->id) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_heading', $firm->id) ?> data-parent="#allFirms">
-                    <div class="card-body" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id], true) ?>>
+                    <div class="card-body container-fluid clearfix" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id], true) ?>>
                         <!-- Storage content -->
                     </div>
                 </div>
@@ -103,7 +102,7 @@ echo $this->element('modal');
         </div>
     </div>
 </section>
-<section>
+<section class="mt-2">
     <nav aria-label="firms list pagination">
         <ul class="pagination justify-content-center">
             <?= $this->Paginator->first('<< ' . __('Premier')) ?>

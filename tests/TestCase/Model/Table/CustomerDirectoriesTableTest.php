@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\CustomerFilesTable;
+use App\Model\Table\CustomerDirectoriesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\CustomerFilesTable Test Case
+ * App\Model\Table\CustomerDirectoriesTable Test Case
  */
-class CustomerFilesTableTest extends TestCase
+class CustomerDirectoriesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\CustomerFilesTable
+     * @var \App\Model\Table\CustomerDirectoriesTable
      */
-    public $CustomerFiles;
+    public $CustomerDirectories;
 
     /**
      * Fixtures
@@ -24,9 +24,9 @@ class CustomerFilesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.customer_files',
+        'app.customer_directories',
         'app.firms',
-        'app.customer_directories'
+        'app.customer_files'
     ];
 
     /**
@@ -37,8 +37,8 @@ class CustomerFilesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('CustomerFiles') ? [] : ['className' => CustomerFilesTable::class];
-        $this->CustomerFiles = TableRegistry::getTableLocator()->get('CustomerFiles', $config);
+        $config = TableRegistry::getTableLocator()->exists('CustomerDirectories') ? [] : ['className' => CustomerDirectoriesTable::class];
+        $this->CustomerDirectories = TableRegistry::getTableLocator()->get('CustomerDirectories', $config);
     }
 
     /**
@@ -48,7 +48,7 @@ class CustomerFilesTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->CustomerFiles);
+        unset($this->CustomerDirectories);
 
         parent::tearDown();
     }

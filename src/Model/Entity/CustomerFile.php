@@ -4,23 +4,25 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 // for additionnals method
-use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 use Cake\Utility\Security;
+use Cake\ORM\TableRegistry;
 
 /**
  * CustomerFile Entity
  *
  * @property int $id
- * @property string $file_name
- * @property string $file_extension
+ * @property string $name
+ * @property string $extension
  * @property string $file_key
  * @property int $firm_id
+ * @property int $customer_directory_id
  * @property int $added_by
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
  * @property \App\Model\Entity\Firm $firm
+ * @property \App\Model\Entity\CustomerDirectory $customer_directory
  * 
  * @property \Cake\Filesystem\File $file
  */
@@ -37,15 +39,16 @@ class CustomerFile extends Entity
      * @var array
      */
     protected $_accessible = [
-        'file_name' => true,
-        'file_extension' => true,
+        'name' => true,
+        'extension' => true,
         'file_key' => true,
         'firm_id' => true,
-        'dir_name' => true,
+        'customer_directory_id' => true,
         'added_by' => true,
         'created' => true,
         'modified' => true,
         'firm' => true,
+        'customer_directory' => true,
         'file' => true
     ];
 
@@ -61,7 +64,7 @@ class CustomerFile extends Entity
     /**
      * Accessor of the file property
      * 
-     * Returns the file linked to the entity
+     * Returns the file linked to the entity.
      * 
      * @param array|null $file file stored or to store on the application
      * @return \Cake\Filesystem\File|array If it's a new entity, returns the file's informations in an array, else return the file stored.
@@ -70,8 +73,10 @@ class CustomerFile extends Entity
     {
         if (!$this->isNew()) { 
             $basePath = UPLOADS . $this->_properties['firm_id'] . DS;
-            $baseName = $this->_properties['file_name'] . '.' . $this->_properties['file_extension'];           
-            $path = (isset($this->_properties['dir_name'])) ? $basePath . $this->_properties['dir_name'] . DS . $baseName : $basePath . $baseName;
+            $baseName = $this->_properties['name'] . '.' . $this->_properties['extension']; 
+            $customerDirectory = ($this->has('customer_directory_id')) ? TableRegistry::get('CustomerDirectories')->get($this->_properties['customer_directory_id']) : null;      
+            $path = (isset($customerDirectory)) ? $basePath . $customerDirectory->name . DS . $baseName : $basePath . $baseName;  
+                      
             return new File($path);
         } else {
             if (isset($file)) {
@@ -81,7 +86,7 @@ class CustomerFile extends Entity
     }
 
     /**
-     * Mutator of the file_key property 
+     * Mutator of the file_key property. 
      * 
      * @param string $value key to assign to the entity
      * @return string Hashed with the 'sha3-512' algo.

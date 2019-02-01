@@ -13,6 +13,7 @@
         <li><?= $this->Html->link(__('New Customer File'), ['action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Firms'), ['controller' => 'Firms', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Firm'), ['controller' => 'Firms', 'action' => 'add']) ?> </li>
+<<<<<<< HEAD
     </ul>
 </nav>
 <div class="customerFiles view large-9 medium-8 columns content">
@@ -21,18 +22,47 @@
         <tr>
             <th scope="row"><?= __('File Name') ?></th>
             <td><?= h($customerFile->file_name) ?></td>
+=======
+        <li><?= $this->Html->link(__('List Customer Directories'), ['controller' => 'CustomerDirectories', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Customer Directory'), ['controller' => 'CustomerDirectories', 'action' => 'add']) ?> </li>
+    </ul>
+</nav>
+<div class="customerFiles view large-9 medium-8 columns content">
+    <h3><?= h($customerFile->name) ?></h3>
+    <table class="vertical-table">
+        <tr>
+            <th scope="row"><?= __('Name') ?></th>
+            <td><?= h($customerFile->name) ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Extension') ?></th>
+            <td><?= h($customerFile->extension) ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Key') ?></th>
+            <td><?= h($customerFile->key) ?></td>
+>>>>>>> christopher_directory
         </tr>
         <tr>
             <th scope="row"><?= __('Firm') ?></th>
             <td><?= $customerFile->has('firm') ? $this->Html->link($customerFile->firm->name, ['controller' => 'Firms', 'action' => 'view', $customerFile->firm->id]) : '' ?></td>
         </tr>
         <tr>
+<<<<<<< HEAD
             <th scope="row"><?= __('Id') ?></th>
             <td><?= $this->Number->format($customerFile->id) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Tag') ?></th>
             <td><?= $this->Number->format($customerFile->tag) ?></td>
+=======
+            <th scope="row"><?= __('Customer Directory') ?></th>
+            <td><?= $customerFile->has('customer_directory') ? $this->Html->link($customerFile->customer_directory->name, ['controller' => 'CustomerDirectories', 'action' => 'view', $customerFile->customer_directory->id]) : '' ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Id') ?></th>
+            <td><?= $this->Number->format($customerFile->id) ?></td>
+>>>>>>> christopher_directory
         </tr>
         <tr>
             <th scope="row"><?= __('Added By') ?></th>

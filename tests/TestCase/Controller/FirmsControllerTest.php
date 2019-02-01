@@ -17,6 +17,7 @@ class FirmsControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'app.firms',
+        'app.customer_directories',
         'app.customer_files',
         'app.users'
     ];

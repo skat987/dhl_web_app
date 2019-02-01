@@ -50,10 +50,11 @@ class UserTypesController extends AppController
         if ($this->request->is('post')) {
             $userType = $this->UserTypes->patchEntity($userType, $this->request->getData());
             if ($this->UserTypes->save($userType)) {
-                $this->Flash->success(__('Le type d\'utilisateur a bien été sauvegardé.'));
+                $this->Flash->success(__('The user type has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('Le type d\'utilisateur n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));
+            $this->Flash->error(__('The user type could not be saved. Please, try again.'));
         }
         $this->set(compact('userType'));
     }
@@ -73,10 +74,11 @@ class UserTypesController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $userType = $this->UserTypes->patchEntity($userType, $this->request->getData());
             if ($this->UserTypes->save($userType)) {
-                $this->Flash->success(__('Le type d\'utilisateur a bien été sauvegardé.'));
+                $this->Flash->success(__('The user type has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('Le type d\'utilisateur n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));
+            $this->Flash->error(__('The user type could not be saved. Please, try again.'));
         }
         $this->set(compact('userType'));
     }
@@ -93,10 +95,11 @@ class UserTypesController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $userType = $this->UserTypes->get($id);
         if ($this->UserTypes->delete($userType)) {
-            $this->Flash->success(__('Le type d\'utilisateur a bien été supprimé.'));
+            $this->Flash->success(__('The user type has been deleted.'));
         } else {
-            $this->Flash->error(__('Le type d\'utilisateur n\'a pas pu être supprimé. Veuillez ré-essayer.'));
+            $this->Flash->error(__('The user type could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

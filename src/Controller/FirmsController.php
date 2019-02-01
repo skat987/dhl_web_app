@@ -3,12 +3,6 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 
-// Folder Components
-use Cake\Filesystem\Folder;
-use Cake\Filesystem\File;
-use Cake\Utility\Security;
-use Cake\ORM\Query;
-
 /**
  * Firms Controller
  *
@@ -18,7 +12,6 @@ use Cake\ORM\Query;
  */
 class FirmsController extends AppController
 {
-
     /**
      * IsAuthorized method
      * 
@@ -35,34 +28,33 @@ class FirmsController extends AppController
             $actionsAllowed = ['view'];
         }
         $action = $this->request->getParam('action');
+        
         return in_array($action, $actionsAllowed);
     }
 
     /**
      * Index method
-     * 
-     * Set the firms list on the admin home page.
      *
+     * Display the firms list on the admin home page.
+     * 
      * @return \Cake\Http\Response|void
      */
     public function index()
-    {
+    {   
         $this->paginate = [
-            'contain' => ['CustomerFiles'],
-            'order' => [
-                'Firms.name' => 'asc'
-            ],
+            'order' => ['Firms.name' => 'asc'],
             'maxLimit' => 10
         ];
         $firms = $this->paginate($this->Firms);
+
         $this->set(compact('firms'));
     }
 
     /**
      * View method
-     * 
-     * Show the profile of the firm.
      *
+     * Display the profile of the firm.
+     * 
      * @param string|null $id Firm id.
      * @return \Cake\Http\Response|void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
@@ -70,9 +62,10 @@ class FirmsController extends AppController
     public function view($id = null)
     {
         $firm = $this->Firms->get($id, [
-            'contain' => ['CustomerFiles', 'Users']
+            'contain' => []
         ]);
-        $this->set(compact('firm'));
+
+        $this->set('firm', $firm);
     }
 
     /**
@@ -90,9 +83,11 @@ class FirmsController extends AppController
             $firm->added_by = $this->Auth->user('id');
             if ($this->Firms->save($firm)) {
                 $this->Flash->success(__('La société a bien été sauvegardée.'));
-                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('La société n\'a pas pu être sauvegardée. Veuillez ré-essayer.'));
             }
-            $this->Flash->error(__('La société n\'a pas pu être sauvegardée. Veuillez ré-essayer.'));
+
+            return $this->redirect(['action' => 'index']);
         }
         $this->set(compact('firm'));
     }
@@ -115,9 +110,11 @@ class FirmsController extends AppController
             $firm = $this->Firms->patchEntity($firm, $this->request->getData());
             if ($this->Firms->save($firm)) {
                 $this->Flash->success(__('La société a bien été sauvegardée.'));
-                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('La société n\'a pas pu être sauvegardée. Veuillez ré-essayer.'));
             }
-            $this->Flash->error(__('La société n\'a pas pu être sauvegardée. Veuillez ré-essayer.'));
+
+            return $this->redirect(['action' => 'index']);
         }
         $this->set(compact('firm'));
     }
@@ -140,6 +137,7 @@ class FirmsController extends AppController
         } else {
             $this->Flash->error(__('La société n\'a pas pu être supprimée. Veuillez ré-essayer.'));
         }
+        
         return $this->redirect(['action' => 'index']);
     }
 }
