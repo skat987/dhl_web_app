@@ -14,7 +14,7 @@ echo $this->element('modal');
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <h1 class="display-4 text-center"><?= h($firm->name) ?></h1>
+                    <h1 class="text-center"><?= h($firm->name) ?></h1>
                 </div>
             </div>
             <div class="row">
