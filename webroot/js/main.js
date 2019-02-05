@@ -9,6 +9,7 @@ const baseUrl = ''; // To use preview mode
 const pages = ['/', '/admin/liste-des-societes', '/admin/liste-des-utilisateurs', '/esapce-client/:id'];
 const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 const passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+const keyException = ['ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp'];
 var page;
 
 /**
@@ -53,7 +54,7 @@ function setUpLoginPage() {
 function setUpAllFirms(page) {
     var firms = $('#allFirms').find('.card');
     var firmsBtn = [];
-    var lastCollapse;
+    var lastCollapse, lastKey;
     setUpNavBar(page);
     setUpAccessDropdown();
     setUpModal();
@@ -65,19 +66,21 @@ function setUpAllFirms(page) {
             btn.click(function(e) {
                 var collapse = $(firms[key]).find($(this).data('target'));
                 if (!lastCollapse) {  
-                    setUpStorage(collapse.find('.card-body'));
+                    setUpStorage(collapse.find('#storageContent_' + key), key);
                     collapse.collapse('show');
-                    lastCollapse = collapse; 
+                    lastCollapse = collapse;
+                    lastKey = key;
                 } else {                
                     if (lastCollapse.attr('id') == collapse.attr('id')) {
                         lastCollapse.collapse('hide');
-                        lastCollapse.find('.card-body').empty();
+                        lastCollapse.find('#storageContent_' + lastKey).empty();
                         lastCollapse = null;                        
                     } else {
-                        setUpStorage(collapse.find('.card-body'));
+                        setUpStorage(collapse.find('#storageContent_' + key), key);
                         collapse.collapse('show');
-                        lastCollapse.find('.card-body').empty();
+                        lastCollapse.find('#storageContent_' + lastKey).empty();
                         lastCollapse = collapse;
+                        lastKey = key;
                     }
                 }               
             });
@@ -92,9 +95,11 @@ function setUpAllUsers(page) {
 }
 
 function setUpViewFirm() {
+    var container = $('#storageContent');
+    var firmKey = container.data('firm');
     setUpAccessDropdown();
     setUpModal();
-    setUpStorage($('#storageContent'));
+    setUpStorage(container, firmKey);
 }
 
 function setUpAccessDropdown() {
@@ -220,12 +225,13 @@ function setUpForm() {
     });
 }
 
-function setUpStorage(container) {
+function setUpStorage(container, key) {
     $.get({
         url: container.data('link'),
         success: function(resp) {
             container.html(resp);
-            setUpStoragePagination(container, $('#storagePagination').find('.page-link'));
+            setUpSearchDirectory(container, key);
+            setUpStoragePagination(container, key, $('#storagePagination').find('.page-link'));
         },
         error: function(resp) {
             console.log('Error access storage : ', resp);
@@ -234,7 +240,7 @@ function setUpStorage(container) {
     });
 }
 
-function setUpStoragePagination(container, buttons) {
+function setUpStoragePagination(container, key, buttons) {
     buttons.click(function(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -242,10 +248,74 @@ function setUpStoragePagination(container, buttons) {
             url: $(this).attr('href'),
             success: function(resp) {
                 container.html(resp);
-                setUpStoragePagination(container, $('#storagePagination').find('.page-link'));
+                setUpSearchDirectory(container, key);
+                setUpStoragePagination(container, key, $('#storagePagination').find('.page-link'));
             },
             error: function(resp) {
                 console.log('Error pagination : ', resp);
+                container.html('<p>Error : Cannot reach the storage content.</p>');
+            }
+        });
+    });
+}
+
+function setUpSearchDirectory(container, firmKey) {
+    var url, firmId;
+    $('#searchDirectory_' + firmKey).keyup(function(e) {
+        if ($(this).val() == '') {
+            $('#optionsDirectories_' + firmKey).empty();
+        }
+        if (($.inArray(e.key, keyException) == -1) && ($(this).val() != '')) {
+            firmId = $(this).data('firm');
+            url = '/societe-' + firmId + '/dossiers/rechercher-' + $(this).val();
+            $.get({
+                url: url,
+                dataType: 'json',
+                success: function(resp) {
+                    console.log('success', resp);
+                    $('#optionsDirectories_' + firmKey).empty();
+                    $.each(resp, function(key, r) {
+                        $('#optionsDirectories_' + firmKey).append(
+                            '<option value="' + r.name + '">'
+                        );
+                    });
+                },
+                error: function(resp) {
+                    console.log('Error search directories', resp);
+                }
+            });
+        }        
+    });
+    $('#searchForm_' + firmKey).submit(function(e) {
+        e.preventDefault();
+        if ($('#searchDirectory_' + firmKey).val() != '') {
+            url = '/societe-' + $('#searchDirectory_' + firmKey).data('firm') + '/liste-des-documents/' + $('#searchDirectory_' + firmKey).val();
+        } else {
+            url = '/societe-' + $('#searchDirectory_' + firmKey).data('firm') + '/liste-des-documents/all';
+        }
+        $.get({
+            url: url,
+            success: function(resp) {
+                container.html(resp);
+                setUpSearchDirectory(container, firmKey);
+                setUpStoragePagination(container, firmKey, $('#storagePagination').find('.page-link'));
+            },
+            error: function(resp) {
+                console.log('Error filtering directories list', resp);
+                container.html('<p>Error : Cannot reach the storage content.</p>');
+            }
+        });
+    });
+    $('#resetSearch_' + firmKey).click(function() {
+        $.get({
+            url: $(this).data('link'),
+            success: function(resp) {
+                container.html(resp);
+                setUpSearchDirectory(container, firmKey);
+                setUpStoragePagination(container, firmKey, $('#storagePagination').find('.page-link'));
+            },
+            error: function(resp) {
+                console.log('Error filtering directories list', resp);
                 container.html('<p>Error : Cannot reach the storage content.</p>');
             }
         });

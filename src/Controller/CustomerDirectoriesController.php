@@ -23,9 +23,9 @@ class CustomerDirectoriesController extends AppController
     public function isAuthorized($user)
     {
         if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['add', 'delete', 'storageView'];
+            $actionsAllowed = ['add', 'delete', 'storageView', 'getDirectoriesOptions'];
         } else {
-            $actionsAllowed = ['storageView'];
+            $actionsAllowed = ['storageView', 'getDirectoriesOptions'];
         }
         $action = (isset($actionsAllowed)) ? $this->request->getParam('action') : null;
         if (isset($action)) {
@@ -141,16 +141,35 @@ class CustomerDirectoriesController extends AppController
      * 
      * @param string|null $firmId Firm id
      */
-    public function storageView($firmId = null)
+    public function storageView($firmId = null, $customerDirectoryName = null)
     {
         $this->paginate = [
             'contain' => ['CustomerFiles'],
             'maxLimit' => 10
         ];
-        $customerDirectories = $this->paginate($this->CustomerDirectories->findByFirmId($firmId));    
-        $firm = $this->CustomerDirectories->Firms->get($firmId, [
-            'contain' => ['CustomerFiles']
-        ]);
+        if ($customerDirectoryName == 'all') {  
+            $query = $this->CustomerDirectories->findByFirmId($firmId);
+            $firm = $this->CustomerDirectories->Firms->get($firmId, [
+                'contain' => ['CustomerFiles']
+            ]);
+        } else {
+            $query = $this->CustomerDirectories->findByFirmId($firmId)
+                ->where(['name' => $customerDirectoryName]);
+            $firm = $this->CustomerDirectories->Firms->get($firmId, [
+                'contain' => []
+            ]);
+        }  
+        $customerDirectories = $this->paginate($query);
         $this->set(compact('customerDirectories', 'firm'));
+    }
+
+    public function getDirectoriesOptions($firmId = null, $search = null)
+    {
+        if ($this->request->is('get')) {
+            $query = $this->CustomerDirectories->findByFirmId($firmId);
+            $options = $query->select(['id', 'name'])
+                ->where(['name LIKE' => '%' . $search . '%'])->toArray();
+            $this->set(compact('options'));
+        }
     }
 }
