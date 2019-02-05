@@ -107,9 +107,12 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/admin/dossier-:id/supprimer', ['controller' => 'CustomerDirectories', 'action' => 'delete'], ['_name' => 'deleteDirectory'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);
-    $routes->connect('/societe-:firm_id/liste-des-documents', ['controller' => 'CustomerDirectories', 'action' => 'storageView'], ['_name' => 'getStorage'])
+    $routes->connect('/societe-:firm_id/liste-des-documents/:customer_directory_name', ['controller' => 'CustomerDirectories', 'action' => 'storageView'], ['_name' => 'getStorage'])
         ->setPatterns(['firm_id' => '\d+'])
-        ->setPass(['firm_id']);
+        ->setPass(['firm_id', 'customer_directory_name']);
+    $routes->connect('/societe-:firm_id/dossiers/rechercher-:search', ['controller' => 'CustomerDirectories', 'action' => 'getDirectoriesOptions'], ['_name' => 'getDirectoriesOptions'])
+        ->setPatterns(['firm_id' => '\d+'])
+        ->setPass(['firm_id', 'search']);
 
     /**
      * Connect catchall routes for all controllers.

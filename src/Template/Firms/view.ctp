@@ -9,7 +9,7 @@ $this->assign('title', 'Espace client');
 // Call the Modal element
 echo $this->element('modal');
 ?>
-<div class="row">
+<section class="row">
     <div class="jumbotron jumbotron-fluid col">
         <div class="container">
             <div class="row">
@@ -39,7 +39,10 @@ echo $this->element('modal');
             </div>
         </div>
     </div>
-</div>
-<div id="storageContent" class="container-fluid clearfix" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id], true) ?>>
-    <!-- Storage content -->
-</div>
+</section>
+<section class="container-fluid clearfix">
+    <?= $this->element('panel', ['firm' => $firm, 'firmKey' => $firm->id]) ?>
+    <div id="storageContent" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id, 'all'], true) ?> data-firm=<?= h($firm->id) ?>>
+        <!-- Storage content -->
+    </div>
+</section>

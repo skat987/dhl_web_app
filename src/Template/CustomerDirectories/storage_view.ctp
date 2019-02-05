@@ -6,59 +6,12 @@
  * @var \App\Model\Entity\CustomerFile[]|\Cake\Collection\CollectionInterface $customerFiles
  */
 ?>
-<?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
-<section>
-    <div class="row">
-        <div class="col d-flex justify-content-center">
-            <?= $this->Form->create(null, [
-                'class' => 'form-inline'
-            ]) ?>
-            <?= $this->Form->search('search', [
-                'type' => 'search',
-                'class' => 'form-control mr-sm-2',
-                'placeholder' => __('Rechercher un dossier'),
-                'aria-label' => 'Search'
-            ]) ?>
-            <?= $this->Form->button(__('Rechercher <i class="fas fa-search"></i>'), [
-                'type' => 'submit',
-                'class' => 'btn btn-outline-success my-2 my-sm-0',
-                'escape' => false
-            ]) ?>
-            <?= $this->Form->end() ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6 mb-3 d-flex justify-content-center">
-            <?= $this->Html->link(__('<i class="fas fa-file"></i> Nouveau document <i class="fas fa-plus-circle"></i>'), '#', [
-                'escape' => false,
-                'role' => 'button',
-                'class' => 'btn dhl-custom-btn',
-                'title' => __('Ajouter un document à la société {0}', $firm->name),
-                'data-toggle' => 'modal',
-                'data-target' => '#modal',
-                'data-link' => $this->Url->build(['_name' => 'addCustomerFile', $firm->id], true)
-            ]) ?>
-        </div>
-        <div class="col-md-6 mb-3 d-flex justify-content-center">
-            <?= $this->Html->link(__('<i class="fas fa-folder"></i> Nouveau dossier <i class="fas fa-plus-circle"></i>'), '#', [
-                'escape' => false,
-                'role' => 'button',
-                'class' => 'btn dhl-custom-btn',
-                'title' => __('Ajouter un dossier à la société {0}', $firm->name),
-                'data-toggle' => 'modal',
-                'data-target' => '#modal',
-                'data-link' => $this->Url->build(['_name' => 'addDirectory', $firm->id], true)
-            ]) ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
 <div class="container-fluid clearfix">    
     <?php if ($firm->customer_directories_count > 0): ?>
     <section class="accordion" id=<?= __('storage_firm_{0}', $firm->id) ?>>
-        <?php foreach ($customerDirectories as $key => $customerDirectory): ?>
+        <?php foreach ($customerDirectories as $customerDirectory): ?>
         <div class="card">
-            <div class="card-header" id=<?= __('firm_{0}_dir_{1}_heading', [$firm->id, $key]) ?>>
+            <div class="card-header" id=<?= __('firm_{0}_dir_{1}_heading', [$firm->id, $customerDirectory->id]) ?>>
                 <h5 class="mb-0">
                     <?= $this->Form->button(__('<i class="fas fa-folder"></i> {0}', $customerDirectory->name), [
                         'escape' => false,
@@ -66,9 +19,9 @@
                         'title' => __('Ouvrir'),
                         'type' => 'button',
                         'data-toggle' => 'collapse',
-                        'data-target' => __('#firm_{0}_dir_{1}_content', [$firm->id, $key]),
+                        'data-target' => __('#firm_{0}_dir_{1}_content', [$firm->id, $customerDirectory->id]),
                         'aria-expanded' => 'false',
-                        'aria-controls' => __('firm_{0}_dir_{1}_contnent', [$firm->id, $key])
+                        'aria-controls' => __('firm_{0}_dir_{1}_contnent', [$firm->id, $customerDirectory->id])
                     ]) ?>
                     <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
                     <?= $this->Form->postLink(__('<i class="fas fa-trash-alt"></i>'), [
@@ -83,7 +36,7 @@
                     <?php endif; ?>
                 </h5>
             </div>
-            <div id=<?= __('firm_{0}_dir_{1}_content', [$firm->id, $key]) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_dir_{1}_heading', [$firm->id, $key]) ?> data-parent=<?= __('#storage_firm_{0}', $firm->id) ?>>
+            <div id=<?= __('firm_{0}_dir_{1}_content', [$firm->id, $customerDirectory->id]) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_dir_{1}_heading', [$firm->id, $customerDirectory->id]) ?> data-parent=<?= __('#storage_firm_{0}', $firm->id) ?>>
                 <div class="card-body">
                     <?php if ($customerDirectory->has('customer_files')): ?>
                     <ul class="list-group">
@@ -117,6 +70,7 @@
         <?php endforeach; ?>
     </section>
     <?php endif; ?>
+    <?php if (isset($firm->customer_files)): ?>
     <?php if ((count($firm->storage->read()[1]) > 0) && !$this->Paginator->hasNext()): ?>
     <section>
         <ul class="list-group">
@@ -146,6 +100,7 @@
             <?php endforeach; ?>
         </ul>
     </section>
+    <?php endif; ?>
     <?php endif; ?>
     <?php if ($firm->customer_directories_count > 0): ?>
     <section class="mt-2">

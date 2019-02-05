@@ -93,8 +93,11 @@ echo $this->element('modal');
                     </div>
                 </div>
                 <div id=<?= __('firm_{0}_storage', $firm->id) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_heading', $firm->id) ?> data-parent="#allFirms">
-                    <div class="card-body container-fluid clearfix" data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id], true) ?>>
-                        <!-- Storage content -->
+                    <div class="card-body container-fluid clearfix">
+                        <?= $this->element('panel', ['firm' => $firm, 'firmKey' => $firmKey]) ?>
+                        <div id=<?= __('storageContent_{0}', $firmKey) ?> data-link=<?= $this->Url->build(['_name' => 'getStorage', $firm->id, 'all'], true) ?>>
+                            <!-- Storage content -->
+                        </div>
                     </div>
                 </div>
             </div>
