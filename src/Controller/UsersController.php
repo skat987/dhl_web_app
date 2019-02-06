@@ -177,7 +177,7 @@ class UsersController extends AppController
                 } else {
                     $url = ['controller' => 'Firms', 'action' => 'view', $this->Auth->user('firm_id')];
                 }
-                $this->Flash->success(__('Bienvenu(e) {0} !', $this->Auth->user('full_name')));
+                $this->Flash->success(__('Bienvenue {0} !', $this->Auth->user('full_name')));
 
                 return $this->redirect($url);
             } else {

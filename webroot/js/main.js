@@ -5,11 +5,13 @@
 /**
  * Global variables
  */ 
-const baseUrl = ''; // To use preview mode
-const pages = ['/', '/admin/liste-des-societes', '/admin/liste-des-utilisateurs', '/esapce-client/:id'];
-const emailPattern = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-const passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
-const keyException = ['ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp'];
+const _PAGES = ['/', '/admin/liste-des-societes', '/admin/liste-des-utilisateurs', '/esapce-client/:id'];
+const _DEFAULT_PAGE_INDEX = 3;
+const _PATTERNS = {
+    email: /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
+    password: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/ 
+}
+const _KEY_EXCEPTION = ['ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp'];
 var page;
 
 /**
@@ -21,12 +23,9 @@ $(function() {
 });
 
 function initializePage() {
-    var pathName = $(location).attr('pathname');
-    var current = 3;
-    $.each(pages, function(key, value) {
-        if (pathName == (baseUrl + value)) {
-            current = key;
-        } 
+    var current = _DEFAULT_PAGE_INDEX;
+    $.each(_PAGES, function(key, value) { 
+        current = ($(location).attr('pathname') == value) ? key : current;
     });
     return current;
 }
@@ -48,7 +47,7 @@ function setUpPage(index) {
 }
 
 function setUpLoginPage() {
-    setUpForm();
+    setUpForm($('form'));
 }
 
 function setUpAllFirms(page) {
@@ -95,41 +94,39 @@ function setUpAllUsers(page) {
 }
 
 function setUpViewFirm() {
-    var container = $('#storageContent');
-    var firmKey = container.data('firm');
     setUpAccessDropdown();
     setUpModal();
-    setUpStorage(container, firmKey);
+    setUpStorage($('#storageContent'), $('#storageContent').data('firm'));
 }
 
 function setUpAccessDropdown() {
-    var dropdown = $('#accessDropdown');
-    dropdown.on('show.bs.dropdown', function(e) {
+    $('#accessDropdown').on('show.bs.dropdown', function(e) {
         $.get({
             url: $(e.relatedTarget).data('link'),
             success: function(resp) {
-                dropdown.children().last().html(resp);
-                setUpForm();
+                $('#accessDropdown').children().last().html(resp);
+                setUpForm($('#accessDropdown').children().last().find('form'));
                 $('#cancelBtn').click(function() {
-                    dropdown.dropdown();
-                    dropdown.children().last().empty();
+                    $('#accessDropdown').dropdown();
                 });
             },
             error: function(resp) {
                 console.log('Error access form : ', resp);
-                dropdown.children().last().html('<p>Error : The menu cannot be filled with content.</p>');
+                $('#accessDropdown').children().last().html('<p>Error : The menu cannot be filled with content.</p>');
             }
         });
+    });
+    $('#accessDropdown').on('hide.bs.dropdown', function() {
+        $(this).children().last().empty();
     });
 }
 
 function setUpModal() {
-    var modal = $('#modal');
-    modal.on('show.bs.modal', function(e) {
+    $('#modal').on('show.bs.modal', function(e) {
         $.get({
             url: $(e.relatedTarget).data('link'),
             success: function(resp) {
-                modal.find('#modalContent').html(resp);
+                $('#modal').find('#modalContent').html(resp);
             },
             error: function(resp) {
                 console.log('Error : the modal cannot be filled with content', resp);
@@ -138,17 +135,17 @@ function setUpModal() {
             }
         });
     });
-    modal.on('shown.bs.modal', function() {
-        setUpForm();
+    $('#modal').on('shown.bs.modal', function() {
+        setUpForm($(this).find('form'));
     });
-    modal.on('hidden.bs.modal', function() {
+    $('#modal').on('hidden.bs.modal', function() {
         $(this).find('#modalContent').empty();
     });
 }
 
 function setUpNavBar(page) {
     $.each($('#navbar').find('.nav-link'), function(key, item) {
-        if ((baseUrl + pages[page]) == $(item).attr('href')) {
+        if (_PAGES[page] == $(item).attr('href')) {
             $(item).parent().addClass('active');
             $(item).append('<span class="sr-only">(current)</span>');
         }
@@ -185,9 +182,9 @@ function setValidation(controls) {
 function checkControls(input) {
     var checks;
     if (input.type == 'email') {
-        checks = input.checkValidity() && emailPattern.test(input.value);
+        checks = input.checkValidity() && _PATTERNS.email.test(input.value);
     } else if (input.type == 'password') {
-        checks = input.checkValidity() && passwordPattern.test(input.value);
+        checks = input.checkValidity() && _PATTERNS.password.test(input.value);
     } else {
         checks = input.checkValidity();
     }
@@ -204,8 +201,8 @@ function checkControls(input) {
     return checks;
 }
 
-function setUpForm() {
-    var controls = $('form').find('.form-control');
+function setUpForm(form) {
+    var controls = form.find('.form-control');
     controls.change(function() {
         if ($(this).attr('type') == 'file') {
             var fileName = $(this).val().split('\\')[2];
@@ -217,7 +214,7 @@ function setUpForm() {
         }
         setValidation($(this));
     });
-    $('form').submit(function(e) { 
+    form.submit(function(e) { 
         if (!setValidation(controls)) {
             e.preventDefault();
             e.stopPropagation();
@@ -260,19 +257,17 @@ function setUpStoragePagination(container, key, buttons) {
 }
 
 function setUpSearchDirectory(container, firmKey) {
-    var url, firmId;
+    var url;
     $('#searchDirectory_' + firmKey).keyup(function(e) {
         if ($(this).val() == '') {
             $('#optionsDirectories_' + firmKey).empty();
         }
-        if (($.inArray(e.key, keyException) == -1) && ($(this).val() != '')) {
-            firmId = $(this).data('firm');
-            url = '/societe-' + firmId + '/dossiers/rechercher-' + $(this).val();
+        if (($.inArray(e.key, _KEY_EXCEPTION) < 0) && ($(this).val() != '')) {
+            url = '/societe-' + $(this).data('firm') + '/dossiers/rechercher-' + $(this).val();
             $.get({
                 url: url,
                 dataType: 'json',
                 success: function(resp) {
-                    console.log('success', resp);
                     $('#optionsDirectories_' + firmKey).empty();
                     $.each(resp, function(key, r) {
                         $('#optionsDirectories_' + firmKey).append(

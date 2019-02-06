@@ -38,14 +38,17 @@ class AppView extends View
     {
         // Change the template used by PaginatorHelper to Bootstrap template
         $this->Paginator->setTemplates([
-            'nextActive' => '<li class="page-item"><a class="page-link" href="{{url}}">{{text}}</a></li>',
-            'nextDisabled' => '<li class="page-item disabled"><a class="page-link" href="{{url}}">{{text}}</a></li>',
-            'prevActive' => '<li class="page-item"><a class="page-link" href="{{url}}">{{text}}</a></li>',
-            'prevDisabled' => '<li class="page-item disabled"><a class="page-link" href="{{url}}">{{text}}</a></li>',
-            'first' => '<li class="page-item"><a class="page-link" href="{{url}}">{{text}}</a></li>',
-            'last' => '<li class="page-item"><a class="page-link" href="{{url}}">{{text}}</a></li>',
-            'number' => '<li class="page-item"><a class="page-link" href="{{url}}">{{text}}</a></li>',
-            'current' => '<li class="page-item active"><a class="page-link" href="{{url}}">{{text}} <span class="sr-only">(current)</span></a></li>'
+            'nextActive' => '<li class="page-item"><a class="page-link custom-pagination-link" href="{{url}}">{{text}}</a></li>',
+            'nextDisabled' => '<li class="page-item disabled"><a class="page-link custom-pagination-link" href="{{url}}">{{text}}</a></li>',
+            'prevActive' => '<li class="page-item"><a class="page-link custom-pagination-link" href="{{url}}">{{text}}</a></li>',
+            'prevDisabled' => '<li class="page-item disabled"><a class="page-link custom-pagination-link" href="{{url}}">{{text}}</a></li>',
+            'first' => '<li class="page-item"><a class="page-link custom-pagination-link" href="{{url}}">{{text}}</a></li>',
+            'last' => '<li class="page-item"><a class="page-link custom-pagination-link" href="{{url}}">{{text}}</a></li>',
+            'number' => '<li class="page-item"><a class="page-link custom-pagination-link" href="{{url}}">{{text}}</a></li>',
+            'current' => '<li class="page-item active"><a class="page-link custom-pagination-link" href="{{url}}">{{text}} <span class="sr-only">(current)</span></a></li>',
+            'sort' => '<a class="custom-pagination-link" href="{{url}}">{{text}}</a>',
+            'sortAsc' => '<a class="custom-pagination-link" href="{{url}}">{{text}}</a>',
+            'sortDesc' => '<a class="custom-pagination-link" href="{{url}}">{{text}}</a>',
         ]);
     }
 }

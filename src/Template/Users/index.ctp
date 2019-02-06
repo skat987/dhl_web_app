@@ -24,7 +24,7 @@ echo $this->element('modal');
 </section>
 <section class="table-responsive">
     <table class="table">
-        <thead class="thead-light">
+        <thead class="custom-thead">
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('full_name', 'Nom') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('phone', 'Téléphone') ?></th>
@@ -42,32 +42,38 @@ echo $this->element('modal');
                 <td><?= h($user->email) ?></td>
                 <td><?= $user->has('user_type') ? h($user->user_type->name) : '' ?></td>
                 <td>
-                    <?= $user->has('firm') ? $this->Html->link($user->firm->name, [
+                    <?= $user->has('firm') ? $this->Html->link(__('<i class="fas fa-building"></i> {0}', $user->firm->name), [
                         '_name' => 'viewFirm', 
                         $user->firm->id
                     ], [
-                        'title' => __('Accéder à l\'espace client')
-                    ]) : '' ?></td>
-                <td>
-                    <?= $this->Html->link('<i class="far fa-eye"></i>', '#', [
                         'escape' => false,
+                        'class' => 'custom-link',
+                        'title' => __('Accéder à l\'espace client')
+                    ]) : '' ?>
+                </td>
+                <td>
+                    <?= $this->Html->link('<i class="fas fa-eye"></i>', '#', [
+                        'escape' => false,
+                        'class' => 'custom-icon-link',
                         'title' => __('Voir le profil'),
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
                         'data-link' => $this->Url->build(['_name' => 'viewUser', $user->id], true)
                     ]) ?>
-                    <?= $this->Html->link('<i class="far fa-edit"></i>', '#', [
+                    <?= $this->Html->link('<i class="fas fa-edit"></i>', '#', [
                         'escape' => false,
+                        'class' => 'custom-icon-link',
                         'title' => __('Modifier le profil'),
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
                         'data-link' => $this->Url->build(['_name' => 'editUser', $user->id], true)
                     ]) ?>                    
-                    <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
+                    <?= $this->Form->postLink('<i class="fas fa-trash-alt"></i>', [
                         '_name' => 'deleteUser', 
                         $user->id
                     ], [
                         'escape' => false,
+                        'class' => 'custom-icon-link',
                         'title' => __('Supprimer l\'utilisateur'),
                         'confirm' => __('Voulez-vous vraiment supprimer l\'utilisateur {0}?', $user->full_name)
                     ]) ?>
@@ -79,12 +85,17 @@ echo $this->element('modal');
 </section>
 <section class="mt-2">
     <nav aria-label="users list pagination">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center mb-0">
             <?= $this->Paginator->first('<< ' . __('Premier')) ?>
             <?= $this->Paginator->prev('< ' . __('Précédent')) ?>
             <?= $this->Paginator->numbers() ?>
             <?= $this->Paginator->next(__('Suivant') . ' >') ?>
             <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
         </ul>
+        <div class="col d-flex justify-content-center">
+            <small class="pagination-help text-muted">
+                <?= $this->Paginator->counter(['format' => 'Page {{page}}/{{pages}} des utilisateurs']) ?>
+            </small>
+        </div>
     </nav>
 </section>

@@ -75,3 +75,49 @@ form small {
 .dhl-custom-btn:focus, .dhl-custom-btn-2:focus {
     box-shadow: 0 0 0 .2rem #e9d397;
 }
+
+.firm-card-header {
+    background-color: #d3d6d8c7;
+}
+
+.custom-icon-link {
+    color: #e70410;
+}
+
+.custom-icon-link:hover {
+    color: #c00d16;
+}
+
+.custom-link {
+    color: #362a53e5;
+}
+
+.custom-link:hover {
+    color: #3d1fa8;
+}
+
+.custom-thead {
+    background-color: #ffcc00;
+}
+
+.custom-pagination-link {
+    color: #e70410;
+}
+
+.custom-pagination-link:hover {
+    color: #c00d16;
+}
+
+.page-item.active .custom-pagination-link {
+    background-color: #e70410;
+    border-color: #e70410;
+}
+
+.page-item.active .custom-pagination-link:hover {
+    background-color: #c00d16;
+    border-color: #c00d16;
+}
+
+.pagination-help {
+    font-size: 0.6rem;
+}

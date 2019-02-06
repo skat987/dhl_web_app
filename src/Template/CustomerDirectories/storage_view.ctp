@@ -15,7 +15,7 @@
                 <h5 class="mb-0">
                     <?= $this->Form->button(__('<i class="fas fa-folder"></i> {0}', $customerDirectory->name), [
                         'escape' => false,
-                        'class' => 'btn btn-link',
+                        'class' => 'btn btn-link custom-link',
                         'title' => __('Ouvrir'),
                         'type' => 'button',
                         'data-toggle' => 'collapse',
@@ -29,7 +29,7 @@
                         $customerDirectory->id
                     ], [
                         'escape' => false,
-                        'class' => 'float-right',
+                        'class' => 'float-right custom-icon-link',
                         'title' => __('Supprimer le dossier'),
                         'confirm' => __('Voulez-vous vraiment supprimer le dossier {0} ?', $customerDirectory->name)
                     ]) ?>
@@ -47,6 +47,7 @@
                                 $customerFile->id
                             ], [
                                 'escape' => false,
+                                'class' => 'custom-link',
                                 'title' => __('Télécharger')
                             ]) ?>
                             <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
@@ -55,7 +56,7 @@
                                 $customerFile->id
                             ], [
                                 'escape' => false,
-                                'class' => 'float-right',
+                                'class' => 'float-right custom-icon-link',
                                 'title' => __('Supprimer le document'),
                                 'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                             ]) ?>
@@ -82,6 +83,7 @@
                     $customerFile->id
                 ], [
                     'escape' => false,
+                    'class' => 'custom-link',
                     'title' => __('Télécharger')
                 ]) ?>
                 <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
@@ -90,7 +92,7 @@
                     $customerFile->id
                 ], [
                     'escape' => false,
-                    'class' => 'float-right',
+                    'class' => 'float-right custom-icon-link',
                     'title' => __('Supprimer le document'),
                     'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                 ]) ?>
@@ -105,13 +107,18 @@
     <?php if ($firm->customer_directories_count > 0): ?>
     <section class="mt-2">
         <nav aria-label="customer-files list pagination">
-            <ul class="pagination justify-content-center" id="storagePagination">
+            <ul class="pagination justify-content-center mb-0" id="storagePagination">
                 <?= $this->Paginator->first('<< ' . __('Premier')) ?>
                 <?= $this->Paginator->prev('< ' . __('Précédent')) ?>
                 <?= $this->Paginator->numbers() ?>
                 <?= $this->Paginator->next(__('Suivant') . ' >') ?>
                 <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
             </ul>
+            <div class="col d-flex justify-content-center">
+                <small class="pagination-help text-muted">
+                    <?= $this->Paginator->counter(['format' => 'Page {{page}}/{{pages}} des dossiers']) ?>
+                </small>
+            </div>
         </nav>
     </section>
     <?php endif; ?>
