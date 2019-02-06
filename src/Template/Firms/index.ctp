@@ -27,12 +27,12 @@ echo $this->element('modal');
         <div class="accordion" id="allFirms">
             <?php foreach ($firms as $firmKey => $firm): ?>
             <div class="card">
-                <div class="card-header" id=<?= __('firm_{0}_heading', $firm->id) ?>>
+                <div class="card-header firm-card-header" id=<?= __('firm_{0}_heading', $firm->id) ?>>
                     <div class="row">
                         <div class="col-4">
                             <h5 class="mb-0">
                                 <?= $this->Form->button(__('<i class="fas fa-building"></i> {0}', $firm->name), [
-                                    'class' => 'btn btn-link',
+                                    'class' => 'btn btn-link custom-link',
                                     'id' => __('firm_btn_{0}', $firmKey),
                                     'title' => __('Ouvrir'),
                                     'type' => 'button',
@@ -64,27 +64,28 @@ echo $this->element('modal');
                                 </div>
                             </div>
                             <div class="row justify-content-center">
-                                <?= $this->Html->link('<i class="far fa-eye"></i>', [
+                                <?= $this->Html->link('<i class="fas fa-eye"></i>', [
                                     '_name' => 'viewFirm', 
                                     $firm->id
                                 ], [
                                     'escape' => false,
-                                    'class' => 'mr-2',
+                                    'class' => 'mr-2 custom-icon-link',
                                     'title' => __('Accéder à l\'espace client')
                                 ]) ?>
-                                <?= $this->Html->link(__('<i class="far fa-edit"></i>'), '#', [
+                                <?= $this->Html->link(__('<i class="fas fa-edit"></i>'), '#', [
                                     'escape' => false,
-                                    'class' => 'mr-2',
+                                    'class' => 'mr-2 custom-icon-link',
                                     'title' => __('Renommer la société'),
                                     'data-toggle' => 'modal',
                                     'data-target' => '#modal',
                                     'data-link' => $this->Url->build(['_name' => 'editFirm', $firm->id], true)
                                 ]) ?>
-                                <?= $this->Form->postLink('<i class="far fa-trash-alt"></i>', [
+                                <?= $this->Form->postLink('<i class="fas fa-trash-alt"></i>', [
                                     '_name' => 'deleteFirm', 
                                     $firm->id
                                 ], [
                                     'escape' => false,
+                                    'class' => 'custom-icon-link',
                                     'title' => __('Supprimer la société'),
                                     'confirm' => __('Voulez-vous vraiment supprimer la société {0} ?', $firm->name)
                                 ]) ?>
@@ -105,14 +106,19 @@ echo $this->element('modal');
         </div>
     </div>
 </section>
-<section class="mt-2">
+<section class="mt-2 mb-3">
     <nav aria-label="firms list pagination">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center mb-0">
             <?= $this->Paginator->first('<< ' . __('Premier')) ?>
             <?= $this->Paginator->prev('< ' . __('Précédent')) ?>
             <?= $this->Paginator->numbers() ?>
             <?= $this->Paginator->next(__('Suivant') . ' >') ?>
             <?= $this->Paginator->last(__('Dernier') . ' >>') ?>
         </ul>
+        <div class="col d-flex justify-content-center">
+            <small class="pagination-help text-muted">
+                <?= $this->Paginator->counter(['format' => 'Page {{page}}/{{pages}} des sociétés']) ?>
+            </small>
+        </div>
     </nav>
 </section>

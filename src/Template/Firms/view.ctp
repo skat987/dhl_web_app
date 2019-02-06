@@ -10,7 +10,7 @@ $this->assign('title', 'Espace client');
 echo $this->element('modal');
 ?>
 <section class="row">
-    <div class="jumbotron jumbotron-fluid col">
+    <div class="jumbotron jumbotron-fluid col py-4">
         <div class="container">
             <div class="row">
                 <div class="col">

@@ -43,7 +43,7 @@ class FirmsController extends AppController
     {   
         $this->paginate = [
             'order' => ['Firms.name' => 'asc'],
-            'maxLimit' => 10
+            'maxLimit' => 20
         ];
         $firms = $this->paginate($this->Firms);
 

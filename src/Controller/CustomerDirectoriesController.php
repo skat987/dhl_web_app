@@ -140,6 +140,7 @@ class CustomerDirectoriesController extends AppController
      * Display the storage content of a firm.
      * 
      * @param string|null $firmId Firm id
+     * @param string|null $customerDirectoryName name of a specify directory
      */
     public function storageView($firmId = null, $customerDirectoryName = null)
     {
@@ -163,12 +164,21 @@ class CustomerDirectoriesController extends AppController
         $this->set(compact('customerDirectories', 'firm'));
     }
 
+    /**
+     * GetDirectoriesOptions method
+     * 
+     * Display the options of the search directories input
+     * 
+     * @param string|null $firmId Firm id
+     * @param string|null $search search to look for 
+     */
     public function getDirectoriesOptions($firmId = null, $search = null)
     {
         if ($this->request->is('get')) {
             $query = $this->CustomerDirectories->findByFirmId($firmId);
             $options = $query->select(['id', 'name'])
-                ->where(['name LIKE' => '%' . $search . '%'])->toArray();
+                ->where(['name LIKE' => '%' . $search . '%'])
+                ->toArray();
             $this->set(compact('options'));
         }
     }

@@ -72,7 +72,6 @@ class AppController extends Controller
             ],
             'unauthorizedRedirect' => $this->referer()
         ]);
-        $this->Auth->allow(['view', 'index']); // A retirer pour éviter que l'utilisateur ne puisse naviguer sans être authentifié
     }
 
     /**
