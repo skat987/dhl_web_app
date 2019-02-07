@@ -42,6 +42,7 @@ class UsersController extends AppController
             $actionsAllowed = ['editMyAccess', 'checkPass'];
         }
         $action = $this->request->getParam('action');
+
         return in_array($action, $actionsAllowed);
     }
 
@@ -121,9 +122,7 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
-        $user = $this->Users->get($id, [
-            'contain' => []
-        ]);
+        $user = $this->Users->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
@@ -206,6 +205,13 @@ class UsersController extends AppController
         return $this->redirect($this->Auth->logout()); 
     }
 
+    /**
+     * EditMyAccess method
+     * 
+     * Update an authenticated user's access.
+     * 
+     * @return \Cake\Http\Response|null Redirects to the same page.
+     */
     public function editMyAccess()
     {
         $user = $this->Users->get($this->Auth->user('id'));
@@ -223,6 +229,11 @@ class UsersController extends AppController
         $this->set('user', $user);
     }
 
+    /**
+     * CheckPass method
+     * 
+     * Check the password entered by the user in the "EditMyAccess" form.
+     */
     public function checkPass()
     {
         if ($this->request->is(['post', 'ajax'])) {
@@ -232,6 +243,13 @@ class UsersController extends AppController
         }
     }
 
+    /**
+     * ResetPassword method
+     * 
+     * Allows the user "ios" to update a user's password.
+     * 
+     * @return \Cake\Http\Response|null Redirects to Index Page
+     */
     public function resetPassword($id = null)
     {
         $user = $this->Users->get($id);

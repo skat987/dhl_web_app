@@ -38,7 +38,7 @@ class FirmsController extends AppController
     public function index()
     {   
         $this->paginate = [
-            'order' => ['Firms.name' => 'asc'],
+            'order' => ['Firms.name' => 'ASC'],
             'maxLimit' => 20
         ];
         $firms = $this->paginate($this->Firms);
@@ -57,9 +57,7 @@ class FirmsController extends AppController
      */
     public function view($id = null)
     {
-        $firm = $this->Firms->get($id, [
-            'contain' => []
-        ]);
+        $firm = $this->Firms->get($id);
 
         $this->set('firm', $firm);
     }
@@ -99,9 +97,7 @@ class FirmsController extends AppController
      */
     public function edit($id = null)
     {
-        $firm = $this->Firms->get($id, [
-            'contain' => []
-        ]);
+        $firm = $this->Firms->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $firm = $this->Firms->patchEntity($firm, $this->request->getData());
             if ($this->Firms->save($firm)) {
