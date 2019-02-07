@@ -26,49 +26,10 @@ class CustomerFilesController extends AppController
      */
     public function isAuthorized($user)
     {
-        if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['add', 'delete', 'downloadCustomerFile'];
-        } else {
-            $actionsAllowed = ['downloadCustomerFile'];
-        }
-        $action = (isset($actionsAllowed)) ? $this->request->getParam('action') : null;
-        if (isset($action)) {
-            return in_array($action, $actionsAllowed);
-        } else {
-            return false;
-        }
-    }
-
-
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|void
-     */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Firms', 'CustomerDirectories']
-        ];
-        $customerFiles = $this->paginate($this->CustomerFiles);
-
-        $this->set(compact('customerFiles'));
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Customer File id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $customerFile = $this->CustomerFiles->get($id, [
-            'contain' => ['Firms', 'CustomerDirectories']
-        ]);
-
-        $this->set('customerFile', $customerFile);
+        $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'delete', 'downloadCustomerFile'] : ['downloadCustomerFile'];
+        $action = $this->request->getParam('action');
+        
+        return in_array($action, $actionsAllowed);
     }
 
     /**
@@ -98,37 +59,12 @@ class CustomerFilesController extends AppController
             } else {
                 $this->Flash->success(__('Tous les documents ont été sauvegardés.'));  
             }     
+
             return $this->redirect($this->referer());
         }
         $firm = $this->CustomerFiles->Firms->get($firmId);
         $customerDirectories = $this->CustomerFiles->CustomerDirectories->findListByFirmId($firmId, ['limit' => 200]);
         $this->set(compact('customerFiles', 'firm', 'customerDirectories'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Customer File id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $customerFile = $this->CustomerFiles->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $customerFile = $this->CustomerFiles->patchEntity($customerFile, $this->request->getData());
-            if ($this->CustomerFiles->save($customerFile)) {
-                $this->Flash->success(__('The customer file has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The customer file could not be saved. Please, try again.'));
-        }
-        $firms = $this->CustomerFiles->Firms->find('list', ['limit' => 200]);
-        $customerDirectories = $this->CustomerFiles->CustomerDirectories->find('list', ['limit' => 200]);
-        $this->set(compact('customerFile', 'firms', 'customerDirectories'));
     }
 
     /**
