@@ -77,6 +77,15 @@ echo $this->element('modal');
                         'title' => __('Supprimer l\'utilisateur'),
                         'confirm' => __('Voulez-vous vraiment supprimer l\'utilisateur {0}?', $user->full_name)
                     ]) ?>
+                    <?php if ($this->request->getSession()->read('Auth.User.user_type_id') == 1): ?>
+                    <?= $this->Html->link('IOS <i class="fas fa-edit"></i>', '#', [
+                        'escape' => false,
+                        'title' => __('Modifier le profil'),
+                        'data-toggle' => 'modal',
+                        'data-target' => '#modal',
+                        'data-link' => $this->Url->build(['_name' => 'resetPass', $user->id], true)
+                    ]) ?>    
+                    <?php endif; ?>                
                 </td>
             </tr>
             <?php endforeach; ?>

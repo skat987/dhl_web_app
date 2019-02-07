@@ -84,6 +84,10 @@ Router::scope('/', function (RouteBuilder $routes) {
         ->setPass(['id']);
     $routes->connect('/admin/utilisateur/creer', ['controller' => 'Users', 'action' => 'add'], ['_name' => 'addUser']);
     $routes->connect('/modifier-mes-acces', ['controller' => 'Users', 'action' => 'editMyAccess'], ['_name' => 'editAccess']);
+    $routes->connect('/verification-pass', ['controller' => 'Users', 'action' => 'checkPass'], ['_name' => 'checkPass']);
+    $routes->connect('/ios/reset-password/:id', ['controller' => 'Users', 'action' => 'resetPassword'], ['_name' => 'resetPass'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
 
     /**
      * CustomerFile entity routes

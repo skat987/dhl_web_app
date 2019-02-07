@@ -22,7 +22,7 @@
 ]) ?>
 <div class="modal-body">
     <div class="form-row">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <?= $this->Form->control('first_name', [
                 'label' => ['text' => 'Prénom'],
                 'type' => 'text',
@@ -32,7 +32,7 @@
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
             <?= $this->Form->control('last_name', [
                 'label' => ['text' => 'Nom'],
                 'type' => 'text',
@@ -41,16 +41,7 @@
                 'required' => true
             ]) ?>
             <div class="invalid-feedback"></div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <?= $this->Form->control('phone', [
-                'label' => ['text' => 'Téléphone'],
-                'type' => 'tel',
-                'class' => 'form-control',
-                'placeholder' => 'N° téléphone'
-            ]) ?>
-            <div class="invalid-feedback"></div>
-        </div>
+        </div>        
     </div>
     <div class="form-row">
         <div class="col-md-6 mb-3">
@@ -63,18 +54,13 @@
             <div class="invalid-feedback"></div>
         </div>
         <div class="col-md-6 mb-3">
-            <?= $this->Form->control('password', [
-                'label' => ['text' => 'Mot de passe'],
-                'type' => 'password',
-                'minlength' => 8,
+            <?= $this->Form->control('phone', [
+                'label' => ['text' => 'Téléphone'],
+                'type' => 'tel',
                 'class' => 'form-control',
-                'aria-describedby' => 'passwordHelpBlock',
-                'placeholder' => 'Mot de passe'
+                'placeholder' => 'N° téléphone'
             ]) ?>
             <div class="invalid-feedback"></div>
-            <small id="passwordHelpBlock" class="form-text text-muted">
-                <?= __('Au moins 8 caractères, 1 majuscule et 1 chiffre. Les caractères spéciaux sont exclus.') ?>
-            </small>
         </div>
     </div>
     <div class="form-row">
