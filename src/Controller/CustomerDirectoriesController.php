@@ -22,48 +22,10 @@ class CustomerDirectoriesController extends AppController
      */
     public function isAuthorized($user)
     {
-        if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['add', 'delete', 'storageView', 'getDirectoriesOptions'];
-        } else {
-            $actionsAllowed = ['storageView', 'getDirectoriesOptions'];
-        }
-        $action = (isset($actionsAllowed)) ? $this->request->getParam('action') : null;
-        if (isset($action)) {
-            return in_array($action, $actionsAllowed);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|void
-     */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Firms']
-        ];
-        $customerDirectories = $this->paginate($this->CustomerDirectories);
-
-        $this->set(compact('customerDirectories'));
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Customer Directory id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $customerDirectory = $this->CustomerDirectories->get($id, [
-            'contain' => ['Firms', 'CustomerFiles']
-        ]);
-
-        $this->set('customerDirectory', $customerDirectory);
+        $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'delete', 'storageView', 'getDirectoriesOptions'] : ['storageView', 'getDirectoriesOptions'];
+        $action = $this->request->getParam('action');
+        
+        return in_array($action, $actionsAllowed);
     }
 
     /**
@@ -87,31 +49,6 @@ class CustomerDirectoriesController extends AppController
             return $this->redirect($this->referer());
         }
         $this->set(compact('customerDirectory', 'firm'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Customer Directory id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $customerDirectory = $this->CustomerDirectories->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $customerDirectory = $this->CustomerDirectories->patchEntity($customerDirectory, $this->request->getData());
-            if ($this->CustomerDirectories->save($customerDirectory)) {
-                $this->Flash->success(__('The customer directory has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The customer directory could not be saved. Please, try again.'));
-        }
-        $firms = $this->CustomerDirectories->Firms->find('list', ['limit' => 200]);
-        $this->set(compact('customerDirectory', 'firms'));
     }
 
     /**
@@ -145,13 +82,22 @@ class CustomerDirectoriesController extends AppController
     public function storageView($firmId = null, $customerDirectoryName = null)
     {
         $this->paginate = [
-            'contain' => ['CustomerFiles'],
+            'contain' => [
+                'CustomerFiles' => [
+                    'sort' => ['CustomerFiles.name' => 'ASC']
+                ]
+            ],
+            'order' => ['CustomerDirectories.created' => 'DESC'],
             'maxLimit' => 10
         ];
         if ($customerDirectoryName == 'all') {  
             $query = $this->CustomerDirectories->findByFirmId($firmId);
             $firm = $this->CustomerDirectories->Firms->get($firmId, [
-                'contain' => ['CustomerFiles']
+                'contain' => [
+                    'CustomerFiles' => [
+                        'sort' => ['CustomerFiles.name' => 'ASC']
+                    ]
+                ]
             ]);
         } else {
             $query = $this->CustomerDirectories->findByFirmId($firmId)
@@ -178,6 +124,7 @@ class CustomerDirectoriesController extends AppController
             $query = $this->CustomerDirectories->findByFirmId($firmId);
             $options = $query->select(['id', 'name'])
                 ->where(['name LIKE' => '%' . $search . '%'])
+                ->orderDesc('name')
                 ->toArray();
             $this->set(compact('options'));
         }

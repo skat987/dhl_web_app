@@ -79,7 +79,7 @@ $appBaseTitle = 'DHL : ';
                                     'aria-expanded' => 'false',
                                     'data-link' => $this->Url->build(['_name' => 'editAccess'], true)
                                 ]) ?>
-                                <div class="dropdown-menu" aria-labelledby="userAccess" id="editMyAccessForm">
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userAccess" id="editMyAccessForm">
                                     <!-- Edit Access Form -->
                                 </div>
                             </li>

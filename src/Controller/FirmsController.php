@@ -22,11 +22,7 @@ class FirmsController extends AppController
      */
     public function isAuthorized($user)
     {
-        if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete'];
-        } else {
-            $actionsAllowed = ['view'];
-        }
+        $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['index', 'view', 'add', 'edit', 'delete'] : ['view'];
         $action = $this->request->getParam('action');
         
         return in_array($action, $actionsAllowed);
