@@ -143,6 +143,9 @@ class UsersTable extends Table
         if (isset($data['newPassword'])) {
             $data['password'] = $data['newPassword'];
         }
+        if (isset($data['last_name'])) {
+            $data['last_name'] = mb_strtoupper($data['last_name']);
+        }
     }
 
     /**

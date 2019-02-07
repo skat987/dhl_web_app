@@ -121,3 +121,14 @@ form small {
 .pagination-help {
     font-size: 0.6rem;
 }
+
+#form-login {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    border: 1px solid #d3d6d8c7;
+    border-radius: 0.25rem;
+}

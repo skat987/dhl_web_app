@@ -9,8 +9,9 @@ $this->assign('title', 'Connexion');
 <?= $this->Flash->render('auth') ?>
 <div class="row">
     <?= $this->Form->create(null, [
-        'class' => 'col needs-validation',
-        'novalidate' => true
+        'class' => 'needs-validation',
+        'novalidate' => true,
+        'id' => 'form-login'
     ]) ?>
     <div class="form-group">
         <?= $this->Form->control('email', [
@@ -38,7 +39,7 @@ $this->assign('title', 'Connexion');
     </div>
     <?= $this->Form->button(__('Valider <i class="fas fa-check"></i>'), [
         'type' => 'submit',
-        'class' => 'btn dhl-custom-btn',
+        'class' => 'btn btn-block dhl-custom-btn',
         'escape' => false
     ]) ?>
     <?= $this->Form->end() ?>
