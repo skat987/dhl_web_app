@@ -25,15 +25,30 @@
     <div class="invalid-feedback"></div>
 </div>
 <div class="form-group">
-    <?= $this->Form->control('password', [
+    <?= $this->Form->control('oldPassword', [
         'label' => [
-            'text' => 'Modifier mon mot de passe'
+            'text' => 'Mon mot de passe'
         ],
         'type' => 'password',
+        'placeholder' => __('Entrer votre mot de passe'),
         'class' => 'form-control',
         'minlength' => 8
     ]) ?>
     <div class="invalid-feedback"></div>
+    <?= $this->Form->control('newPassword', [
+        'label' => [
+            'text' => 'Nouveau mot de passe'
+        ],
+        'type' => 'password',
+        'disabled' => true,
+        'aria-describedby' => 'newPasswordHelpBlock',
+        'class' => 'form-control',
+        'minlength' => 8
+    ]) ?>
+    <div class="invalid-feedback"></div>    
+    <small id="newPasswordHelpBlock" class="form-text text-muted">
+        <?= __('Vous devez d\'abord saisir votre mot de passe.') ?>
+    </small>
 </div>
 <div class="col py-0 px-0">
     <p class="form-text text-muted py-0 px-0 my-0"><small>(<span id="helpRequired">*</span>) Champs obligatoires</small></p>

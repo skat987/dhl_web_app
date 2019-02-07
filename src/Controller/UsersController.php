@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Utility\Security;
 
 /**
  * Users Controller
@@ -33,10 +34,12 @@ class UsersController extends AppController
      */
     public function isAuthorized($user)
     {
-        if (in_array($user['user_type_id'], [1, 2])) {
-            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete', 'editMyAccess'];
+        if ($user['user_type_id'] == 1) {
+            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete', 'editMyAccess', 'checkPass', 'resetPassword'];
+        } else if ($user['user_type_id'] == 2) {
+            $actionsAllowed = ['index', 'view', 'add', 'edit', 'delete', 'editMyAccess', 'checkPass'];
         } else {
-            $actionsAllowed = ['editMyAccess'];
+            $actionsAllowed = ['editMyAccess', 'checkPass'];
         }
         $action = $this->request->getParam('action');
         return in_array($action, $actionsAllowed);
@@ -122,6 +125,9 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
+                if ($id == $this->Auth->user('id')) {
+                    $this->Auth->setUser($user);
+                }
                 $this->Flash->success(__('L\'utilisateur a bien été sauvegardé.'));
             } else {
                 $this->Flash->error(__('L\'utilisateur n\'a pas pu être sauvegardé. Veuillez ré-essayer.'));
@@ -211,6 +217,31 @@ class UsersController extends AppController
             }
             
             return $this->redirect($this->referer());
+        }
+        $this->set('user', $user);
+    }
+
+    public function checkPass()
+    {
+        if ($this->request->is(['post', 'ajax'])) {
+            $user = $this->Users->get($this->Auth->user('id'));
+            $resp = (security::hash($this->request->getData('pass'), 'sha3-512') === $user->password);
+            $this->set('resp', $resp);
+        }
+    }
+
+    public function resetPassword($id = null)
+    {
+        $user = $this->Users->get($id);
+        if ($this->request->is(['post', 'patch', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('L\'utilisateur {0} a bien été modifié.', $user->full_name));
+            } else {
+                $this->Flash->error(__('Une erreur est survenue. L\'utilisateur n\'a pas pu être modifié.'));
+            }
+
+            return $this->redirect(['action' => 'index']);
         }
         $this->set('user', $user);
     }

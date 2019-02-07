@@ -11,7 +11,7 @@ const _PATTERNS = {
     email: /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
     password: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/ 
 }
-const _KEY_EXCEPTION = ['ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp'];
+const _KEY_EXCEPTION = ['ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'End', 'Home', 'PageDown', 'PageUp', 'Enter', 'Tab'];
 var page;
 
 /**
@@ -105,7 +105,7 @@ function setUpAccessDropdown() {
             url: $(e.relatedTarget).data('link'),
             success: function(resp) {
                 $('#accessDropdown').children().last().html(resp);
-                setUpForm($('#accessDropdown').children().last().find('form'));
+                setUpAccessForm($('#accessDropdown').children().last().find('form'));
                 $('#cancelBtn').click(function() {
                     $('#accessDropdown').dropdown();
                 });
@@ -314,5 +314,51 @@ function setUpSearchDirectory(container, firmKey) {
                 container.html('<p>Error : Cannot reach the storage content.</p>');
             }
         });
+    });
+}
+
+function setUpAccessForm(form) {
+    var email = form.find('#email');
+    var oldPass = form.find('#oldpassword');
+    var newPass = form.find('#newpassword');
+    email.change(function() {
+        checkControls($(this)[0]);
+    });
+    oldPass.keyup(function(e) {
+        if (($.inArray(e.key, _KEY_EXCEPTION) < 0) && ($(this).val() != '')) {
+            $.post({
+                url: '/verification-pass',
+                data: {
+                    pass: $(this).val()
+                },
+                dataType: 'json',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
+                success: function(resp) {
+                    if (resp) {
+                        $(newPass).attr('disabled', false);
+                    }
+                },
+                error: function(resp) {
+                    console.log('error', resp);
+                }
+            });
+        }
+    });
+    newPass.change(function() {
+        checkControls($(this)[0]);
+    });
+    form.submit(function(e) {
+        if (!checkControls(email[0])) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        if (!$(newPass).attr('disabled')) {   
+            if (!checkControls(newPass[0])) {  
+                e.preventDefault();
+                e.stopPropagation();
+            } 
+        };
     });
 }

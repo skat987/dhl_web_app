@@ -134,6 +134,18 @@ class UsersTable extends Table
     }
 
     /**
+     * BeforeMarshal method
+     * 
+     * Performs actions before the data is converted to an entity.
+     */
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) 
+    {
+        if (isset($data['newPassword'])) {
+            $data['password'] = $data['newPassword'];
+        }
+    }
+
+    /**
      * BeforeSave method
      * 
      * Performs actions before the entity is backed up into the database.
