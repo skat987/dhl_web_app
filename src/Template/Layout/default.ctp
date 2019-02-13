@@ -43,7 +43,7 @@ $appBaseTitle = 'DHL : ';
     <header class="container-fluid clearfix">
         <div class="row py-2 px-2">
             <div class="col-auto mx-0 px-0 my-0 py-0">
-                <?= $this->Html->image('dhl_logo.gif', [
+                <?= $this->Html->image('dhl_logo.png', [
                     'alt' => 'Logo DHL',
                     'class' => 'mx-0 my-0'
                 ]) ?>
@@ -128,11 +128,11 @@ $appBaseTitle = 'DHL : ';
         <div class="row py-2 px-2">
             <div class="col-12 d-flex justify-content-center">
                 <div class="row align-items-center">
-                    <div class="col-auto my-0 mx-0">
+                    <div class="col-auto my-0 mx-0 py-0 px-0 d-flex flex-column">
                         <?= $this->Html->link(
                             $this->Html->image('iaora systems-logo-rvb 2018_300x100.jpg', [
                                 'alt' => 'Logo Iaora Systems',
-                                'style' => 'width: 100px',
+                                'style' => 'width: 115px',
                                 'class' => 'rounded'
                             ]), 
                             $this->Url->build('http://www.iaora-systems.pf/'),
@@ -142,6 +142,7 @@ $appBaseTitle = 'DHL : ';
                                 'title' => 'Visiter le site'
                             ]
                         ) ?>
+                        <small id="IosLegend">Powered by Iaora systems</small>
                     </div>
                     <?php if (!empty($this->request->getSession()->read('Auth.User')) && ($this->request->getSession()->read('Auth.User.user_type_id') != 3)): ?>
                     <address class="col col-md-auto my-0 mx-0">

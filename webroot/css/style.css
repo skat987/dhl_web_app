@@ -21,6 +21,11 @@ address {
     font-size: 0.65rem;
 }
 
+#IosLegend {
+    color: #fff;
+    font-size: 0.55rem;
+}
+
 #editMyAccessForm {
     width: 300px;
 }
