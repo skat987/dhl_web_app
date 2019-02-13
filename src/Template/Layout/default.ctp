@@ -12,7 +12,6 @@
  * @since         0.10.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-$appBaseTitle = 'DHL : ';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -20,7 +19,6 @@ $appBaseTitle = 'DHL : ';
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <?= $appBaseTitle ?>
         <?= $this->fetch('title') ?>
     </title>      
     <?= $this->Html->css('bootstrap.min') ?>
