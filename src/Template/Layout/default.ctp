@@ -43,8 +43,8 @@ $appBaseTitle = 'DHL : ';
     <header class="container-fluid clearfix">
         <div class="row py-2 px-2">
             <div class="col-auto mx-0 px-0 my-0 py-0">
-                <?= $this->Html->image('dhl_logo.png', [
-                    'alt' => 'Logo DHL',
+                <?= $this->Html->image('logo.png', [
+                    'alt' => 'Logo',
                     'class' => 'mx-0 my-0'
                 ]) ?>
             </div>
