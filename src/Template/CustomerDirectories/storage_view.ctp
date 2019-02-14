@@ -13,7 +13,7 @@
         <div class="card">
             <div class="card-header" id=<?= __('firm_{0}_dir_{1}_heading', [$firm->id, $customerDirectory->id]) ?>>
                 <h5 class="mb-0">
-                    <?= $this->Form->button(__('<i class="fas fa-folder"></i> {0}', $customerDirectory->name), [
+                    <?= $this->Form->button(__('<i class="fas fa-folder"></i> {0}', substr($customerDirectory->name, strrpos($customerDirectory->name, '_') + 1, strlen($customerDirectory->name))), [
                         'escape' => false,
                         'class' => 'btn btn-link custom-link',
                         'title' => __('Ouvrir'),

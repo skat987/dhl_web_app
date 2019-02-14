@@ -33,7 +33,7 @@ class CustomerDirectoriesController extends AppController
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add($firmId)
+    public function add($firmId = null, $type = null)
     {
         $customerDirectory = $this->CustomerDirectories->newEntity();
         $firm = $this->CustomerDirectories->Firms->get($firmId);
@@ -48,7 +48,7 @@ class CustomerDirectoriesController extends AppController
 
             return $this->redirect($this->referer());
         }
-        $this->set(compact('customerDirectory', 'firm'));
+        $this->set(compact('customerDirectory', 'firm', 'type'));
     }
 
     /**
@@ -92,6 +92,16 @@ class CustomerDirectoriesController extends AppController
         ];
         if ($customerDirectoryName == 'all') {  
             $query = $this->CustomerDirectories->findByFirmId($firmId);
+            $firm = $this->CustomerDirectories->Firms->get($firmId, [
+                'contain' => [
+                    'CustomerFiles' => [
+                        'sort' => ['CustomerFiles.name' => 'ASC']
+                    ]
+                ]
+            ]);
+        } else if (($customerDirectoryName == 'dgf') || ($customerDirectoryName == 'express')) {
+            $query = $this->CustomerDirectories->findByFirmId($firmId)
+                ->where(['name LIKE' => mb_strtoupper($customerDirectoryName) . '%']);
             $firm = $this->CustomerDirectories->Firms->get($firmId, [
                 'contain' => [
                     'CustomerFiles' => [
