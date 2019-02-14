@@ -105,9 +105,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     /**
      * CustomerDirectory entity routes
      */
-    $routes->connect('/admin/societe-:firm_id/dossier/creer', ['controller' => 'CustomerDirectories', 'action' => 'add'], ['_name' => 'addDirectory'])
+    $routes->connect('/admin/societe-:firm_id/dossier/creer-:type', ['controller' => 'CustomerDirectories', 'action' => 'add'], ['_name' => 'addDirectory'])
         ->setPatterns(['firm_id' => '\d+'])
-        ->setPass(['firm_id']);
+        ->setPass(['firm_id', 'type']);
     $routes->connect('/admin/dossier-:id/supprimer', ['controller' => 'CustomerDirectories', 'action' => 'delete'], ['_name' => 'deleteDirectory'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);

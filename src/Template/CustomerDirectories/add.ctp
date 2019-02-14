@@ -7,7 +7,7 @@
  */
 ?>
 <div class="modal-header">
-    <h4 class="modal-title font-weight-bold"><?= __('Nouveau dossier') ?></h4>
+    <h4 class="modal-title font-weight-bold"><?= __('Nouveau dossier {0}', mb_strtoupper($type)) ?></h4>
     <?= $this->Form->button('<span aria-hidden="true">&times;</span>', [
         'type' => 'button',
         'class' => 'close',
@@ -25,6 +25,9 @@
         <p>Société : <?= h($firm->name) ?></p>
         <?= $this->Form->hidden('firm_id', [
             'value' => $firm->id
+        ]) ?>
+        <?= $this->Form->hidden('type', [
+            'value' => $type
         ]) ?>
     </div>
     <div class="form-group">

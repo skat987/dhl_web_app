@@ -315,6 +315,34 @@ function setUpSearchDirectory(container, firmKey) {
             }
         });
     });
+    $('#dgf_' + firmKey).click(function() {
+        $.get({
+            url: $(this).data('link'),
+            success: function(resp) {
+                container.html(resp);
+                setUpSearchDirectory(container, firmKey);
+                setUpStoragePagination(container, firmKey, $('#storagePagination').find('.page-link'));
+            },
+            error: function(resp) {
+                console.log('Error filtering directories list', resp);
+                container.html('<p>Error : Cannot reach the storage content.</p>');
+            }
+        });
+    });
+    $('#express_' + firmKey).click(function() {
+        $.get({
+            url: $(this).data('link'),
+            success: function(resp) {
+                container.html(resp);
+                setUpSearchDirectory(container, firmKey);
+                setUpStoragePagination(container, firmKey, $('#storagePagination').find('.page-link'));
+            },
+            error: function(resp) {
+                console.log('Error filtering directories list', resp);
+                container.html('<p>Error : Cannot reach the storage content.</p>');
+            }
+        });
+    });
 }
 
 function setUpAccessForm(form) {
