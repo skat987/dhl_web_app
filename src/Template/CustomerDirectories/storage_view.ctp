@@ -33,6 +33,14 @@
                         'title' => __('Supprimer le dossier'),
                         'confirm' => __('Voulez-vous vraiment supprimer le dossier {0} ?', $customerDirectory->name)
                     ]) ?>
+                    <?= $this->Html->link(__('<i class="fas fa-edit"></i>'), '#', [
+                        'escape' => false,
+                        'class' => 'float-right mr-2 custom-icon-link',
+                        'title' => __('Renommer le dossier'),
+                        'data-toggle' => 'modal',
+                        'data-target' => '#modal',
+                        'data-link' => $this->Url->build(['_name' => 'editDirectory', $customerDirectory->id], true)
+                    ]) ?>
                     <?php endif; ?>
                 </h5>
             </div>

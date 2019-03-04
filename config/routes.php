@@ -108,6 +108,9 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/admin/societe-:firm_id/dossier/creer-:type', ['controller' => 'CustomerDirectories', 'action' => 'add'], ['_name' => 'addDirectory'])
         ->setPatterns(['firm_id' => '\d+'])
         ->setPass(['firm_id', 'type']);
+    $routes->connect('/admin/dossier-:id/edit', ['controller' => 'CustomerDirectories', 'action' => 'edit'], ['_name' => 'editDirectory'])
+        ->setPatterns(['id' => '\d+'])
+        ->setPass(['id']);
     $routes->connect('/admin/dossier-:id/supprimer', ['controller' => 'CustomerDirectories', 'action' => 'delete'], ['_name' => 'deleteDirectory'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);

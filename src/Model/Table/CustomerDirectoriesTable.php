@@ -127,6 +127,15 @@ class CustomerDirectoriesTable extends Table
             } else {
                 return false;
             }
+        } else {
+            if ($entity->isDirty('name')) {
+                $path = UPLOADS . $entity->firm_id . DS . $entity->name;
+                if (!file_exists($path)) {
+                    $newFolder = new Folder($path, true);
+                } else {
+                    return false;
+                }
+            }
         }
     }
 
@@ -137,9 +146,19 @@ class CustomerDirectoriesTable extends Table
      */
     public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        $firm = $this->Firms->get($entity->firm_id);
-        $firm->customer_directories_count = $this->find()->where(['firm_id' => $firm->id])->count();
-        $this->Firms->save($firm);
+        if ($entity->isDirty('firm_id')) {
+            $firm = $this->Firms->get($entity->firm_id);
+            $firm->customer_directories_count = $this->find()->where(['firm_id' => $firm->id])->count();
+            $this->Firms->save($firm);
+        }
+        if ($entity->isDirty('name')) {
+            $path = UPLOADS . $entity->firm_id . DS . $entity->getOriginal('name');
+            $oldFolder = new Folder($path);
+            if (count($oldFolder->read()[1]) > 0) {                
+                $oldFolder->copy($entity->folder->path);
+            }
+            $oldFolder->delete();
+        }
     }
 
     /**

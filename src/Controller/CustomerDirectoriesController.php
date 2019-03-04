@@ -22,7 +22,7 @@ class CustomerDirectoriesController extends AppController
      */
     public function isAuthorized($user)
     {
-        $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'delete', 'storageView', 'getDirectoriesOptions'] : ['storageView', 'getDirectoriesOptions'];
+        $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'edit', 'delete', 'storageView', 'getDirectoriesOptions'] : ['storageView', 'getDirectoriesOptions'];
         $action = $this->request->getParam('action');
         
         return in_array($action, $actionsAllowed);
@@ -49,6 +49,29 @@ class CustomerDirectoriesController extends AppController
             return $this->redirect($this->referer());
         }
         $this->set(compact('customerDirectory', 'firm', 'type'));
+    }
+
+    /**
+     * Edit method
+     * 
+     * @param string|null $id CustomerDirectory id.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $customerDirectory = $this->CustomerDirectories->get($id);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $customerDirectory = $this->CustomerDirectories->patchEntity($customerDirectory, $this->request->getData());
+            if ($this->CustomerDirectories->save($customerDirectory)) {
+                $this->Flash->success(__('Le dossier {0} a bien été sauvegardé.', $customerDirectory->name));
+            } else {
+                $this->Flash->error(__('Le dossier {0} n\'a pas pu être sauvegardé. Veuillez ré-essayer.', $customerDirectory->name));
+            }
+
+            return $this->redirect($this->referer());
+        }
+        $this->set('customerDirectory', $customerDirectory);
     }
 
     /**
