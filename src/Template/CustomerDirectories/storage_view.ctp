@@ -12,37 +12,44 @@
         <?php foreach ($customerDirectories as $customerDirectory): ?>
         <div class="card">
             <div class="card-header" id=<?= __('firm_{0}_dir_{1}_heading', [$firm->id, $customerDirectory->id]) ?>>
-                <h5 class="mb-0">
-                    <?= $this->Form->button(__('<i class="fas fa-folder"></i> {0}', substr($customerDirectory->name, strrpos($customerDirectory->name, '_') + 1, strlen($customerDirectory->name))), [
-                        'escape' => false,
-                        'class' => 'btn btn-link custom-link',
-                        'title' => __('Ouvrir'),
-                        'type' => 'button',
-                        'data-toggle' => 'collapse',
-                        'data-target' => __('#firm_{0}_dir_{1}_content', [$firm->id, $customerDirectory->id]),
-                        'aria-expanded' => 'false',
-                        'aria-controls' => __('firm_{0}_dir_{1}_contnent', [$firm->id, $customerDirectory->id])
-                    ]) ?>
-                    <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
-                    <?= $this->Form->postLink(__('<i class="fas fa-trash-alt"></i>'), [
-                        '_name' => 'deleteDirectory',
-                        $customerDirectory->id
-                    ], [
-                        'escape' => false,
-                        'class' => 'float-right custom-icon-link',
-                        'title' => __('Supprimer le dossier'),
-                        'confirm' => __('Voulez-vous vraiment supprimer le dossier {0} ?', $customerDirectory->name)
-                    ]) ?>
-                    <?= $this->Html->link(__('<i class="fas fa-edit"></i>'), '#', [
-                        'escape' => false,
-                        'class' => 'float-right mr-2 custom-icon-link',
-                        'title' => __('Renommer le dossier'),
-                        'data-toggle' => 'modal',
-                        'data-target' => '#modal',
-                        'data-link' => $this->Url->build(['_name' => 'editDirectory', $customerDirectory->id], true)
-                    ]) ?>
-                    <?php endif; ?>
-                </h5>
+                <div class="row">
+                    <h5 class="col-sm-4 mb-0">
+                        <?= $this->Form->button(__('<i class="fas fa-folder"></i> {0}', substr($customerDirectory->name, strrpos($customerDirectory->name, '_') + 1, strlen($customerDirectory->name))), [
+                            'escape' => false,
+                            'class' => 'btn btn-link custom-link',
+                            'title' => __('Ouvrir'),
+                            'type' => 'button',
+                            'data-toggle' => 'collapse',
+                            'data-target' => __('#firm_{0}_dir_{1}_content', [$firm->id, $customerDirectory->id]),
+                            'aria-expanded' => 'false',
+                            'aria-controls' => __('firm_{0}_dir_{1}_contnent', [$firm->id, $customerDirectory->id])
+                        ]) ?>
+                    </h5>
+                    <div class="col-sm-4 py-0 d-flex align-items-center">
+                        <p class="my-0"><?= h($customerDirectory->created->format('d/m/y')) ?></p>
+                    </div>
+                    <div class="col-sm-4 py-0 d-flex align-items-center justify-content-end">
+                        <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
+                            <?= $this->Html->link(__('<i class="fas fa-edit"></i>'), '#', [
+                                'escape' => false,
+                                'class' => 'float-right mr-2 custom-icon-link',
+                                'title' => __('Renommer le dossier'),
+                                'data-toggle' => 'modal',
+                                'data-target' => '#modal',
+                                'data-link' => $this->Url->build(['_name' => 'editDirectory', $customerDirectory->id], true)
+                            ]) ?>
+                            <?= $this->Form->postLink(__('<i class="fas fa-trash-alt"></i>'), [
+                                '_name' => 'deleteDirectory',
+                                $customerDirectory->id
+                            ], [
+                                'escape' => false,
+                                'class' => 'float-right custom-icon-link',
+                                'title' => __('Supprimer le dossier'),
+                                'confirm' => __('Voulez-vous vraiment supprimer le dossier {0} ?', $customerDirectory->name)
+                            ]) ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
             <div id=<?= __('firm_{0}_dir_{1}_content', [$firm->id, $customerDirectory->id]) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_dir_{1}_heading', [$firm->id, $customerDirectory->id]) ?> data-parent=<?= __('#storage_firm_{0}', $firm->id) ?>>
                 <div class="card-body">
