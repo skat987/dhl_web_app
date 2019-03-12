@@ -17,14 +17,14 @@
 <div class="modal-body">
     <div class="form-group">
         <?= $this->Form->hidden('type', [
-            'value' => substr($customerDirectory->name, 0, strrpos($customerDirectory->name, '_'))
+            'value' => substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_'))
         ]) ?>
         <?= $this->Form->control('name', [
             'label' => ['text' => 'Nom du dossier'],
             'type' => 'text',
             'class' => 'form-control',
             'placeholder' => 'Entrer le nom du dossier',
-            'value' => substr($customerDirectory->name, strrpos($customerDirectory->name, '_') + 1, strlen($customerDirectory->name))
+            'value' => substr($customerDirectory->name, strpos($customerDirectory->name, '_') + 1, strlen($customerDirectory->name))
         ]) ?>
         <div class="invalid-feedback"></div>
     </div>

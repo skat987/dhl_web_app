@@ -6,6 +6,7 @@ use App\Controller\AppController;
 // for additionnal methods
 use Cake\Filesystem\File;
 use Cake\Utility\Security;
+use Cake\Mailer\Email;
 
 /**
  * CustomerFiles Controller
@@ -57,6 +58,7 @@ class CustomerFilesController extends AppController
                 $message = $this->getUploadMessageError($fileError);        
                 $this->Flash->error(__($message, $fileError));
             } else {
+                $this->sendAddNotifications($firmId, $customerFiles);
                 $this->Flash->success(__('Tous les documents ont été sauvegardés.'));  
             }     
             return $this->redirect($this->referer());
@@ -214,5 +216,47 @@ class CustomerFilesController extends AppController
             }
         }
         return $message;
+    }
+
+    /**
+     * SendAddNotifications method
+     * 
+     * Send an e-mail to notify the addition of a new document
+     * 
+     * @param string|null $firmId Firm id
+     * @param Array $customerFiles added files
+     */
+    private function sendAddNotifications($firmId = null, $customerFiles = null)
+    {
+        $lineBreak = "\n\n";
+        $content = __('Chèr(e) client(e),' . $lineBreak);
+        $content .= __('{0} ', (count($customerFiles) > 1) ? 'Les documents' : 'Le document') ;
+        foreach ($customerFiles as $index => $customerFile) {
+            $content .= __('"{0}.{1}"', [$customerFile->name, $customerFile->extension]);
+            $content .= __('{0}', ($index < (count($customerFiles) - 1)) ? ', ' : ' ');
+        }
+        $content .= __('{0} ', (count($customerFiles) > 1) ? 'ont été' : 'a été');
+        $content .= __('{0} ', (count($customerFiles) > 1) ? 'déposés' : 'déposé');
+        $customerDirectory = $this->CustomerFiles->CustomerDirectories->get($customerFiles[0]->customer_directory_id);
+        $content .= __('dans le dossier {0} "{1}" ', [substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), substr($customerDirectory->name, strpos($customerDirectory->name, '_') + 1, strlen($customerDirectory->name))]);
+        $content .= __('de votre espace client sur exdoc-tahiti.com, le {0}.', $customerFiles[0]->created->format('d/m/y'));
+        $content .= __($lineBreak . 'Cordialement,');
+        $firm = $this->CustomerFiles->Firms->get($firmId, [
+            'contain' => [
+                'Users' => [
+                    'fields' => [
+                        'Users.firm_id',
+                        'Users.email'
+                    ]
+                ]
+            ]
+        ]);
+        $email = new Email('default');
+        $email->setFrom(['no-reply@exdoc-tahiti.com' => 'exdoc-tahiti.com'])
+            ->setSubject('Avis de dépôt de document(s)');
+        foreach ($firm->users as $user) {
+            $email->addTo($user->email);
+        }
+        $email->send($content);
     }
 }
