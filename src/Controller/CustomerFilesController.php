@@ -228,19 +228,18 @@ class CustomerFilesController extends AppController
      */
     private function sendAddNotifications($firmId = null, $customerFiles = null)
     {
+        $lineBreak = "\n";
+        $signature = 'Cordialement,' . $lineBreak . 'DHL Global Forwarding Polynésie' . $lineBreak . 'DHL Express' . $lineBreak . 'Immeuble Tavararo' . $lineBreak . 'BP 62255' . $lineBreak . '98702 FAA\'A Centre' . $lineBreak . 'Tahiti/Polynésie française (French Polynesia)';
         $lineBreak = "\n\n";
-        $content = __('Chèr(e) client(e),' . $lineBreak);
-        $content .= __('{0} ', (count($customerFiles) > 1) ? 'Les documents' : 'Le document') ;
+        $message = 'Chèr(e) client(e),' . $lineBreak;
+        $message .= (count($customerFiles) > 1) ? 'Les documents {0} ({1}) ont été déposés dans votre espace client WEB d\'échanges de documents, le {2}' : 'Le document {0} ({1}) a été déposé dans votre espace client WEB d\'échanges de documents, le {2}';
+        $uploads = '';
         foreach ($customerFiles as $index => $customerFile) {
-            $content .= __('"{0}.{1}"', [$customerFile->name, $customerFile->extension]);
-            $content .= __('{0}', ($index < (count($customerFiles) - 1)) ? ', ' : ' ');
+            $uploads .= __('"{0}.{1}"', [$customerFile->name, $customerFile->extension]);
+            $uploads .= __('{0}', ($index < (count($customerFiles) - 1)) ? ', ' : '');
         }
-        $content .= __('{0} ', (count($customerFiles) > 1) ? 'ont été' : 'a été');
-        $content .= __('{0} ', (count($customerFiles) > 1) ? 'déposés' : 'déposé');
         $customerDirectory = $this->CustomerFiles->CustomerDirectories->get($customerFiles[0]->customer_directory_id);
-        $content .= __('dans le dossier {0} "{1}" ', [substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), substr($customerDirectory->name, strpos($customerDirectory->name, '_') + 1, strlen($customerDirectory->name))]);
-        $content .= __('de votre espace client sur exdoc-tahiti.com, le {0}.', $customerFiles[0]->created->format('d/m/y'));
-        $content .= __($lineBreak . 'Cordialement,');
+        $content = __($message, [$uploads, substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), $customerFiles[0]->created->format('d/m/y')]);
         $firm = $this->CustomerFiles->Firms->get($firmId, [
             'contain' => [
                 'Users' => [
@@ -257,6 +256,6 @@ class CustomerFilesController extends AppController
         foreach ($firm->users as $user) {
             $email->addTo($user->email);
         }
-        $email->send($content);
+        $email->send($content . $lineBreak . $signature);
     }
 }
