@@ -252,7 +252,7 @@ class CustomerFilesController extends AppController
         ]);
         $email = new Email('default');
         $email->setFrom(['no-reply@exdoc-tahiti.com' => 'exdoc-tahiti.com'])
-            ->setSubject('Avis de dépôt de document(s)');
+            ->setSubject('TRANSFERT DOCUMENTS');
         foreach ($firm->users as $user) {
             $email->addTo($user->email);
         }
