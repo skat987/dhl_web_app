@@ -24,6 +24,13 @@ class CustomerDirectoriesController extends AppController
     {
         $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'edit', 'delete', 'storageView', 'getDirectoriesOptions'] : ['storageView', 'getDirectoriesOptions'];
         $action = $this->request->getParam('action');
+
+        if ($user['user_type_id'] == 3) {
+            $firmId = $this->request->getParam('firm_id');
+            if ($user['user_type_id'] != $firmId) {
+                return false;
+            }
+        }
         
         return in_array($action, $actionsAllowed);
     }
