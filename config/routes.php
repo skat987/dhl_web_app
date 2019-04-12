@@ -98,9 +98,12 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/admin/document-:id/supprimer', ['controller' => 'CustomerFiles', 'action' => 'delete'], ['_name' => 'deleteCustomerFile'])
         ->setPatterns(['id' => '\d+'])
         ->setPass(['id']);    
-    $routes->connect('/document-:id/telecharger', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])
-        ->setPatterns(['id' => '\d+'])
-        ->setPass(['id']);
+    $routes->connect('/societe-:firm_id/document-:id/telecharger', ['controller' => 'CustomerFiles', 'action' => 'downloadCustomerFile'], ['_name' => 'downloadCustomerFile'])
+        ->setPatterns([
+            'firm_id' => '\d+',
+            'id' => '\d+'
+            ])
+        ->setPass(['firm_id', 'id']);
 
     /**
      * CustomerDirectory entity routes

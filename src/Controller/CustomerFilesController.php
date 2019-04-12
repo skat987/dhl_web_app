@@ -29,7 +29,12 @@ class CustomerFilesController extends AppController
     {
         $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'delete', 'downloadCustomerFile'] : ['downloadCustomerFile'];
         $action = $this->request->getParam('action');
-        
+        if ($user['user_type_id'] == 3) {
+            $firmId = $this->request->getParam('firm_id');
+            if ($user['firm_id'] != $firmId) {
+                return false;
+            }
+        }
         return in_array($action, $actionsAllowed);
     }
 
@@ -96,21 +101,30 @@ class CustomerFilesController extends AppController
      * @param string|null $id Customer File id
      * @return \Cake\Http\Response|null Redirects to the current page.
      */
-    public function downloadCustomerFile($id = null)
+    public function downloadCustomerFile($firmId = null, $id = null)
     {
-        $customerFile = $this->CustomerFiles->get($id);
-        $tempPath = TMP_UPLOADS . $customerFile->file->name;
-        if (!file_exists($tempPath)) {
-            $tempFile = new File($tempPath, true);
-            $isDecrypt = $this->decryptCustomerFile($customerFile->file->path, $customerFile->file_key, $tempPath);
-            if ($isDecrypt) {
-                $this->setHeaders($tempFile);
+        $customerFile = $this->CustomerFiles->find()
+            ->where([
+                'firm_id' => $firmId,
+                'id' => $id
+            ])
+            ->first();
+        if (!is_null($customerFile)) {
+            $tempPath = TMP_UPLOADS . $customerFile->file->name;
+            if (!file_exists($tempPath)) {
+                $tempFile = new File($tempPath, true);
+                $isDecrypt = $this->decryptCustomerFile($customerFile->file->path, $customerFile->file_key, $tempPath);
+                if ($isDecrypt) {
+                    $this->setHeaders($tempFile);
+                } else {
+                    $tempFile->delete();
+                    $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
+                }
             } else {
-                $tempFile->delete();
                 $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
             }
         } else {
-            $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
+            $this->Flash->error(__('Le document est introuvable. Veuillez contacter votre administrateur.'));
         }
 
         return $this->redirect($this->referer());

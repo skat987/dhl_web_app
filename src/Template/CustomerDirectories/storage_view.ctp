@@ -59,6 +59,7 @@
                         <li class="list-group-item">
                             <?= $this->Html->link(__('<i class="fas fa-file"></i> {0}', h($customerFile->name)), [
                                 '_name' => 'downloadCustomerFile',
+                                $firm->id,
                                 $customerFile->id
                             ], [
                                 'escape' => false,
@@ -95,6 +96,7 @@
             <li class="list-group-item">
                 <?= $this->Html->link(__('<i class="fas fa-file"></i> {0}', h($customerFile->name)), [
                     '_name' => 'downloadCustomerFile',
+                    $firm->id,
                     $customerFile->id
                 ], [
                     'escape' => false,
