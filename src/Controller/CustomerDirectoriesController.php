@@ -27,7 +27,7 @@ class CustomerDirectoriesController extends AppController
 
         if ($user['user_type_id'] == 3) {
             $firmId = $this->request->getParam('firm_id');
-            if ($user['user_type_id'] != $firmId) {
+            if ($user['firm_id'] != $firmId) {
                 return false;
             }
         }
