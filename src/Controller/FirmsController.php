@@ -24,6 +24,13 @@ class FirmsController extends AppController
     {
         $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['index', 'view', 'add', 'edit', 'delete'] : ['view'];
         $action = $this->request->getParam('action');
+
+        if ($user['user_type_id'] == 3) {
+            $firmId = $this->request->getParam('id');
+            if ($user['firm_id'] != $firmId) {
+                return false;
+            }
+        }
         
         return in_array($action, $actionsAllowed);
     }
@@ -56,9 +63,9 @@ class FirmsController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
-    {
+    {        
         $firm = $this->Firms->get($id);
-
+    
         $this->set('firm', $firm);
     }
 
