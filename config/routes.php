@@ -139,5 +139,5 @@ Router::scope('/', function (RouteBuilder $routes) {
      * You can remove these routes once you've connected the
      * routes you want in your application.
      */
-    //$routes->fallbacks(DashedRoute::class);  A décommenter pour utiliser les routes par défauts
+    $routes->fallbacks(DashedRoute::class);  //A décommenter pour utiliser les routes par défauts
 });
