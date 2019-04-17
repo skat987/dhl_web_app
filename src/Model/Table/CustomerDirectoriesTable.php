@@ -11,6 +11,7 @@ use Cake\Event\Event;
 use Cake\Datasource\EntityInterface;
 use ArrayObject;
 use Cake\Filesystem\Folder;
+use Cake\Filesystem\File;
 
 /**
  * CustomerDirectories Model
@@ -123,6 +124,8 @@ class CustomerDirectoriesTable extends Table
             if (!file_exists($path)) {
                 if (!$newFolder->create($path)) {
                     return false;
+                } else {
+                    $emptyFile = new File($path . DS . 'Vide', true);
                 }
             } else {
                 return false;
@@ -151,7 +154,7 @@ class CustomerDirectoriesTable extends Table
             $firm->customer_directories_count = $this->find()->where(['firm_id' => $firm->id])->count();
             $this->Firms->save($firm);
         }
-        if ($entity->isDirty('name')) {
+        if (!$entity->isNew() && $entity->isDirty('name')) {
             $path = UPLOADS . $entity->firm_id . DS . $entity->getOriginal('name');
             $oldFolder = new Folder($path);
             if (count($oldFolder->read()[1]) > 0) {                
@@ -169,11 +172,15 @@ class CustomerDirectoriesTable extends Table
     public function beforeDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         if (count($entity->folder->read()[1]) > 0) {
-            return false;
-        } else {
-            if (!$entity->folder->delete()) {
+            if ($entity->folder->read()[1][0] == 'Vide') {
+                $emptyFile = new Folder($entity->folder->path . DS . 'Vide');
+                $emptyFile->delete();
+            } else {
                 return false;
             }
+        } 
+        if (!$entity->folder->delete()) {
+            return false;
         }
     }
 

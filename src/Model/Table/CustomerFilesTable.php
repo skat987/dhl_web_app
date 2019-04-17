@@ -152,6 +152,13 @@ class CustomerFilesTable extends Table
         $destinationBasePath = UPLOADS . $entity->firm_id . DS;
         $baseName = pathinfo($entity->file['name'], PATHINFO_BASENAME);
         $dir = $entity->has('customer_directory_id') ? $this->CustomerDirectories->get($entity->customer_directory_id) : null;
+        if (isset($dir)) {
+            $empty = $dir->folder->read()[1][0];
+            if ($empty == 'Vide') {
+                $emptyFile = new File($dir->folder->path . DS . $empty);
+                $emptyFile->delete();
+            }
+        }
         $destinationPath = (isset($dir)) ? $destinationBasePath . $dir->name . DS . $baseName : $destinationBasePath . $baseName;
         $tempPath = TMP_UPLOADS . $baseName;
         if (!file_exists($tempPath)) {
