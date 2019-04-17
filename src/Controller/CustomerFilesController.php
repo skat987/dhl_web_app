@@ -246,14 +246,19 @@ class CustomerFilesController extends AppController
         $signature = 'Cordialement,' . $lineBreak . 'DHL Global Forwarding Polynésie' . $lineBreak . 'DHL Express' . $lineBreak . 'Immeuble Tavararo' . $lineBreak . 'BP 62255' . $lineBreak . '98702 FAA\'A Centre' . $lineBreak . 'Tahiti/Polynésie française (French Polynesia)';
         $lineBreak = "\n\n";
         $message = 'Chèr(e) client(e),' . $lineBreak;
-        $message .= (count($customerFiles) > 1) ? 'Les documents {0} ({1}) ont été déposés dans votre espace client WEB d\'échanges de documents, le {2}' : 'Le document {0} ({1}) a été déposé dans votre espace client WEB d\'échanges de documents, le {2}';
         $uploads = '';
         foreach ($customerFiles as $index => $customerFile) {
             $uploads .= __('"{0}.{1}"', [$customerFile->name, $customerFile->extension]);
             $uploads .= __('{0}', ($index < (count($customerFiles) - 1)) ? ', ' : '');
         }
-        $customerDirectory = $this->CustomerFiles->CustomerDirectories->get($customerFiles[0]->customer_directory_id);
-        $content = __($message, [$uploads, substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), $customerFiles[0]->created->format('d/m/y')]);
+        if (isset($customerFiles[0]->customer_directory_id)) {
+            $customerDirectory = $this->CustomerFiles->CustomerDirectories->get($customerFiles[0]->customer_directory_id);
+            $message .= (count($customerFiles) > 1) ? 'Les documents {0} ({1}) ont été déposés dans votre espace client WEB d\'échanges de documents, le {2}.' : 'Le document {0} ({1}) a été déposé dans votre espace client WEB d\'échanges de documents, le {2}.';
+            $content = __($message, [$uploads, substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), $customerFiles[0]->created->format('d/m/y')]);
+        } else {
+            $message .= (count($customerFiles) > 1) ? 'Les documents {0} ont été déposés dans votre espace client WEB d\'échanges de documents, le {1}.' : 'Le document {0} a été déposé dans votre espace client WEB d\'échanges de documents, le {1}.';
+            $content = __($message, [$uploads, $customerFiles[0]->created->format('d/m/y')]);
+        }
         $firm = $this->CustomerFiles->Firms->get($firmId, [
             'contain' => [
                 'Users' => [
