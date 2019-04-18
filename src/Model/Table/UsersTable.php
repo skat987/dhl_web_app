@@ -172,7 +172,7 @@ class UsersTable extends Table
      */
     public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        if($entity->isDirty('firm_id')) {
+        if ($entity->isDirty('firm_id')) {
             $firm = $this->Firms->get($entity->firm_id);
             $firm->workers_count = $this->find()->where(['firm_id' => $firm->id])->count();
             $this->Firms->save($firm);
