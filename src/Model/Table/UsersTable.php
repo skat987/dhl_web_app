@@ -114,6 +114,10 @@ class UsersTable extends Table
             ->requirePresence('firm_id', 'create')
             ->notEmpty('firm_id');
 
+        $validator
+            ->boolean('has_email_notification')
+            ->allowEmpty('has_email_notification');
+
         return $validator;
     }
 

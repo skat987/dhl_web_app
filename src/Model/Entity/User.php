@@ -43,6 +43,7 @@ class User extends Entity
         'password' => true,
         'user_type_id' => true,
         'firm_id' => true,
+        'has_email_notification' => true,
         'created' => true,
         'modified' => true,
         'user_type' => true,

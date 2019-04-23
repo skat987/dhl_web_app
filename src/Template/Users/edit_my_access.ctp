@@ -50,6 +50,20 @@
         <?= __('Vous devez d\'abord saisir votre mot de passe.') ?>
     </small>
 </div>
+<div class="form-group">
+    <small>
+        <div class="form-check">
+            <?= $this->Form->control('has_email_notification', [
+                'label' => [
+                    'text' => 'Je souhaite être prévenu(e) à l\'ajout d\'un nouveau document.',
+                    'class' => 'form-check-label'
+                ],
+                'type' => 'checkbox',
+                'class' => 'form-check-input'
+            ]) ?>
+        </div>
+    </small>
+</div>
 <div class="col py-0 px-0">
     <p class="form-text text-muted py-0 px-0 my-0"><small>(<span id="helpRequired">*</span>) Champs obligatoires</small></p>
 </div>
