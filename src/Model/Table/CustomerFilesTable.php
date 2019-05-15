@@ -162,20 +162,25 @@ class CustomerFilesTable extends Table
             }
         }
         $destinationPath = (isset($dir)) ? $destinationBasePath . $dir->name . DS . $baseName : $destinationBasePath . $baseName;
+        if (file_exists($destinationPath)) {
+            return false;
+        }
         $tempPath = TMP_UPLOADS . $baseName;
-        if (!file_exists($tempPath)) {
-            if (move_uploaded_file($entity->file['tmp_name'], $tempPath)) {
-                $newFile = new File($destinationPath, true);
-                $isEncrypted = $this->encryptCustomerFile($tempPath, $entity->file_key, $destinationPath);
-                if (!$isEncrypted) {
-                    $newFile->delete();
-                    
-                    return false;
-                }
-            } else {
-                return false;
-            }
+        if (file_exists($tempPath)) {
+            return false;
+        }
+        if (!move_uploaded_file($entity->file['tmp_name'], $tempPath)) {
+            return false;
+        }
+        $newFile = new File($destinationPath);
+        if ($newFile->exists()) {
+            return false;
         } else {
+            $newFile->create();
+        }
+        $isEncrypted = $this->encryptCustomerFile($tempPath, $entity->file_key, $destinationPath);
+        if (!$isEncrypted) {
+            $newFile->delete();
             return false;
         }
     }

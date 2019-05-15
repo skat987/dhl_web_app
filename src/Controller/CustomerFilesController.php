@@ -110,18 +110,22 @@ class CustomerFilesController extends AppController
             ])
             ->first();
         if (!is_null($customerFile)) {
-            $tempPath = TMP_UPLOADS . $customerFile->file->name;
-            if (!file_exists($tempPath)) {
-                $tempFile = new File($tempPath, true);
-                $isDecrypt = $this->decryptCustomerFile($customerFile->file->path, $customerFile->file_key, $tempPath);
-                if ($isDecrypt) {
-                    $this->setHeaders($tempFile);
+            if (!file_exists($customerFile->file->path)) {
+                $this->Flash->error(__('Le document {0} est introuvable. Veuillez signaler ce message.', $customerFile->name));
+            } else {
+                $tempPath = TMP_UPLOADS . $customerFile->file->name;
+                if (!file_exists($tempPath)) {
+                    $tempFile = new File($tempPath, true);
+                    $isDecrypt = $this->decryptCustomerFile($customerFile->file->path, $customerFile->file_key, $tempPath);
+                    if ($isDecrypt) {
+                        $this->setHeaders($tempFile);
+                    } else {
+                        $tempFile->delete();
+                        $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
+                    }
                 } else {
-                    $tempFile->delete();
                     $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
                 }
-            } else {
-                $this->Flash->error(__('Une erreur s\'est produite lors du téléchargement.'));
             }
         } else {
             $this->Flash->error(__('Le document est introuvable. Veuillez contacter votre administrateur.'));
