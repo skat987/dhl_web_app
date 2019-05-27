@@ -23,6 +23,7 @@
             'label' => ['text' => 'Nom du dossier'],
             'type' => 'text',
             'class' => 'form-control',
+            'maxlength' => 60,
             'placeholder' => 'Entrer le nom du dossier',
             'value' => substr($customerDirectory->name, strpos($customerDirectory->name, '_') + 1, strlen($customerDirectory->name))
         ]) ?>

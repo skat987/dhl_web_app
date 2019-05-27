@@ -37,6 +37,7 @@
             ],
             'type' => 'text',
             'class' => 'form-control',
+            'maxlength' => 60,
             'placeholder' => 'Entrer le nom du dossier',
             'required' => true
         ]) ?>

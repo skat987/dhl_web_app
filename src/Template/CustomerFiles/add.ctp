@@ -52,7 +52,8 @@
                     'class' => 'custom-file-label'
                 ],
                 'type' => 'file',
-                'class' => 'form-control custom-file-input'
+                'class' => 'form-control custom-file-input',
+                'maxlength' => 100
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>
@@ -65,7 +66,8 @@
                     'class' => 'custom-file-label'
                 ],
                 'type' => 'file',
-                'class' => 'form-control custom-file-input'
+                'class' => 'form-control custom-file-input',
+                'maxlength' => 100
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>
@@ -78,7 +80,8 @@
                     'class' => 'custom-file-label'
                 ],
                 'type' => 'file',
-                'class' => 'form-control custom-file-input'
+                'class' => 'form-control custom-file-input',
+                'maxlength' => 100
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>
@@ -91,7 +94,8 @@
                     'class' => 'custom-file-label'
                 ],
                 'type' => 'file',
-                'class' => 'form-control custom-file-input'
+                'class' => 'form-control custom-file-input',
+                'maxlength' => 100
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>
@@ -104,7 +108,8 @@
                     'class' => 'custom-file-label'
                 ],
                 'type' => 'file',
-                'class' => 'form-control custom-file-input'
+                'class' => 'form-control custom-file-input',
+                'maxlength' => 100
             ]) ?>
             <div class="invalid-feedback"></div>
         </div>

@@ -72,7 +72,7 @@ class CustomerDirectoriesTable extends Table
 
         $validator
             ->scalar('name')
-            ->maxLength('name', 45)
+            ->maxLength('name', 68)
             ->requirePresence('name', 'create')
             ->notEmpty('name');
 
