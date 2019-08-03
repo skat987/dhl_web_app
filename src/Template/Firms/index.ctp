@@ -53,7 +53,7 @@ echo $this->element('modal');
                                 <?= ($firm->customer_directories_count > 1) ? __('dossiers') : __('dossier') ?>
                             </p>
                             <p class="mb-0">
-                                <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
+                                <span class="badge badge-outline-dark badge-pill" id=<?= __('filesCount-firm-{0}', $firm->id) ?>><?= $this->Number->format($firm->customer_files_count) ?></span>
                                 <?= ($firm->customer_files_count > 1) ? __('documents') : __('document') ?>
                             </p>
                         </div>

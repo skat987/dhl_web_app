@@ -227,6 +227,7 @@ function setUpStorage(container, key) {
         url: container.data('link'),
         success: function(resp) {
             container.html(resp);
+            SetUpCustomerFilesActions();
             setUpSearchDirectory(container, key);
             setUpStoragePagination(container, key, $('#storagePagination').find('.page-link'));
         },
@@ -388,5 +389,39 @@ function setUpAccessForm(form) {
                 e.stopPropagation();
             } 
         };
+    });
+}
+
+function SetUpCustomerFilesActions() {
+    $('.delete-customer-file-link').click(function(e) {
+        console.log('trigger event', e);
+        $(this).parent().submit(function(e) {
+            console.log('target event', e);
+            e.preventDefault();
+            e.stopPropagation();
+            var form = $(this);
+            $.post({
+                url: $(form).prop('action'),
+                dataType: 'json',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-Token', $(form).find('[name="_csrfToken"]').val());
+                },
+                success: function(resp) {
+                    if (resp.filesCount) {
+                        $(form).parent().css('display', 'none');
+                        $('#filesCount-firm-' + resp.firmId).text(resp.filesCount);
+                        $.alert(resp.text, {
+                            autoClose: true,
+                            closeTime: 3000,
+                            type: 'success',
+                            position: ['bottom-right']
+                        });
+                    }
+                },
+                error: function(resp) {
+                    console.log('Erreur', resp);
+                }
+            });
+        });
     });
 }

@@ -32,7 +32,7 @@ echo $this->element('modal');
                 </div>
                 <div class="col-md-4">
                     <p class="lead text-center">
-                        <span class="badge badge-outline-dark badge-pill"><?= $this->Number->format($firm->customer_files_count) ?></span>
+                        <span class="badge badge-outline-dark badge-pill" id=<?= __('filesCount-firm-{0}', $firm->id) ?>><?= $this->Number->format($firm->customer_files_count) ?></span>
                         <?= ($firm->customer_files_count > 1) ? 'documents' : 'document' ?>
                     </p>
                 </div>

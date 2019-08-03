@@ -67,12 +67,12 @@
                                 'title' => __('Télécharger')
                             ]) ?>
                             <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
-                            <?= $this->Form->postLink(__('<i class="fas fa-trash-alt"></i>'), [
+                            <?= $this->Form->postButton(__('<i class="fas fa-trash-alt"></i>'), [
                                 '_name' => 'deleteCustomerFile', 
                                 $customerFile->id
                             ], [
                                 'escape' => false,
-                                'class' => 'float-right custom-icon-link',
+                                'class' => 'float-right custom-icon-link delete-customer-file-link',
                                 'title' => __('Supprimer le document'),
                                 'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                             ]) ?>
@@ -109,7 +109,7 @@
                     $customerFile->id
                 ], [
                     'escape' => false,
-                    'class' => 'float-right custom-icon-link',
+                    'class' => 'float-right custom-icon-link delete-customer-file-link',
                     'title' => __('Supprimer le document'),
                     'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                 ]) ?>

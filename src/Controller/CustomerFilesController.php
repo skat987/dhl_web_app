@@ -82,15 +82,24 @@ class CustomerFilesController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $customerFile = $this->CustomerFiles->get($id);
-        if ($this->CustomerFiles->delete($customerFile)) {
-            $this->Flash->success(__('Le document a été supprimé.'));
-        } else {
-            $this->Flash->error(__('Le document n\'a pas pu être supprimé. Veuillez ré-essayer.'));
+        $resp = [
+            'text' => null,
+            'filesCount' => null,
+            'firmId' => null
+        ];
+        if ($this->request->is(['post'])) {
+            $customerFile = $this->CustomerFiles->get($id);
+            if ($this->CustomerFiles->delete($customerFile)) {
+                $resp = [
+                    'text' => __('Le document {0}.{1} a été supprimé.', [$customerFile->name, $customerFile->extension]),
+                    'filesCount' => $this->CustomerFiles->Firms->get($customerFile->firm_id)->customer_files_count,
+                    'firmId' => $customerFile->firm_id
+                ];
+            } else {
+                $resp['text'] = __('Le document {0} n\'a pas pu être supprimé.', $customerFile->name);
+            }
+            $this->set(compact('resp'));
         }
-
-        return $this->redirect($this->referer());
     }
 
     /**
