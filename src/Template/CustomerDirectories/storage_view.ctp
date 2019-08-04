@@ -56,7 +56,7 @@
                     <?php if ($customerDirectory->has('customer_files')): ?>
                     <ul class="list-group">
                         <?php foreach ($customerDirectory->customer_files as $customerFile): ?>
-                        <li class="list-group-item">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
                             <?= $this->Html->link(__('<i class="fas fa-file"></i> {0}', h($customerFile->name)), [
                                 '_name' => 'downloadCustomerFile',
                                 $firm->id,
@@ -72,8 +72,9 @@
                                 $customerFile->id
                             ], [
                                 'escape' => false,
-                                'class' => 'float-right custom-icon-link delete-customer-file-link',
+                                'class' => 'float-right custom-icon-link delete-customer-file-link btn btn-link',
                                 'title' => __('Supprimer le document'),
+                                'data-filename' => __('{0}.{1}', [$customerFile->name, $customerFile->extension]),
                                 'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                             ]) ?>
                             <?php endif; ?>
@@ -93,7 +94,7 @@
         <ul class="list-group">
             <?php foreach ($firm->customer_files as $customerFile): ?>
             <?php  if (!$customerFile->has('customer_directory_id')): ?>
-            <li class="list-group-item">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
                 <?= $this->Html->link(__('<i class="fas fa-file"></i> {0}', h($customerFile->name)), [
                     '_name' => 'downloadCustomerFile',
                     $firm->id,
@@ -104,13 +105,14 @@
                     'title' => __('Télécharger')
                 ]) ?>
                 <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
-                <?= $this->Form->postLink(__('<i class="fas fa-trash-alt"></i>'), [
+                <?= $this->Form->postButton(__('<i class="fas fa-trash-alt"></i>'), [
                     '_name' => 'deleteCustomerFile', 
                     $customerFile->id
                 ], [
                     'escape' => false,
-                    'class' => 'float-right custom-icon-link delete-customer-file-link',
+                    'class' => 'float-right custom-icon-link delete-customer-file-link btn btn-link',
                     'title' => __('Supprimer le document'),
+                    'data-filename' => __('{0}.{1}', [$customerFile->name, $customerFile->extension]),
                     'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
                 ]) ?>
                 <?php endif; ?>

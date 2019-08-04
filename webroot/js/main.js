@@ -394,34 +394,50 @@ function setUpAccessForm(form) {
 
 function SetUpCustomerFilesActions() {
     $('.delete-customer-file-link').click(function(e) {
-        console.log('trigger event', e);
-        $(this).parent().submit(function(e) {
-            console.log('target event', e);
+        if (!e.originalEvent.returnValue) {
             e.preventDefault();
             e.stopPropagation();
-            var form = $(this);
-            $.post({
-                url: $(form).prop('action'),
-                dataType: 'json',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-CSRF-Token', $(form).find('[name="_csrfToken"]').val());
-                },
-                success: function(resp) {
-                    if (resp.filesCount) {
-                        $(form).parent().css('display', 'none');
-                        $('#filesCount-firm-' + resp.firmId).text(resp.filesCount);
-                        $.alert(resp.text, {
+        } else {
+            $(this).parent().submit(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var form = $(this);
+                $.post({
+                    url: $(form).prop('action'),
+                    dataType: 'json',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-CSRF-Token', $(form).find('[name="_csrfToken"]').val());
+                    },
+                    success: function(resp) {
+                        if (resp.filesCount) {
+                            $(form).parent().removeClass('d-flex').css('display', 'none');
+                            $('#filesCount-firm-' + resp.firmId).text(resp.filesCount);
+                            $.alert(resp.text, {
+                                autoClose: true,
+                                closeTime: 3000,
+                                type: 'success',
+                                position: ['bottom-right']
+                            });
+                        } else {
+                            $.alert(resp.text, {
+                                autoClose: true,
+                                closeTime: 3000,
+                                type: 'warning',
+                                position:['bottom-right']
+                            });
+                        }
+                    },
+                    error: function(resp) {
+                        console.log('Erreur', resp);
+                        $.alert('Le document ' + $(form).children().last().data('filename') + ' n\'a pas pu être supprimé.', {
                             autoClose: true,
                             closeTime: 3000,
-                            type: 'success',
+                            type: 'warning',
                             position: ['bottom-right']
                         });
                     }
-                },
-                error: function(resp) {
-                    console.log('Erreur', resp);
-                }
+                });
             });
-        });
+        }
     });
 }
