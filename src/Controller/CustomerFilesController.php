@@ -83,6 +83,7 @@ class CustomerFilesController extends AppController
     public function delete($id = null)
     {
         $resp = [
+            'result' => null,
             'text' => null,
             'filesCount' => null,
             'firmId' => null
@@ -91,12 +92,17 @@ class CustomerFilesController extends AppController
             $customerFile = $this->CustomerFiles->get($id);
             if ($this->CustomerFiles->delete($customerFile)) {
                 $resp = [
+                    'result' => 'success',
                     'text' => __('Le document {0}.{1} a été supprimé.', [$customerFile->name, $customerFile->extension]),
                     'filesCount' => $this->CustomerFiles->Firms->get($customerFile->firm_id)->customer_files_count,
                     'firmId' => $customerFile->firm_id
                 ];
             } else {
-                $resp['text'] = __('Le document {0} n\'a pas pu être supprimé.', $customerFile->name);
+                
+                $resp = [
+                    'result' => 'error',
+                    'text' => __('Le document {0} n\'a pas pu être supprimé.', $customerFile->name)
+                ];
             }
             $this->set(compact('resp'));
         }

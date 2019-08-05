@@ -409,7 +409,7 @@ function SetUpCustomerFilesActions() {
                         xhr.setRequestHeader('X-CSRF-Token', $(form).find('[name="_csrfToken"]').val());
                     },
                     success: function(resp) {
-                        if (resp.filesCount) {
+                        if (resp.result == 'success') {
                             $(form).parent().removeClass('d-flex').css('display', 'none');
                             $('#filesCount-firm-' + resp.firmId).text(resp.filesCount);
                             $.alert(resp.text, {
