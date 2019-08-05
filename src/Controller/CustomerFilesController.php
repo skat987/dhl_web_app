@@ -97,8 +97,7 @@ class CustomerFilesController extends AppController
                     'filesCount' => $this->CustomerFiles->Firms->get($customerFile->firm_id)->customer_files_count,
                     'firmId' => $customerFile->firm_id
                 ];
-            } else {
-                
+            } else {                
                 $resp = [
                     'result' => 'error',
                     'text' => __('Le document {0} n\'a pas pu être supprimé.', $customerFile->name)
