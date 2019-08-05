@@ -145,7 +145,7 @@ class CustomerDirectoriesController extends AppController
             $firm = $this->CustomerDirectories->Firms->get($firmId, [
                 'contain' => []
             ]);
-        }  
+        } 
         $customerDirectories = $this->paginate($query);
         $this->set(compact('customerDirectories', 'firm'));
     }
