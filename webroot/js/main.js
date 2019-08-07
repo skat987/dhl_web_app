@@ -123,9 +123,13 @@ function setUpAccessDropdown() {
 
 function setUpModal() {
     $('#modal').on('show.bs.modal', function(e) {
+        var btn = $(e.relatedTarget);
         $.get({
-            url: $(e.relatedTarget).data('link'),
+            url: btn.data('link'),
             success: function(resp) {
+                if ($(btn).hasClass('add-customer-file-link')) {
+                    $('#modal').children().first().addClass('modal-lg');
+                }
                 $('#modal').find('#modalContent').html(resp);
             },
             error: function(resp) {
@@ -204,21 +208,21 @@ function checkControls(input) {
 function setUpForm(form) {
     var controls = form.find('.form-control');
     controls.change(function() {
-        if ($(this).attr('type') == 'file') {
-            var fileName = $(this).val().split('\\')[2];
-            if (fileName != '') {
-                $(this).prev().removeClass('is-invalid');
-                $(this).prev().addClass('is-valid');
-            }
-            $(this).prev().text(fileName);
-        }
-        setValidation($(this));
+        // if ($(this).attr('type') == 'file') {
+        //     var fileName = $(this).val().split('\\')[2];
+        //     if (fileName != '') {
+        //         $(this).prev().removeClass('is-invalid');
+        //         $(this).prev().addClass('is-valid');
+        //     }
+        //     $(this).prev().text(fileName);
+        // }
+        // setValidation($(this));
     });
     form.submit(function(e) { 
-        if (!setValidation(controls)) {
+        // if (!setValidation(controls)) {
             e.preventDefault();
             e.stopPropagation();
-        }
+        // }
     });
 }
 

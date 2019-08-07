@@ -52,6 +52,7 @@ class CustomerFilesController extends AppController
         }
         if ($this->request->is('post')) {
             $data = $this->getDataCustomerFile($this->request->getData());
+            dd($data);
             $customerFiles = $this->CustomerFiles->patchEntities($customerFiles, $data);
             $fileError = [];
             foreach ($customerFiles as $customerFile) {
@@ -144,7 +145,6 @@ class CustomerFilesController extends AppController
         } else {
             $this->Flash->error(__('Le document est introuvable. Veuillez contacter votre administrateur.'));
         }
-
         return $this->redirect($this->referer());
     }
 
@@ -177,7 +177,6 @@ class CustomerFilesController extends AppController
         } else {
             $error = true;
         }
-
         return $error ? false : $dest;
     }
 
@@ -262,20 +261,15 @@ class CustomerFilesController extends AppController
     { 
         $firm = $this->CustomerFiles->Firms->get($firmId, [
             'contain' => [
-                'Users' => [
-                    'fields' => [
-                        'Users.firm_id',
-                        'Users.email',
-                        'Users.has_email_notification'
-                    ]
-                ]
+                'Users' => function($q) {
+                    return $q->select(['firm_id', 'email'])
+                        ->where(['Users.has_email_notification' => true]);
+                }
             ]
         ]);
         $email = new Email('default');
-        foreach ($firm->users as $user) {
-            if ($user->has_email_notification) {
-                $email->addTo($user->email);
-            }
+        foreach ($firm->users as $u) {
+            $email->addTo($u->email);
         }
         if (count($email->getTo()) > 0) {
             $email->setFrom(['no-reply@exdoc-tahiti.com' => 'exdoc-tahiti.com'])

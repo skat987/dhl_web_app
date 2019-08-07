@@ -120,7 +120,6 @@ class CustomerFilesTable extends Table
     {
         $rules->add($rules->existsIn(['firm_id'], 'Firms'));
         $rules->add($rules->existsIn(['customer_directory_id'], 'CustomerDirectories'));
-
         return $rules;
     }
 
@@ -248,7 +247,6 @@ class CustomerFilesTable extends Table
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         ];  
-
         return in_array(mime_content_type($file), $typeAllowed);
     }
 
@@ -288,8 +286,7 @@ class CustomerFilesTable extends Table
             }
         } else {
             $error = true;
-        }
-        
+        }        
         return $error ? false : $dest;
     }
 }

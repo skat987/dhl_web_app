@@ -22,7 +22,7 @@
                             'data-toggle' => 'collapse',
                             'data-target' => __('#firm_{0}_dir_{1}_content', [$firm->id, $customerDirectory->id]),
                             'aria-expanded' => 'false',
-                            'aria-controls' => __('firm_{0}_dir_{1}_contnent', [$firm->id, $customerDirectory->id])
+                            'aria-controls' => __('firm_{0}_dir_{1}_content', [$firm->id, $customerDirectory->id])
                         ]) ?>
                     </h5>
                     <div class="col-sm-4 py-0 d-flex align-items-center">
