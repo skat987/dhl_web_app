@@ -102,7 +102,7 @@
             console.log('form', $(this));
             var fd = $(this);
             var dataForm = new FormData(form[0]);
-            console.log('dataForm', form);
+            console.log('dataForm', dataForm);
             // if (validateControls($(controls))) {
             //     $.post({
             //         url: $(this).prop('action'),

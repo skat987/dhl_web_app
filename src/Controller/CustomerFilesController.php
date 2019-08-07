@@ -51,8 +51,8 @@ class CustomerFilesController extends AppController
             $customerFiles[$i] = $this->CustomerFiles->newEntity();
         }
         if ($this->request->is('post')) {
+            dd($this->request->getData());
             $data = $this->getDataCustomerFile($this->request->getData());
-            dd($data);
             $customerFiles = $this->CustomerFiles->patchEntities($customerFiles, $data);
             $fileError = [];
             foreach ($customerFiles as $customerFile) {
