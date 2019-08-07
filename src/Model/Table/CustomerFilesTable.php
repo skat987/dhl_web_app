@@ -104,7 +104,24 @@ class CustomerFilesTable extends Table
 
         $validator 
             ->requirePresence('file', 'create')
-            ->notEmpty('file');
+            ->notEmpty('file')
+            ->mimeType('file', [
+                'text/plain',
+                'text/csv', 
+                'application/msword', 
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+                'image/gif',
+                'image/jpeg',
+                'application/vnd.oasis.opendocument.presentation',
+                'application/vnd.oasis.opendocument.spreadsheet',
+                'application/vnd.oasis.opendocument.text',
+                'image/png',
+                'application/pdf',
+                'application/vnd.ms-powerpoint',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ]);
 
         return $validator;
     }
@@ -247,7 +264,8 @@ class CustomerFilesTable extends Table
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         ];  
-        return in_array(mime_content_type($file), $typeAllowed);
+        // return in_array(mime_content_type($file), $typeAllowed);
+        return true;
     }
 
     /**
