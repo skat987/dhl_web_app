@@ -105,24 +105,29 @@ class CustomerFilesTable extends Table
         $validator 
             ->requirePresence('file', 'create')
             ->notEmpty('file')
-            ->mimeType('file', [
-                'text/plain',
-                'text/csv', 
-                'application/msword', 
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
-                'image/gif',
-                'image/jpeg',
-                'application/vnd.oasis.opendocument.presentation',
-                'application/vnd.oasis.opendocument.spreadsheet',
-                'application/vnd.oasis.opendocument.text',
-                'image/png',
-                'application/pdf',
-                'application/vnd.ms-powerpoint',
-                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                'application/vnd.ms-excel',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            ]);
+            ->add('file', 'file', [
+                'rule' => [
+                    'mimeType', 
+                    [
+                        'text/plain',
+                        'text/csv', 
+                        'application/msword', 
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+                        'image/gif',
+                        'image/jpeg',
+                        'application/vnd.oasis.opendocument.presentation',
+                        'application/vnd.oasis.opendocument.spreadsheet',
+                        'application/vnd.oasis.opendocument.text',
+                        'image/png',
+                        'application/pdf',
+                        'application/vnd.ms-powerpoint',
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                        'application/vnd.ms-excel',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    ]
+                ], 'message' => 'Ce type de fichier est invalide.'
 
+            ]);
         return $validator;
     }
 
@@ -148,12 +153,8 @@ class CustomerFilesTable extends Table
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
         if (isset($data['file'])) {
-            if ($this->isTypeAllowed($data['file']['tmp_name'])) {                
-                $data['name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
-                $data['extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
-            } else {
-                return false;
-            }
+            $data['name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
+            $data['extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
         }
     }
 
@@ -235,37 +236,6 @@ class CustomerFilesTable extends Table
         $firm = $this->Firms->get($entity->firm_id);
         $firm->customer_files_count = $this->find()->where(['firm_id' => $firm->id])->count();
         $this->Firms->save($firm);
-    }
-
-    /**
-     * IsTypeAllowed method
-     * 
-     * Check that the file type is allowed.
-     * 
-     * @param string $file Path to the file to check.
-     * @return bool If the type is in the allowed list.
-     */
-    private function isTypeAllowed($file)
-    {
-        $typeAllowed = [
-            'text/plain',
-            'text/csv', 
-            'application/msword', 
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
-            'image/gif',
-            'image/jpeg',
-            'application/vnd.oasis.opendocument.presentation',
-            'application/vnd.oasis.opendocument.spreadsheet',
-            'application/vnd.oasis.opendocument.text',
-            'image/png',
-            'application/pdf',
-            'application/vnd.ms-powerpoint',
-            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-            'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        ];  
-        // return in_array(mime_content_type($file), $typeAllowed);
-        return true;
     }
 
     /**

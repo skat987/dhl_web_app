@@ -218,12 +218,12 @@ function setUpForm(form) {
         // }
         // setValidation($(this));
     });
-    form.submit(function(e) { 
-        // if (!setValidation(controls)) {
-            e.preventDefault();
-            e.stopPropagation();
-        // }
-    });
+    // form.submit(function(e) { 
+    //     if (!setValidation(controls)) {
+    //         e.preventDefault();
+    //         e.stopPropagation();
+    //     }
+    // });
 }
 
 function setUpStorage(container, key) {

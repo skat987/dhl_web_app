@@ -51,23 +51,47 @@ class CustomerFilesController extends AppController
             $customerFiles[$i] = $this->CustomerFiles->newEntity();
         }
         if ($this->request->is('post')) {
-            dd($this->request->getData());
+            $resp = [
+                'firmId' => $firmId,
+                'filesCount' => null,
+                'items' => null,
+                'error' => null 
+            ];
             $data = $this->getDataCustomerFile($this->request->getData());
+            $dirId = isset($data[0]['customer_directory_id']) ? $data[0]['customer_directory_id'] : null;
             $customerFiles = $this->CustomerFiles->patchEntities($customerFiles, $data);
-            $fileError = [];
+            $fileError = $items = [];
+            $success = false;
+            $i = 0;
+            $createdDate = null;
             foreach ($customerFiles as $customerFile) {
                 if (!$this->CustomerFiles->save($customerFile)) {
                     array_push($fileError, $customerFile->name);
+                } else {
+                    if (!$success) {
+                        $success = true;
+                    }
+                    if (!isset($createdDate)) {
+                        $createdDate = $customerFile->created;
+                    }
+                    $items[$i] = [
+                        'dirId' => $dirId,
+                        'fileId' => $customerFile->id,
+                        'fileName' => $customerFile->name,
+                        'fileExt' => $customerFile->extension
+                    ];
+                    $i++;
                 }
             }
+            if ($success) {
+                $this->sendAddNotifications($firmId, $items, $createdDate);
+                $resp['items'] = $items;
+                $resp['filesCount'] = $this->CustomerFiles->Firms->get($firmId)->customer_files_count;
+            }
             if (count($fileError) > 0) {  
-                $message = $this->getUploadMessageError($fileError);        
-                $this->Flash->error(__($message, $fileError));
-            } else {
-                $this->sendAddNotifications($firmId, $customerFiles);
-                $this->Flash->success(__('Tous les documents ont été sauvegardés.'));  
+                $resp['error'] = $this->getUploadMessageError($fileError);      
             }     
-            return $this->redirect($this->referer());
+            $this->set(compact('resp'));
         }
         $firm = $this->CustomerFiles->Firms->get($firmId);
         $customerDirectories = $this->CustomerFiles->CustomerDirectories->findListByFirmId($firmId, ['limit' => 200]);
@@ -83,12 +107,6 @@ class CustomerFilesController extends AppController
      */
     public function delete($id = null)
     {
-        $resp = [
-            'result' => null,
-            'text' => null,
-            'filesCount' => null,
-            'firmId' => null
-        ];
         if ($this->request->is(['post'])) {
             $customerFile = $this->CustomerFiles->get($id);
             if ($this->CustomerFiles->delete($customerFile)) {
@@ -239,9 +257,9 @@ class CustomerFilesController extends AppController
      */
     private function getUploadMessageError($errors)
     {
-        $message = 'Les documents suivant n\'ont pas pu être sauvegarder : ';
+        $message = (count($errors) > 1) ? 'Les documents suivant n\'ont pas pu être sauvegardés: ' : 'Le document suivant n\'a pas pu être sauvegardé: ';
         foreach ($errors as $key => $error) {
-            $message .= '{' . $key . '}';
+            $message .= $error;
             if ($key < (count($errors) - 1)) {
                 $message .= ', ';
             }
@@ -257,7 +275,7 @@ class CustomerFilesController extends AppController
      * @param string|null $firmId Firm id
      * @param Array $customerFiles added files
      */
-    private function sendAddNotifications($firmId = null, $customerFiles = null)
+    private function sendAddNotifications($firmId = null, $customerFiles = null, $created = null)
     { 
         $firm = $this->CustomerFiles->Firms->get($firmId, [
             'contain' => [
@@ -280,16 +298,16 @@ class CustomerFilesController extends AppController
             $message = 'Chèr(e) client(e),' . $lineBreak;
             $uploads = '';
             foreach ($customerFiles as $index => $customerFile) {
-                $uploads .= __('"{0}.{1}"', [$customerFile->name, $customerFile->extension]);
+                $uploads .= __('"{0}.{1}"', [$customerFile['fileName'], $customerFile['fileExt']]);
                 $uploads .= __('{0}', ($index < (count($customerFiles) - 1)) ? ', ' : '');
             }
-            if (isset($customerFiles[0]->customer_directory_id)) {
-                $customerDirectory = $this->CustomerFiles->CustomerDirectories->get($customerFiles[0]->customer_directory_id);
+            if (isset($customerFiles[0]['dirId'])) {
+                $customerDirectory = $this->CustomerFiles->CustomerDirectories->get($customerFiles[0]['dirId']);
                 $message .= (count($customerFiles) > 1) ? 'Les documents {0} ({1}) ont été déposés dans votre espace client WEB d\'échanges de documents, le {2}.' : 'Le document {0} ({1}) a été déposé dans votre espace client WEB d\'échanges de documents, le {2}.';
-                $content = __($message, [$uploads, substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), $customerFiles[0]->created->format('d/m/y')]);
+                $content = __($message, [$uploads, substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), $created->format('d/m/y')]);
             } else {
                 $message .= (count($customerFiles) > 1) ? 'Les documents {0} ont été déposés dans votre espace client WEB d\'échanges de documents, le {1}.' : 'Le document {0} a été déposé dans votre espace client WEB d\'échanges de documents, le {1}.';
-                $content = __($message, [$uploads, $customerFiles[0]->created->format('d/m/y')]);
+                $content = __($message, [$uploads, $created->format('d/m/y')]);
             }
             $email->send($content . $lineBreak . $signature);
         }

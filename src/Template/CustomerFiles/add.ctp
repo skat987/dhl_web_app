@@ -93,22 +93,35 @@
                 } else {
                     $(label).addClass('is-valid');
                 }
-                $(divError).css('display', 'none').html().empty();
+                $(divError).css('display', 'none').empty();
             }
         }); 
         $(form).submit(function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('form', $(this));
-            var fd = $(this);
-            var dataForm = new FormData(form[0]);
-            console.log('dataForm', dataForm);
-            // if (validateControls($(controls))) {
-            //     $.post({
-            //         url: $(this).prop('action'),
-            //         data
-            //     });
-            // }
+            var formData = new FormData(form[0]);
+            if (validateControls($(controls))) {
+                $.post({
+                    url: $(form).prop('action'),
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-CSRF-Token', $(form).find('[name="_csrfToken"]').val());
+                    },
+                    success: function(resp) {
+                        console.log('succès', resp);
+                        if ($resp.items.length) {
+                            // $.alert(resp.)
+                        }
+                    },
+                    error: function(resp) {
+                        console.log('erreur', resp);                        
+                        // $('.modal-body').html(resp.responseText);
+                    }
+                });
+            }
         });     
     });
     function validateControls(controls) {
