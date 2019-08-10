@@ -53,7 +53,7 @@
             <?= $this->Html->link(__('<i class="fas fa-file"></i> Nouveau document <i class="fas fa-plus-circle"></i>'), '#', [
                 'escape' => false,
                 'role' => 'button',
-                'class' => 'btn dhl-custom-btn',
+                'class' => 'btn dhl-custom-btn add-customer-file-link',
                 'title' => __('Ajouter un document à la société {0}', $firm->name),
                 'data-toggle' => 'modal',
                 'data-target' => '#modal',

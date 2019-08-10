@@ -113,4 +113,4 @@ define('CHUNK_ENCRYPTION_SIZE', 16);
 /**
  * Define the maximum number of files that can be uploaded.
  */
-define('MAX_UPLOADS_COUNT', 5);
+define('MAX_UPLOADS_COUNT', 10);

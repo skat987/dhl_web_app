@@ -27,7 +27,7 @@ class CustomerFilesController extends AppController
      */
     public function isAuthorized($user)
     {
-        $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'delete', 'downloadCustomerFile'] : ['downloadCustomerFile'];
+        $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'delete', 'downloadCustomerFile', 'getFileItemElement'] : ['downloadCustomerFile'];
         $action = $this->request->getParam('action');
         if ($user['user_type_id'] == 3) {
             $firmId = $this->request->getParam('firm_id');
@@ -41,7 +41,7 @@ class CustomerFilesController extends AppController
     /**
      * Add method
      * 
-     * Create up to 5 new Customer File entities.
+     * Create up to 10 new Customer File entities.
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
@@ -51,22 +51,47 @@ class CustomerFilesController extends AppController
             $customerFiles[$i] = $this->CustomerFiles->newEntity();
         }
         if ($this->request->is('post')) {
+            $resp = [
+                'firmId' => $firmId,
+                'filesCount' => null,
+                'dirId' => null,
+                'items' => [],
+                'error' => null 
+            ];
             $data = $this->getDataCustomerFile($this->request->getData());
+            $resp['dirId'] = empty($data[0]['customer_directory_id']) ? null : $data[0]['customer_directory_id'];
             $customerFiles = $this->CustomerFiles->patchEntities($customerFiles, $data);
-            $fileError = [];
+            $fileError = $items = [];
+            $success = false;
+            $i = 0;
+            $createdDate = null;
             foreach ($customerFiles as $customerFile) {
                 if (!$this->CustomerFiles->save($customerFile)) {
                     array_push($fileError, $customerFile->name);
+                } else {
+                    if (!$success) {
+                        $success = true;
+                    }
+                    if (!isset($createdDate)) {
+                        $createdDate = $customerFile->created;
+                    }
+                    $items[$i] = [
+                        'fileId' => $customerFile->id,
+                        'fileName' => $customerFile->name,
+                        'fileExt' => $customerFile->extension
+                    ];
+                    $i++;
                 }
             }
+            if ($success) {
+                $this->sendAddNotifications($firmId, $items, $resp['dirId'], $createdDate);
+                $resp['items'] = $items;
+                $resp['filesCount'] = $this->CustomerFiles->Firms->get($firmId)->customer_files_count;
+            }
             if (count($fileError) > 0) {  
-                $message = $this->getUploadMessageError($fileError);        
-                $this->Flash->error(__($message, $fileError));
-            } else {
-                $this->sendAddNotifications($firmId, $customerFiles);
-                $this->Flash->success(__('Tous les documents ont été sauvegardés.'));  
-            }     
-            return $this->redirect($this->referer());
+                $resp['error'] = $this->getUploadMessageError($fileError);      
+            }   
+            $this->set(compact('resp'));
         }
         $firm = $this->CustomerFiles->Firms->get($firmId);
         $customerDirectories = $this->CustomerFiles->CustomerDirectories->findListByFirmId($firmId, ['limit' => 200]);
@@ -82,12 +107,6 @@ class CustomerFilesController extends AppController
      */
     public function delete($id = null)
     {
-        $resp = [
-            'result' => null,
-            'text' => null,
-            'filesCount' => null,
-            'firmId' => null
-        ];
         if ($this->request->is(['post'])) {
             $customerFile = $this->CustomerFiles->get($id);
             if ($this->CustomerFiles->delete($customerFile)) {
@@ -144,7 +163,6 @@ class CustomerFilesController extends AppController
         } else {
             $this->Flash->error(__('Le document est introuvable. Veuillez contacter votre administrateur.'));
         }
-
         return $this->redirect($this->referer());
     }
 
@@ -177,7 +195,6 @@ class CustomerFilesController extends AppController
         } else {
             $error = true;
         }
-
         return $error ? false : $dest;
     }
 
@@ -240,12 +257,9 @@ class CustomerFilesController extends AppController
      */
     private function getUploadMessageError($errors)
     {
-        $message = 'Les documents suivant n\'ont pas pu être sauvegarder : ';
+        $message = (count($errors) > 1) ? 'Les documents suivant n\'ont pas pu être sauvegardés: ' : 'Le document suivant n\'a pas pu être sauvegardé: ';
         foreach ($errors as $key => $error) {
-            $message .= '{' . $key . '}';
-            if ($key < (count($errors) - 1)) {
-                $message .= ', ';
-            }
+            $message .= '<br/> - ' . $error;
         }
         return $message;
     }
@@ -258,24 +272,19 @@ class CustomerFilesController extends AppController
      * @param string|null $firmId Firm id
      * @param Array $customerFiles added files
      */
-    private function sendAddNotifications($firmId = null, $customerFiles = null)
+    private function sendAddNotifications($firmId = null, $items = null, $dirId = null, $created = null)
     { 
         $firm = $this->CustomerFiles->Firms->get($firmId, [
             'contain' => [
-                'Users' => [
-                    'fields' => [
-                        'Users.firm_id',
-                        'Users.email',
-                        'Users.has_email_notification'
-                    ]
-                ]
+                'Users' => function($q) {
+                    return $q->select(['firm_id', 'email'])
+                        ->where(['Users.has_email_notification' => true]);
+                }
             ]
         ]);
         $email = new Email('default');
-        foreach ($firm->users as $user) {
-            if ($user->has_email_notification) {
-                $email->addTo($user->email);
-            }
+        foreach ($firm->users as $u) {
+            $email->addTo($u->email);
         }
         if (count($email->getTo()) > 0) {
             $email->setFrom(['no-reply@exdoc-tahiti.com' => 'exdoc-tahiti.com'])
@@ -285,19 +294,30 @@ class CustomerFilesController extends AppController
             $lineBreak = "\n\n";
             $message = 'Chèr(e) client(e),' . $lineBreak;
             $uploads = '';
-            foreach ($customerFiles as $index => $customerFile) {
-                $uploads .= __('"{0}.{1}"', [$customerFile->name, $customerFile->extension]);
-                $uploads .= __('{0}', ($index < (count($customerFiles) - 1)) ? ', ' : '');
+            foreach ($items as $key => $item) {
+                $uploads .= __('"{0}.{1}"', [$item['fileName'], $item['fileExt']]);
+                $uploads .= __('{0}', ($key < (count($items) - 1)) ? ', ' : '');
             }
-            if (isset($customerFiles[0]->customer_directory_id)) {
-                $customerDirectory = $this->CustomerFiles->CustomerDirectories->get($customerFiles[0]->customer_directory_id);
-                $message .= (count($customerFiles) > 1) ? 'Les documents {0} ({1}) ont été déposés dans votre espace client WEB d\'échanges de documents, le {2}.' : 'Le document {0} ({1}) a été déposé dans votre espace client WEB d\'échanges de documents, le {2}.';
-                $content = __($message, [$uploads, substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), $customerFiles[0]->created->format('d/m/y')]);
+            if (isset($dirId)) {
+                $customerDirectory = $this->CustomerFiles->CustomerDirectories->get($dirId);
+                $message .= (count($items) > 1) ? 'Les documents {0} ({1}) ont été déposés dans votre espace client WEB d\'échanges de documents, le {2}.' : 'Le document {0} ({1}) a été déposé dans votre espace client WEB d\'échanges de documents, le {2}.';
+                $content = __($message, [$uploads, substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), $created->format('d/m/y')]);
             } else {
-                $message .= (count($customerFiles) > 1) ? 'Les documents {0} ont été déposés dans votre espace client WEB d\'échanges de documents, le {1}.' : 'Le document {0} a été déposé dans votre espace client WEB d\'échanges de documents, le {1}.';
-                $content = __($message, [$uploads, $customerFiles[0]->created->format('d/m/y')]);
+                $message .= (count($items) > 1) ? 'Les documents {0} ont été déposés dans votre espace client WEB d\'échanges de documents, le {1}.' : 'Le document {0} a été déposé dans votre espace client WEB d\'échanges de documents, le {1}.';
+                $content = __($message, [$uploads, $created->format('d/m/y')]);
             }
             $email->send($content . $lineBreak . $signature);
         }
+    }
+
+    public function getFileItemElement() {
+        $this->autoRender = false;
+        $fileData = $this->request->getQuery();
+        $firmId = $fileData['firmId'];
+        $customerFileId = $fileData['fileId'];
+        $customerFileName = $fileData['fileName'];
+        $customerFileExt = $fileData['fileExt'];
+        $this->set(compact('firmId', 'customerFileId', 'customerFileName', 'customerFileExt'));
+        $this->render('/Element/fileItem');
     }
 }

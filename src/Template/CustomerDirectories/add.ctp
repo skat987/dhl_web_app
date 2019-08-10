@@ -60,3 +60,40 @@
     ]) ?>
 </div>
 <?= $this->Form->end() ?>
+<script>
+    $(function() {
+        var form = $('#modal').find('form');
+        var name = $(form).find('[name="name"]');
+        $(name).change(function() {
+            var divError = $(this).parent().next();
+            if ($(this)[0].checkValidity()) {
+                if ($(this).hasClass('is-invalid')) {
+                    $(this).removeClass('is-invalid').addClass('is-valid'); 
+                } else {
+                    $(this).addClass('is-valid');
+                }
+                $(divError).css('display', 'none').empty();
+            }
+        });
+        $(form).submit(function(e) {
+            var divError = $(name).parent().next();
+            if (!$(name)[0].checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+                if ($(name).hasClass('is-valid')) {
+                    $(name).removeClass('is-valid').addClass('is-invalid');
+                } else {
+                    $(name).addClass('is-invalid');
+                }
+                $(divError).html('<small>' + $(name).prop('validationMessage') + '</small>').css('display', 'block');
+            } else {
+                if ($(name).hasClass('is-invalid')) {
+                    $(name).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(name).addClass('is-valid');
+                }
+                $(divError).css('display', 'none').empty();
+            }
+        });
+    });
+</script>

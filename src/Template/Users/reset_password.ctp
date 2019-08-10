@@ -58,3 +58,40 @@
     ]) ?>
 </div>
 <?= $this->Form->end() ?>
+<script>
+    $(function() {
+        var form = $('#modal').find('form');
+        var password = $(form).find('[name="newPassword"]');
+        $(password).change(function() {
+            var divError = $(this).parent().next();
+            if ($(this)[0].checkValidity()) {
+                if ($(this).hasClass('is-invalid')) {
+                    $(this).removeClass('is-invalid').addClass('is-valid'); 
+                } else {
+                    $(this).addClass('is-valid');
+                }
+                $(divError).css('display', 'none').empty();
+            }
+        });
+        $(form).submit(function(e) {
+            var divError = $(password).parent().next();
+            if (!$(password)[0].checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+                if ($(password).hasClass('is-valid')) {
+                    $(password).removeClass('is-valid').addClass('is-invalid');
+                } else {
+                    $(password).addClass('is-invalid');
+                }
+                $(divError).html('<small>' + $(password).prop('validationMessage') + '</small>').css('display', 'block');
+            } else {
+                if ($(password).hasClass('is-invalid')) {
+                    $(password).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(password).addClass('is-valid');
+                }
+                $(divError).css('display', 'none').empty();
+            }
+        });
+    });
+</script>

@@ -104,8 +104,30 @@ class CustomerFilesTable extends Table
 
         $validator 
             ->requirePresence('file', 'create')
-            ->notEmpty('file');
+            ->notEmpty('file')
+            ->add('file', 'file', [
+                'rule' => [
+                    'mimeType', 
+                    [
+                        'text/plain',
+                        'text/csv', 
+                        'application/msword', 
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+                        'image/gif',
+                        'image/jpeg',
+                        'application/vnd.oasis.opendocument.presentation',
+                        'application/vnd.oasis.opendocument.spreadsheet',
+                        'application/vnd.oasis.opendocument.text',
+                        'image/png',
+                        'application/pdf',
+                        'application/vnd.ms-powerpoint',
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                        'application/vnd.ms-excel',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    ]
+                ], 'message' => 'Ce type de fichier est invalide.'
 
+            ]);
         return $validator;
     }
 
@@ -120,7 +142,6 @@ class CustomerFilesTable extends Table
     {
         $rules->add($rules->existsIn(['firm_id'], 'Firms'));
         $rules->add($rules->existsIn(['customer_directory_id'], 'CustomerDirectories'));
-
         return $rules;
     }
 
@@ -132,12 +153,8 @@ class CustomerFilesTable extends Table
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
         if (isset($data['file'])) {
-            if ($this->isTypeAllowed($data['file']['tmp_name'])) {                
-                $data['name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
-                $data['extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
-            } else {
-                return false;
-            }
+            $data['name'] = pathinfo($data['file']['name'], PATHINFO_FILENAME);
+            $data['extension'] = pathinfo($data['file']['name'], PATHINFO_EXTENSION);
         }
     }
 
@@ -222,37 +239,6 @@ class CustomerFilesTable extends Table
     }
 
     /**
-     * IsTypeAllowed method
-     * 
-     * Check that the file type is allowed.
-     * 
-     * @param string $file Path to the file to check.
-     * @return bool If the type is in the allowed list.
-     */
-    private function isTypeAllowed($file)
-    {
-        $typeAllowed = [
-            'text/plain',
-            'text/csv', 
-            'application/msword', 
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
-            'image/gif',
-            'image/jpeg',
-            'application/vnd.oasis.opendocument.presentation',
-            'application/vnd.oasis.opendocument.spreadsheet',
-            'application/vnd.oasis.opendocument.text',
-            'image/png',
-            'application/pdf',
-            'application/vnd.ms-powerpoint',
-            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-            'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        ];  
-
-        return in_array(mime_content_type($file), $typeAllowed);
-    }
-
-    /**
      * EncryptCustomerFile method
      * 
      * Encrypt the contents of a file by block using AES-256-CBC.
@@ -288,8 +274,7 @@ class CustomerFilesTable extends Table
             }
         } else {
             $error = true;
-        }
-        
+        }        
         return $error ? false : $dest;
     }
 }
