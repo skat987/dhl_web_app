@@ -27,7 +27,7 @@ class CustomerFilesController extends AppController
      */
     public function isAuthorized($user)
     {
-        $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'delete', 'downloadCustomerFile', 'getFileItemElement'] : ['downloadCustomerFile'];
+        $actionsAllowed = in_array($user['user_type_id'], [1, 2]) ? ['add', 'delete', 'downloadCustomerFile', 'getFileItemElement'] : ['downloadCustomerFile', 'getFileItemElement'];
         $action = $this->request->getParam('action');
         if ($user['user_type_id'] == 3) {
             $firmId = $this->request->getParam('firm_id');
