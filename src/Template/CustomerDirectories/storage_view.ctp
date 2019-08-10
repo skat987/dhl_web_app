@@ -54,30 +54,10 @@
             <div id=<?= __('firm_{0}_dir_{1}_content', [$firm->id, $customerDirectory->id]) ?> class="collapse" aria-labelledby=<?= __('firm_{0}_dir_{1}_heading', [$firm->id, $customerDirectory->id]) ?> data-parent=<?= __('#storage_firm_{0}', $firm->id) ?>>
                 <div class="card-body">
                     <?php if ($customerDirectory->has('customer_files')): ?>
-                    <ul class="list-group">
+                    <ul class="list-group" id=<?= __('list-firm-{0}-dir-{1}', [$firm->id, $customerDirectory->id]) ?>>
                         <?php foreach ($customerDirectory->customer_files as $customerFile): ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <?= $this->Html->link(__('<i class="fas fa-file"></i> {0}', h($customerFile->name)), [
-                                '_name' => 'downloadCustomerFile',
-                                $firm->id,
-                                $customerFile->id
-                            ], [
-                                'escape' => false,
-                                'class' => 'custom-link',
-                                'title' => __('Télécharger')
-                            ]) ?>
-                            <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
-                            <?= $this->Form->postButton(__('<i class="fas fa-trash-alt"></i>'), [
-                                '_name' => 'deleteCustomerFile', 
-                                $customerFile->id
-                            ], [
-                                'escape' => false,
-                                'class' => 'float-right custom-icon-link delete-customer-file-link btn btn-link',
-                                'title' => __('Supprimer le document'),
-                                'data-filename' => __('{0}.{1}', [$customerFile->name, $customerFile->extension]),
-                                'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
-                            ]) ?>
-                            <?php endif; ?>
+                            <?= $this->element('fileItem', ['firmId' => $firm->id, 'customerFileId' => $customerFile->id, 'customerFileName' => $customerFile->name, 'customerFileExt' => $customerFile->extension]) ?>
                         </li>
                         <?php endforeach; ?>
                     </ul>
@@ -91,31 +71,11 @@
     <?php if (isset($firm->customer_files)): ?>
     <?php if ((count($firm->storage->read()[1]) > 0) && !$this->Paginator->hasNext()): ?>
     <section>
-        <ul class="list-group">
+        <ul class="list-group" id=<?= __('list-firm-{0}-dir-0', $firm->id) ?>>
             <?php foreach ($firm->customer_files as $customerFile): ?>
             <?php  if (!$customerFile->has('customer_directory_id')): ?>
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <?= $this->Html->link(__('<i class="fas fa-file"></i> {0}', h($customerFile->name)), [
-                    '_name' => 'downloadCustomerFile',
-                    $firm->id,
-                    $customerFile->id
-                ], [
-                    'escape' => false,
-                    'class' => 'custom-link',
-                    'title' => __('Télécharger')
-                ]) ?>
-                <?php if ($this->request->getSession()->read('Auth.User.user_type_id') != 3): ?>
-                <?= $this->Form->postButton(__('<i class="fas fa-trash-alt"></i>'), [
-                    '_name' => 'deleteCustomerFile', 
-                    $customerFile->id
-                ], [
-                    'escape' => false,
-                    'class' => 'float-right custom-icon-link delete-customer-file-link btn btn-link',
-                    'title' => __('Supprimer le document'),
-                    'data-filename' => __('{0}.{1}', [$customerFile->name, $customerFile->extension]),
-                    'confirm' => __('Voulez-vous vraiment supprimer le document {0}?', $customerFile->file->name)
-                ]) ?>
-                <?php endif; ?>
+                <?= $this->element('fileItem', ['firmId' => $firm->id, 'customerFileId' => $customerFile->id, 'customerFileName' => $customerFile->name, 'customerFileExt' => $customerFile->extension]) ?>
             </li>
             <?php endif; ?>
             <?php endforeach; ?>

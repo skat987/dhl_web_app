@@ -41,13 +41,7 @@ function setUpPage(index) {
         case 3:
             setUpViewFirm();
             break;
-        default:
-            setUpLoginPage();
     }
-}
-
-function setUpLoginPage() {
-    setUpForm($('form'));
 }
 
 function setUpAllFirms(page) {
@@ -139,9 +133,6 @@ function setUpModal() {
             }
         });
     });
-    $('#modal').on('shown.bs.modal', function() {
-        setUpForm($(this).find('form'));
-    });
     $('#modal').on('hidden.bs.modal', function() {
         $(this).find('#modalContent').empty();
     });
@@ -205,33 +196,11 @@ function checkControls(input) {
     return checks;
 }
 
-function setUpForm(form) {
-    var controls = form.find('.form-control');
-    controls.change(function() {
-        // if ($(this).attr('type') == 'file') {
-        //     var fileName = $(this).val().split('\\')[2];
-        //     if (fileName != '') {
-        //         $(this).prev().removeClass('is-invalid');
-        //         $(this).prev().addClass('is-valid');
-        //     }
-        //     $(this).prev().text(fileName);
-        // }
-        // setValidation($(this));
-    });
-    // form.submit(function(e) { 
-    //     if (!setValidation(controls)) {
-    //         e.preventDefault();
-    //         e.stopPropagation();
-    //     }
-    // });
-}
-
 function setUpStorage(container, key) {
     $.get({
         url: container.data('link'),
         success: function(resp) {
             container.html(resp);
-            SetUpCustomerFilesActions();
             setUpSearchDirectory(container, key);
             setUpStoragePagination(container, key, $('#storagePagination').find('.page-link'));
         },
@@ -393,55 +362,5 @@ function setUpAccessForm(form) {
                 e.stopPropagation();
             } 
         };
-    });
-}
-
-function SetUpCustomerFilesActions() {
-    $('.delete-customer-file-link').click(function(e) {
-        if (!e.originalEvent.returnValue) {
-            e.preventDefault();
-            e.stopPropagation();
-        } else {
-            $(this).parent().submit(function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var form = $(this);
-                $.post({
-                    url: $(form).prop('action'),
-                    dataType: 'json',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-CSRF-Token', $(form).find('[name="_csrfToken"]').val());
-                    },
-                    success: function(resp) {
-                        if (resp.result == 'success') {
-                            $(form).parent().removeClass('d-flex').css('display', 'none');
-                            $('#filesCount-firm-' + resp.firmId).text(resp.filesCount);
-                            $.alert(resp.text, {
-                                autoClose: true,
-                                closeTime: 3000,
-                                type: 'success',
-                                position: ['bottom-right']
-                            });
-                        } else {
-                            $.alert(resp.text, {
-                                autoClose: true,
-                                closeTime: 3000,
-                                type: 'warning',
-                                position:['bottom-right']
-                            });
-                        }
-                    },
-                    error: function(resp) {
-                        console.log('Erreur', resp);
-                        $.alert('Le document ' + $(form).children().last().data('filename') + ' n\'a pas pu être supprimé.', {
-                            autoClose: true,
-                            closeTime: 3000,
-                            type: 'warning',
-                            position: ['bottom-right']
-                        });
-                    }
-                });
-            });
-        }
     });
 }

@@ -114,3 +114,71 @@
     ]) ?>
 </div>
 <?= $this->Form->end() ?>
+<script>
+    $(function() {
+        const _EMAIL_PATTERN = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        const _PASSWORD_PATTERN = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+        var form = $('#modal').find('form');
+        var controls = $(form).find('.form-control');
+        $(controls).change(function() {
+            var checks;
+            var divError = $(this).parent().next();
+            if ($(this).prop('type') === 'email') {
+                checks = ($(this)[0].checkValidity() && _EMAIL_PATTERN.test($(this).val()));
+            } else if ($(this).prop('type') === 'password') {
+                checks = ($(this)[0].checkValidity() && _PASSWORD_PATTERN.test($(this).val()));
+            } else {
+                checks = $(this)[0].checkValidity();
+            }
+            if (checks) {
+                if ($(this).hasClass('is-invalid')) {
+                    $(this).removeClass('is-invalid').addClass('is-valid'); 
+                } else {
+                    $(this).addClass('is-valid');
+                }
+                $(divError).css('display', 'none').empty();
+            }
+        });
+        $(form).submit(function(e) {
+            if (!validateControls($(controls))) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+    });
+    function validateControls(controls) {        
+        const _EMAIL_PATTERN = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        const _PASSWORD_PATTERN = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+        var checks, divError;
+        var isValid = true;
+        $.each(controls, function(key, control) {
+            divError = $(control).parent().next();
+            if ($(control).prop('type') === 'email') {
+                checks = ($(control)[0].checkValidity() && _EMAIL_PATTERN.test($(control).val()));
+            } else if ($(control).prop('type') === 'password') {
+                checks = ($(control)[0].checkValidity() && _PASSWORD_PATTERN.test($(control).val()));
+            } else {
+                checks = $(control)[0].checkValidity();
+            }
+            if (checks) {
+                if ($(control).hasClass('is-invalid')) {
+                    $(control).removeClass('is-invalid').addClass('is-valid'); 
+                } else {
+                    $(control).addClass('is-valid');
+                }
+                $(divError).css('display', 'none').empty();
+            } else {
+                if (isValid) {
+                    isValid = false;
+                }
+                if ($(control).hasClass('is-valid')) {
+                    $(control).removeClass('is-valid').addClass('is-invalid');
+                } else {
+                    $(control).addClass('is-invalid');
+                }
+                $(divError).html('<small>' + $(control).prop('validationMessage') + '</small>').css('display', 'block');
+            }
+        });
+        return isValid;
+    }
+</script>

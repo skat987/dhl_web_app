@@ -75,7 +75,7 @@
 </div>
 <div class="modal-footer">
     <?= $this->Form->button(__('Fermer'), ['type' => 'button', 'class' => 'btn dhl-custom-btn-2', 'data-dismiss' => 'modal']) ?>
-    <?= $this->Form->button(__('Annuler'), ['type' => 'reset', 'class' => 'btn dhl-custom-btn-2']) ?>
+    <?= $this->Form->button(__('Annuler'), ['type' => 'reset', 'class' => 'btn dhl-custom-btn-2', 'id' => 'resetAddFileForm']) ?>
     <?= $this->Form->button(__('Envoyer <i class="far fa-paper-plane"></i>'), ['escape' => false, 'type' => 'submit', 'class' => 'btn dhl-custom-btn']) ?>
 </div>
 <?= $this->Form->end() ?>
@@ -83,6 +83,7 @@
     $(function() {
         var form = $('#modal').find('form');
         var controls = $(form).find('.form-control:file');
+        var resetBtn = $(form).find('#resetAddFileForm');
         $(controls).change(function(e) {
             var label = $(this).prev();
             var divError = $(this).parent().next();
@@ -94,8 +95,24 @@
                     $(label).addClass('is-valid');
                 }
                 $(divError).css('display', 'none').empty();
-            }
+            } 
         }); 
+        $(resetBtn).click(function(e) {
+            $.each(controls, function(key, control) {
+                var label = $(control).prev();
+                var divError = $(control).parent().next();
+                $(label).text('Sélectionnez un fichier');
+                if ($(label).hasClass('is-invalid')) {
+                    $(label).removeClass('is-invalid');
+                }
+                if ($(label).hasClass('is-valid')) {
+                    $(label).removeClass('is-valid');
+                }
+                if ($(divError).css('display') == 'block') {                    
+                    $(divError).css('display', 'none').empty();
+                }
+            });
+        });
         $(form).submit(function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -111,14 +128,39 @@
                         xhr.setRequestHeader('X-CSRF-Token', $(form).find('[name="_csrfToken"]').val());
                     },
                     success: function(resp) {
-                        console.log('succès', resp);
-                        if ($resp.items.length) {
-                            // $.alert(resp.)
+                        if (resp.items.length) {
+                            var list = (resp.dirId) ? $('#list-firm-' + resp.firmId + '-dir-' + resp.dirId) : $('#list-firm-' + resp.firmId + '-dir-0');
+                            $('#filesCount-firm-' + resp.firmId).text(resp.filesCount);
+                            setSuccessItems(resp, $(list));
+                            var msg = getSuccessMsg(resp.items);
+                            $.alert(msg, {
+                                autoClose: true,
+                                closeTime: 5000,
+                                type: 'success',
+                                position: ['top-right'],
+                                isOnly: false
+                            });
+                        }
+                        if (resp.error) {
+                            $.alert(resp.error, {
+                                autoClose: true,
+                                closeTime: 5000,
+                                type: 'warning',
+                                position: ['bottom-right'],
+                                isOnly: false
+                            });
                         }
                     },
                     error: function(resp) {
-                        console.log('erreur', resp);                        
-                        // $('.modal-body').html(resp.responseText);
+                        console.log('erreur', resp);      
+                        $('.modal-body').html(resp.responseText);             
+                        $.alert('Vos documents n\'ont pas pu être sauvegardé.', {
+                            autoClose: true,
+                            closeTime: 3000,
+                            type: 'warning',
+                            position: ['bottom-right'],
+                            isOnly: false
+                        });
                     }
                 });
             }
@@ -142,5 +184,38 @@
             $(divError).html('<small>' + $(fileControl).prop('validationMessage') + '</small>').css('display', 'block');
         }
         return isFile;
+    }
+    function getSuccessMsg(items) {
+        var msg = (items.length == 1) ? 'Le document suivant a été sauvegardé: ' : 'Les documents ont été sauvegardés: ';
+        for (var i = 0; i < items.length; i++) {
+            msg += '<br/> - ' + items[i].fileName;
+        }
+        return msg;
+    }
+    function setSuccessItems(resp, list) {
+        $.each(resp.items, function(key, item) {
+            $.get({
+                url: '/get-file-item',
+                data: {
+                    firmId: resp.firmId,
+                    fileId: item.fileId,
+                    fileName: item.fileName,
+                    fileExt: item.fileExt
+                },
+                success: function(resp) {
+                    $(list).prepend('<li class="list-group-item d-flex justify-content-between align-items-center">' + resp + '</li>');
+                },
+                error: function(resp) {
+                    console.log('error', resp);
+                    $.alert('Les documents ont été sauvegardés mais la génération des liens a échouée. <br/>Veuillez actualiser la page.', {
+                        autoClose: true,
+                        closeTime: 5000,
+                        type: 'warning',
+                        position: ['bottom-right'],
+                        isOnly: false
+                    });
+                }
+            });
+        });
     }
 </script>

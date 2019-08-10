@@ -103,6 +103,7 @@ Router::scope('/', function (RouteBuilder $routes) {
             'id' => '\d+'
             ])
         ->setPass(['firm_id', 'id']);
+    $routes->connect('/get-file-item', ['controller' => 'CustomerFiles', 'action' => 'getFileItemElement']);
 
     /**
      * CustomerDirectory entity routes
