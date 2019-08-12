@@ -113,6 +113,9 @@
                 }
             });
         });
+        /**
+         * Envoi des fichiers sélectionnés
+         */
         $(form).submit(function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -135,18 +138,17 @@
                             var msg = getSuccessMsg(resp.items);
                             $.alert(msg, {
                                 autoClose: true,
-                                closeTime: 5000,
+                                closeTime: 10000,
                                 type: 'success',
-                                position: ['top-right'],
+                                position: ['top-left', [100, 100]],
                                 isOnly: false
                             });
                         }
                         if (resp.error) {
                             $.alert(resp.error, {
-                                autoClose: true,
-                                closeTime: 5000,
+                                autoClose: false,
                                 type: 'warning',
-                                position: ['bottom-right'],
+                                position: ['top-right', [100, 100]],
                                 isOnly: false
                             });
                         }
@@ -154,11 +156,10 @@
                     error: function(resp) {
                         console.log('erreur', resp);      
                         $('.modal-body').html(resp.responseText);             
-                        $.alert('Vos documents n\'ont pas pu être sauvegardé.', {
-                            autoClose: true,
-                            closeTime: 3000,
+                        $.alert('Vos documents n\'ont pas pu être sauvegardés.', {
+                            autoClose: false,
                             type: 'warning',
-                            position: ['bottom-right'],
+                            position: ['top-right', [100, 100]],
                             isOnly: false
                         });
                     }
