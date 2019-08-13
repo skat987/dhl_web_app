@@ -18,10 +18,6 @@ var page;
  * This run once the entire page is ready
  */
 $(function() {
-    // $.alert('Hello world', {
-    //     type: 'success',
-    //     position: ['top-left']
-    // });
     page = initializePage();
     setUpPage(page);
 });

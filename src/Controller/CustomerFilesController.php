@@ -310,6 +310,9 @@ class CustomerFilesController extends AppController
         }
     }
 
+    /**
+     * Get a file item element with ajax request
+     */
     public function getFileItemElement() {
         $this->autoRender = false;
         $fileData = $this->request->getQuery();
