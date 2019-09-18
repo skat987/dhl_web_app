@@ -94,7 +94,9 @@ class CustomerFilesController extends AppController
             $this->set(compact('resp'));
         }
         $firm = $this->CustomerFiles->Firms->get($firmId);
-        $customerDirectories = $this->CustomerFiles->CustomerDirectories->findListByFirmId($firmId, ['limit' => 200]);
+        $customerDirectories = $this->CustomerFiles->CustomerDirectories
+            ->findListByFirmId($firmId)
+            ->order('CustomerDirectories.name');
         $this->set(compact('customerFiles', 'firm', 'customerDirectories'));
     }
 
