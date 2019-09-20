@@ -17,8 +17,22 @@
             <p>Société : <?= h($firm->name) ?></p>
             <?= $this->Form->hidden('firm_id', ['value' => $firm->id]) ?>
         </div>
-        <div class="col-md-5 mb-3">
-            <?= $this->Form->control('customer_directory_id', ['label' => ['text' => 'Dossier'], 'class' => 'form-control custom-select', 'type' => 'select', 'options' => $customerDirectories, 'empty' => 'Sélectionnez un dossier']) ?>
+        <div class="col-md-5 mb-3">  
+			<div class='input select'>
+				<?= $this->Form->label('Dossier'); ?>
+				<select name="customer_directory_id" class='form-control custom-select' id='customer_directory_id'>
+					<option value=''>Sélectionnez un dossier</option>
+						<?php
+						$pos = 0;
+						$chaineDossier = '';
+						foreach($customerDirectories as $k=>$v)
+						{
+							$pos = strpos($v, '_', 0);	
+							$chaineDossier = substr($v, $pos+1, strlen ($v));	
+							echo '<option value='.$k.'>'.$chaineDossier.'</option>';
+						 } ?>
+				</select>
+			</div>
             <div class="invalid-feedback"></div>
         </div>
     </div>
