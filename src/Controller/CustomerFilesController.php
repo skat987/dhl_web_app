@@ -302,8 +302,8 @@ class CustomerFilesController extends AppController
             }
             if (isset($dirId)) {
                 $customerDirectory = $this->CustomerFiles->CustomerDirectories->get($dirId);
-                $message .= (count($items) > 1) ? 'Les documents {0} ({1}) ont été déposés dans votre espace client WEB d\'échanges de documents, le {2}.' : 'Le document {0} ({1}) a été déposé dans votre espace client WEB d\'échanges de documents, le {2}.';
-                $content = __($message, [$uploads, substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), $created->format('d/m/y')]);
+                $message .= (count($items) > 1) ? 'Les documents {0} ({1}) ont été déposés dans le dossier "{2}" de votre espace client WEB d\'échanges de documents, le {3}.' : 'Le document {0} ({1}) a été déposé dans le dossier "{2}" de votre espace client WEB d\'échanges de documents, le {3}.';
+                $content = __($message, [$uploads, substr($customerDirectory->name, 0, strpos($customerDirectory->name, '_')), $customerDirectory->name, $created->format('d/m/y')]);
             } else {
                 $message .= (count($items) > 1) ? 'Les documents {0} ont été déposés dans votre espace client WEB d\'échanges de documents, le {1}.' : 'Le document {0} a été déposé dans votre espace client WEB d\'échanges de documents, le {1}.';
                 $content = __($message, [$uploads, $created->format('d/m/y')]);
